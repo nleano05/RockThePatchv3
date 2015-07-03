@@ -7,10 +7,10 @@
 		/**
 		 *  This function connects to the database
 		 *  
-		 *  @param - None	
+		 *  @param	- None	
 		 *  		 
 		 *  @return - PDO() object or NULL
-		 *  $throws - Nothing
+		 *  @throws - Nothing
 		 *  @global - None
 		 *  @notes
 		 *  	- Used internally by lib_database class to create and return a PDO connection
