@@ -8,14 +8,18 @@
 		/**
 		 *  This function gets the callee of another function
 		 *  
-		 *  @params - None
+		 *  @param - None
+		 *  
 		 *  @return - Callee
+		 *  @throws - Nothing
+		 *  @global - None
 		 *  @notes	- None
-		 *  @globals - None
+		 *  @example - lib_get::callee();
 		 *  @author - Patches
+		 *  @version - 1.0
 		 *  @history - Created 07/02/2015
 		 */
-		public static function getCallee() {
+		public static function callee() {
 			$backtrace = debug_backtrace();
 			return $backtrace[2]['function'];
 		}
@@ -23,14 +27,18 @@
 		/**
 		 *	This function gets and returns the current URL  
 		 *  
-		 *  @params - None
+		 *  @param - None
+		 *  
 		 *  @return - None
+		 *  @throws - Nothing
+		 *  @global - $gDebugMode, $gDebugFunctionColor, and $gDebugDivider
 		 *  @notes - None
-		 *  @globals - $gDebugMode, $gDebugFunctionColor, $gDebugDivider
+		 *  @example - lib_get::currentUrl();
 		 *  @author - Patches
+		 *  @version - 1.0
 		 *  @histor - Created 07/02/2015
 		 */
-		public static function getCurrentUrl() {
+		public static function currentUrl() {
 			$reflector = new ReflectionClass(__CLASS__);
 			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
 			$args = array();

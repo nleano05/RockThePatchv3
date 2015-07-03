@@ -13,25 +13,30 @@
 		/**
 		 *  This function outputs a log message
 		 *  
-		 *  @params
-		 *  	- $level (int): The level the message is to be logged at
-		 *  	- $message (string): The message to log
-		 *  	- $resource (optional object): A resource to be printed along with the message		 
+		 *  @param $level int (required) The level the message is to be logged at
+		 *  @param $message string (required) The message to log
+		 *  @param $resource object (optional) A resource to be printed along with the message		 
+		 *  
 		 *  @return - callee
+		 *  @throws - Nothing
+		 *  @global - None
 		 *  @notes
 		 *  	- Currently only logs if gDebugMode is enabled
 		 *  	- Current doesn't take into account log level
-		 *  @globals - None
+		 *  @todo Make this take into account log level
+		 *  
+		 *  @example - For just a message: log_util::log(LOG_LEVEL_DEBUG, "message");
+		 *  @example - For a message with a resource: log_util::log(LOG_LEVEL_DEBUG, "message", $resource);
+		 *  
 		 *  @author - Patches
-		 *  @TODO
-		 *  	- Make this take into account log level
+		 *  @version - 1.0
 		 *  @history - Created 07/02/2015
 		 */
-		public static function log($level, $message, $resource = null){
+		public static function log($level, $message, $resource = NULL){
 			global $gDebugMode;
 			
 			if($gDebugMode) {
-				if($resource !== null) {
+				if($resource !== NULL) {
 					echo("<p>" . $message);
 					print_r($resource);
 					echo("</p>"); 
@@ -44,16 +49,19 @@
 		/**
 		 *  This function outputs the debug divider
 		 *  
-		 *  @params - None 
+		 *  @param - None 
+		 *  
 		 *  @return - None
+		 *  @throws - Nothing
+		 *  @global - $gDebugMode and $gDebugDivider
 		 *  @notes 
 		 *  	- Used at the end of methods
 		 *  	- Currently only logs if gDebugMode is enabled
 		 *  	- Current doesn't take into account log level
-		 *  @globals - $gDebugMode, $gDebugDivider
+		 *  @todo - Make this take into account log level
+		 *  @example - log_util::logDivider();
 		 *  @author - Patches
-		 *  @TODO
-		 *  	- Make this take into account log level
+		 *  @version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
 		public static function logDivider(){
@@ -67,24 +75,26 @@
 		/**
 		 *  This function outputs the function name and args
 		 *  
-		 *  @params 
-		 *  	- $args (object): The arguments for the function as a key/value pair	 
+		 *  @param $args object (required) The arguments for the function as a key/value pair	
+		 *  		 
 		 *  @return - None
+		 *  @throws - Nothing
+		 *  @global - $gDebugMode and $gDebugFunctionColor
 		 *  @notes 
 		 *  	- Used at the start of methods
 		 *  	- Currently only logs if gDebugMode is enabled
 		 *  	- Current doesn't take into account log level
-		 *  @globals - $gDebugMode, $gDebugFunctionColor
+		 *  @todo - Make this take into account log level
+		 *  @example - log_util::logFunctionStart();
 		 *  @author - Patches
-		 *  @TODO
-		 *  	- Make this take into account log level
+		 *	@version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
 		public static function logFunctionStart($args) {
 			global $gDebugMode, $gDebugFunctionColor;
 			
 			if($gDebugMode) {
-				$callee = lib_get::getCallee();
+				$callee = lib_get::callee();
 				echo("<p style='color:" . $gDebugFunctionColor . ";' >" . $callee . ", args: ");
 				print_r($args);
 				echo("</p>");

@@ -12,11 +12,11 @@
 	global $gMasterAdminEmail;
 	global $gMasterAdminName;
 	
-	$gDebugMode;
+	$gDebugMode = TRUE;
 	$gDebugFunctionColor = "blue";
 	$gDebugDivider = "-----------------------------------------------------------------------------------------";
 		
-	$mainDistro = lib_database::dbGetEmailDistros(NULL, 1);
+	$mainDistro = lib_database::getEmailDistros(NULL, 1);
 	if(isset($mainDistro) && isset($mainDistro[0])) {
 		if(isset($mainDistro[0]->emailMembers) && $mainDistro[0]->emailMembers[0]){
 			$gMasterAdminEmail = $mainDistro[0]->emailMembers[0];

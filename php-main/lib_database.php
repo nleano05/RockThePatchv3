@@ -7,14 +7,19 @@
 		/**
 		 *  This function connects to the database
 		 *  
-		 *  @params - None	 
+		 *  @param - None	
+		 *  		 
 		 *  @return - PDO() object or NULL
-		 *  @notes - None
-		 *  @globals - None
+		 *  $throws - Nothing
+		 *  @global - None
+		 *  @notes
+		 *  	- Used internally by lib_database class to create and return a PDO connection
+		 *  @example - $dbh = lib_database::dbConnect();
 		 *  @author - Patches
+		 *  @version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
-		private static function dbConnect() {
+		private static function connect() {
 			$reflector = new ReflectionClass(__CLASS__);
 			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
 			$args = array();
@@ -44,14 +49,19 @@
 		/**
 		 *  This function clears the variable housing the database connection
 		 *  
-		 *  @params - None	 
+		 *  @param - None	 
+		 *  
 		 *  @return - NULL database connection
-		 *  @notes - None
-		 *  @globals - None
+		 *  @throws - Nothing
+		 *  @global - None
+		 *  @notes
+		 *  	- Used internally to return a NULL PDO connection
+		 *  @example - $dbh = lib_database::dbDisconnect();
 		 *  @author - Patches
+		 *  @version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
-		private static function dbDisconnect() {
+		private static function disconnect() {
 			$reflector = new ReflectionClass(__CLASS__);
 			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
 			$args = array();
@@ -70,17 +80,24 @@
 		/**
 		 *  This function clears the variable housing the database connection
 		 *  
-		 *  @params
-		 *  	- $name (optional string): The name of the email distro to pull from the database
-		 *  	- $id (optional int): The id of the email distro to pull from the database	
+		 *  @param $name string (optional) The name of the email distro to pull from the database
+		 *  @param $id int (optional) The id of the email distro to pull from the database	
+		 *  
 		 *  @return - An array of EmailDistro objects
+		 *  @throws - Nothing
+		 *  @global - None
 		 *  @notes
 		 *  	- If no name or id is passed in, defaults to no WHERE clause and returning all distros
-		 *  @globals - None
+		 *  
+		 *  @example - To get all distros: lib_database::getEmailDistros();
+		 *  @example - To get distro by name: lib_database::getEmailDistros("Distro name");
+		 *  @example - To get distro by id: lib_database::getEmailDistros(NULL, 1);
+		 *  
 		 *  @author - Patches
+		 *  @version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
-		public static function dbGetEmailDistros($name = NULL, $id = NULL) {
+		public static function getEmailDistros($name = NULL, $id = NULL) {
 			$reflector = new ReflectionClass(__CLASS__);
 			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
 			$args = array();
@@ -91,7 +108,7 @@
 			
 			$emailDistros = array();
 			
-			$dbh = lib_database::dbConnect();
+			$dbh = lib_database::connect();
 			
 			if(!empty($dbh)) {
 				log_util::log(LOG_LEVEL_DEBUG, "dbh IS NOT empty");
@@ -162,7 +179,7 @@
 				log_util::log(LOG_LEVEL_ERROR, "dbh IS empty");
 			}
 			
-			$dbh = lib_database::dbDisconnect();
+			$dbh = lib_database::disconnect();
 			
 			log_util::log(LOG_LEVEL_DEBUG, "emailDistros: ", $emailDistros);
 			log_util::logDivider();

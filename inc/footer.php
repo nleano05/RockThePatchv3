@@ -1,5 +1,5 @@
 <?php 
-	$currentURL = lib_get::getCurrentUrl();
+	$currentURL = lib_get::currentUrl();
 	
 	$currentURLforCSS = $currentURL;
 	log_util::log(LOG_LEVEL_DEBUG, "currentURLforCSS: " . $currentURLforCSS);
