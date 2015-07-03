@@ -102,8 +102,8 @@
 					$stmt->bindParam(1, $name, PDO::PARAM_STR);
 				} else if($id !==  NULL) {
 					log_util::log(LOG_LEVEL_DEBUG, "Querying using id");
-					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro WHERE id = ? ORDER BY name ASC");
-					$stmt->bindParam(1, $id, PDO::PARAM_STR);
+					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro WHERE distro = ? ORDER BY name ASC");
+					$stmt->bindParam(1, $id, PDO::PARAM_INT);
 				} else {
 					log_util::log(LOG_LEVEL_DEBUG, "Querying for all");
 					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro ORDER BY name ASC");
@@ -155,11 +155,11 @@
 					array_push($emailDistros, $emailDistro);
 					
 				} else {
-					log_util::log(LOG_LEVEL_DEBUG, "row WAS empty");
+					log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
 				}
 				
 			} else {	
-				log_util::log(LOG_LEVEL_DEBUG, "dbh IS empty");
+				log_util::log(LOG_LEVEL_ERROR, "dbh IS empty");
 			}
 			
 			$dbh = lib_database::dbDisconnect();

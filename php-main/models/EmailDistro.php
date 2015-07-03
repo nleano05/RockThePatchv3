@@ -1,8 +1,8 @@
 <?php
 	class EmailDistro {
-		protected $id = "";
-		protected $name = "";
-		protected $emails = "";
+		private $id = "";
+		private $name = "";
+		private $emails = "";
 		
 		public function __construct($id = NULL, $name = NULL, $emails = NULL) {
 			$this->id = $id;
