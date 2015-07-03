@@ -1,0 +1,37 @@
+#container{margin:0px;padding:0px;}
+body{margin:0px;padding:0px;background:#fff;font-family:Geneva, Verdana, Helvetica, Arial, sans-serif;}
+p{color:#111;padding:5px;margin:0px;font-size:.9em;line-height:150%;}
+.clear{clear:both;}
+
+/**
+* Styles for main nav bar
+*/
+#nav-bar {width:100%;height:auto;margin:0px;padding:0px;background:#111;border-top:1px #99FF00 solid;border-bottom:1px #99FF00 solid;text-align:center;z-index:3;}
+#nav-bar ul {margin:0px;padding:0px;list-style:none;font-weight:bold;}
+#nav-bar ul li {display:inline-block;padding:0px;margin:0px;border:1px #99FF00 solid;text-align:center;}
+#nav-bar ul li a {display:inline-block;width:165px;color:#fff;text-decoration:none;font-size:.8em;padding-top:10px;padding-bottom:10px;}
+#nav-bar ul li:hover{background:#99FF00;border:1px #fff solid;}
+#nav-bar ul li ul {display:none;z-index:3;}
+#nav-bar ul li:hover ul {display:block;position:absolute;margin:0px;padding:0px;}
+#nav-bar ul li:hover ul li {display:block;width:180px;background:#111;border-left:1px #fff solid;border-bottom:1px #fff solid;border-top:1px #fff solid;}
+#nav-bar ul li:hover ul li a {color:#fff;font-size:.8em;}
+#nav-bar ul li:hover ul li:hover {background:#99FF00;}
+#nav-bar ul li:hover a , #nav-bar ul li:hover ul li:hover a {color:#111;}
+#nav-bar ul li.current, #nav-bar ul li ul li.current{background:#424242;color:#fff;}
+#nav-bar ul li.current:hover, #nav-bar ul li ul li.current:hover{background:#99FF00;color:#fff;}
+
+/**
+* Styles for the footer area 
+*/
+#social-media{width:100%;text-align:center;background:#99FF00;border-left:1px #fff solid;border-bottom:1px #fff solid;margin:0px;padding:0px}
+#social-media img{margin:10px;width:30px;height:auto;}
+#note {width:100%;text-align:center;}
+#contact-info{float:left;}
+#share-buttons{float:left;text-align:center;margin:auto;}
+.html5 {width:85px;}
+.valid{margin:5px;}
+.share-button{background:#FF0066;margin:10px 15px;display:inline-block;text-align:center;}
+.share-button p {margin:auto;}
+.share-button a {display:block;width:180px;text-decoration:none;margin:auto;padding:5px 25px;}
+.share-button a:link, .share-button a:visited, .share-button a:active{color:#f1f1f1;}
+.share-button a:hover{color:#f1f1f1;background:#FF448F;}
