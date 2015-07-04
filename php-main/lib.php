@@ -6,8 +6,10 @@
 	require_once("lib_get.php");
 	require_once("log_util.php");
 	
-	require_once("models/User.php");
+	require_once("models/AnnoyanceLevel.php");
 	require_once("models/EmailDistro.php");
+    require_once("models/ErrorReportCategory.php");
+    require_once("models/User.php");
 
 	global $gDebugMode;
 	global $gDebugFunctionColor;
@@ -25,5 +27,3 @@
 	} else {
 		$gDebugMode = $_COOKIE['debugMode'];
 	}
-	
-	lib_check::userIsAdmin();

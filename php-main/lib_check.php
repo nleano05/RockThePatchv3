@@ -61,6 +61,13 @@
 			
 			$user = lib_database::getUser(NULL, $email);
 			$userTemp = lib_database::getUser(NULL, $emailTemp);
+
+			if($user->getRole() === ROLE_ADMIN || $userTemp->getRole() === ROLE_ADMIN) {
+				log_util::log(LOG_LEVEL_DEBUG, "user WAS was an admin");
+				$isAdmin = TRUE;
+			} else {
+				log_util::log(LOG_LEVEL_DEBUG, "user WAS NOT an admin");
+			}
 			
 			log_util::logDivider();
 			

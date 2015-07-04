@@ -4,7 +4,7 @@ package ui.utils;
 import com.sun.media.jfxmedia.logging.Logger;
 
 
-public class LogUtil {
+class LogUtil {
 
     private static final String TAG = LogUtil.class.getSimpleName();
 

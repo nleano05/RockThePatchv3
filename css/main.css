@@ -8,7 +8,7 @@ p{color:#111;padding:5px;margin:0;font-size:.9em;line-height:150%;}
 /**
 * Styles for main nav bar
 */
-#nav-bar {width:100%;height:auto;margin:0;padding:0;background:#111;border-top:1px #99FF00 solid;border-bottom:1px #99FF00 solid;text-align:center;z-index:3;}
+#nav-bar {width:100%;height:auto;margin:0;padding:0;background:#111;border-top:1px #fff solid;border-bottom:1px #fff solid;text-align:center;z-index:3;}
 #nav-bar ul {margin:0;padding:0;list-style:none;font-weight:bold;}
 #nav-bar ul li {display:inline-block;padding:0;margin:0;border:1px #99FF00 solid;text-align:center;}
 #nav-bar ul li a {display:inline-block;width:165px;color:#fff;text-decoration:none;font-size:.8em;padding-top:10px;padding-bottom:10px;}
@@ -25,15 +25,15 @@ p{color:#111;padding:5px;margin:0;font-size:.9em;line-height:150%;}
 /**
 * Styles for the footer area 
 */
-#social-media{width:100%;text-align:center;background:#99FF00;border-left:1px #fff solid;border-bottom:1px #fff solid;margin:0;padding:0}
+#social-media{width:100%;text-align:center;background:#99FF00;margin:0;padding:0}
 #social-media img{margin:10px;width:30px;height:auto;}
 #note {width:100%;text-align:center;}
 #contact-info{float:left;}
 #share-buttons{float:left;}
 .html5 {width:85px;}
 .valid{margin:5px;}
-.share-button{background:#FF0066;margin:10px 15px;display:inline-block;text-align:center;}
-.share-button p {margin:auto;}
-.share-button a {display:block;width:180px;text-decoration:none;margin:auto;padding:5px 25px;}
-.share-button a:link, .share-button a:visited, .share-button a:active{color:#f1f1f1;}
-.share-button a:hover{color:#f1f1f1;background:#FF448F;}
+#share-buttons .share-button{background:#99FF00;margin:10px 15px;display:inline-block;text-align:center;}
+#share-buttons .share-button p {margin:auto;}
+#share-buttons .share-button a {display:block;width:180px;text-decoration:none;margin:auto;padding:5px 25px;}
+#share-buttons .share-button a:link, .share-button a:visited, .share-button a:active{color:#111;font-weight: bold;}
+#share-buttons .share-button a:hover{background:#99FF88;}

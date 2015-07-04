@@ -7,15 +7,15 @@
 		/**
 		 *  This function connects to the database
 		 *
-		 *  @param	- None
+		 *  @param - None
 		 *
 		 *  @return NULL|PDO
 		 *  @throws - Nothing
 		 *  @global - None
 		 *  @notes
 		 *  	- Used internally by lib_database class to create and return a PDO connection
-		 *  @example - $dbh = lib_database::dbConnect();
-		 *  @author - Patches
+		 *  @example - $dbh = lib_database::connect();
+		 *  @author  - Patches
 		 *  @version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
@@ -45,59 +45,77 @@
 			
 			return $dbh;
 		}
-		
-		/**
-		 *  This function clears the variable housing the database connection
-		 *  
-		 *  @param - None	 
-		 *  
-		 *  @return - NULL database connection
-		 *  @throws - Nothing
-		 *  @global - None
-		 *  @notes
-		 *  	- Used internally to return a NULL PDO connection
-		 *  @example - $dbh = lib_database::dbDisconnect();
-		 *  @author - Patches
-		 *  @version - 1.0
-		 *  @history - Created 07/03/2015
-		 */
-		private static function disconnect() {
-			$reflector = new ReflectionClass(__CLASS__);
-			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
-			$args = array();
-			foreach($parameters as $parameter) {
-				$args[$parameter->name] = ${$parameter->name};
+
+        /**
+         *  This function gets all of the annoyance levels
+         *
+         *  @param	- None
+         *
+         *  @return array of AnnoyanceLevel objects
+         *  @throws - Nothing
+         *  @global - None
+         *  @notes  - None
+         *  @example  - $dbh = lib_database::getAnnoyanceLevels();
+         *  @author - Patches
+         *  @version - 1.0
+         *  @history - Created 07/03/2015
+         */
+		public static function getAnnoyanceLevels(){
+            $reflector = new ReflectionClass(__CLASS__);
+            $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+            $args = array();
+            foreach($parameters as $parameter) {
+                $args[$parameter->name] = ${$parameter->name};
+            }
+            log_util::logFunctionStart($args);
+
+			$annoyanceLevels = array();
+
+			$dbh = lib_database::connect();
+
+			if(!empty($dbh))
+			{
+				log_util::log(LOG_LEVEL_DEBUG, "dnh IS NOT null");
+
+				$stmt = $dbh->prepare("SELECT * FROM annoyance_levels ORDER BY level ASC");
+				$stmt->execute();
+
+                while($row = $stmt->fetch()) {
+                    $annoyanceLevel = new AnnoyanceLevel();
+                    $annoyanceLevel->setId($row['id']);
+                    $annoyanceLevel->setName($row['name']);
+                    $annoyanceLevel->setLevel($row['level']);
+                    $annoyanceLevel->setIsDefault($row['isDefault']);
+
+                    array_push($annoyanceLevels, $annoyanceLevel);
+                }
+			} else {
+				log_util::log(LOG_LEVEL_DEBUG, "dbh WAS null");
 			}
-			log_util::logFunctionStart($args);
-			
-			$dbh = null;
-			
+
+			$dbh = NULL;
+
+			log_util::log(LOG_LEVEL_DEBUG, "annoyanceLevels: ", $annoyanceLevels);
 			log_util::logDivider();
-			
-			return $dbh;
+
+			return $annoyanceLevels;
 		}
-		
+
 		/**
-		 *  This function clears the variable housing the database connection
+		 *  This gets all of the email distros
 		 *  
-		 *  @param $name string (optional) The name of the email distro to pull from the database
-		 *  @param $id int (optional) The id of the email distro to pull from the database	
+		 *  @param None
 		 *  
-		 *  @return array of Email Distros
+		 *  @return array of EmailDistro objects
 		 *  @throws - Nothing
 		 *  @global - None
-		 *  @notes
-		 *  	- If no name or id is passed in, defaults to no WHERE clause and returning all distros
-		 *  
-		 *  @example - To get all distros: lib_database::getEmailDistros();
-		 *  @example - To get distro by name: lib_database::getEmailDistros("Distro name");
-		 *  @example - To get distro by id: lib_database::getEmailDistros(NULL, 1);
-		 *  
+		 *  @notes  - None
+		 *  @example - $emailDistros = lib_database::getEmailDistros();
 		 *  @author - Patches
 		 *  @version - 1.0
 		 *  @history - Created 07/03/2015
 		 */
-		public static function getEmailDistros($name = NULL, $id = NULL) {
+		public static function getEmailDistros() {
 			$reflector = new ReflectionClass(__CLASS__);
 			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
 			$args = array();
@@ -113,18 +131,7 @@
 			if(!empty($dbh)) {
 				log_util::log(LOG_LEVEL_DEBUG, "dbh IS NOT empty");
 				
-				if($name !== NULL) {
-					log_util::log(LOG_LEVEL_DEBUG, "Query using name");
-					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro WHERE name = ? ORDER BY name ASC");
-					$stmt->bindParam(1, $name, PDO::PARAM_STR);
-				} else if($id !==  NULL) {
-					log_util::log(LOG_LEVEL_DEBUG, "Query using id");
-					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro WHERE distro = ? ORDER BY name ASC");
-					$stmt->bindParam(1, $id, PDO::PARAM_INT);
-				} else {
-					log_util::log(LOG_LEVEL_DEBUG, "Query for all");
-					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro ORDER BY name ASC");
-				}
+				$stmt = $dbh->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro ORDER BY name ASC");
 				$stmt->execute();
 				$row = $stmt->fetch();
 				
@@ -179,14 +186,90 @@
 				log_util::log(LOG_LEVEL_ERROR, "dbh IS empty");
 			}
 			
-			$dbh = lib_database::disconnect();
+			$dbh = NULL;
 			
 			log_util::log(LOG_LEVEL_DEBUG, "emailDistros: ", $emailDistros);
 			log_util::logDivider();
 			
 			return $emailDistros;
 		}
-		
+
+        /**
+         *  This function gets all of the error report categories
+         *
+         *  @param None
+         *
+         *  @return array of ErrorReportCategory objects
+         *  @throws - Nothing
+         *  @global - None
+         *  @notes  - None
+         *  @example - $errorReportCategories = lib_database::getErrorReportCategories();
+         *  @author - Patches
+         *  @version - 1.0
+         *  @history - Created 07/03/2015
+         */
+        public static function getErrorReportCategories() {
+            $reflector = new ReflectionClass(__CLASS__);
+            $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+            $args = array();
+            foreach($parameters as $parameter) {
+                $args[$parameter->name] = ${$parameter->name};
+            }
+            log_util::logFunctionStart($args);
+
+            $dbh = lib_database::connect();
+
+            $errorReportCategories = array();
+
+            if(!empty($dbh)) {
+                log_util::log(LOG_LEVEL_DEBUG, "dbh WAS NOT null");
+
+                $stmt = $dbh->prepare("SELECT * FROM error_report_categories ORDER BY name ASC");
+                $stmt->execute();
+
+                while($row = $stmt->fetch()) {
+                    $errorReportCategory = new ErrorReportCategory();
+                    $errorReportCategory->setId($row['id']);
+                    $errorReportCategory->setName($row['name']);
+                    $errorReportCategory->setDistro($row['distro']);
+                    $errorReportCategory->setIsDefault($row['isDefault']);
+
+                    array_push($errorReportCategories, $errorReportCategory);
+                }
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "dbh WAS null");
+            }
+
+            $dbh = NULL;
+
+            log_util::log(LOG_LEVEL_DEBUG, "errorReportCategories", $errorReportCategories);
+            log_util::logDivider();
+
+            return $errorReportCategories;
+        }
+
+
+        /**
+         *  This function gets a specific user
+         *
+         *  @param $id (optional) The id of the user to search for
+         *  @param $email (optional) The email of the user to search for
+         *  @param $userName (optional) The user name of the user to search for
+         *
+         *  @return User object
+         *  @throws - Nothing
+         *  @global - None
+         *  @notes  - None
+         *  @todo - Find a way to pass in a varying set of information and to make the search more flexible
+         *
+         *  @example - To get user by id: $user = lib_database::getUser(1);
+         *  @example - To get user by email: $user = lib_database::getUser(NULL, "email@domain.com");
+         *  @example - To get user by userName: $user = lib_database::getUser(NULL, NULL, "userName");
+         *
+         *  @author - Patches
+         *  @version - 1.0
+         *  @history - Created 07/03/2015
+         */
 		public static function getUser($id = NULL, $email = NULL, $userName = NULL) {
 				$reflector = new ReflectionClass(__CLASS__);
 				$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -234,7 +317,7 @@
 					log_util::log(LOG_LEVEL_ERROR, "dbh IS empty");
 				}
 				
-				$dbh = lib_database::disconnect();
+				$dbh = NULL;
 				
 				log_util::log(LOG_LEVEL_DEBUG, "user: ", $user);
 				log_util::logDivider();

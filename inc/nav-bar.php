@@ -11,7 +11,7 @@
 			<li id="site-issues"><a href="/site-issues.php" title="Site Issues">Site Issues</a></li>
 			<li id="kudos"><a href="/kudos.php" title="Kudos">Kudos</a></li>
 			<li id="templates"><a href="/templates.php" title="Templates">Templates</a></li>
-			<li id="resources"><!--suppress HtmlUnknownTarget --><a href="/resources.php" title="Resources">Resources</a></li>
+			<li id="resources-and-tools"><a href="/resources-and-tools.php" title="Resources">Resources and Tools</a></li>
 		</ul>
 	</li><!--<li id="tech-work">
 		<a href="#" title="Tech Work">Tech Work</a>

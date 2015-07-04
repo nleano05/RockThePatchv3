@@ -11,14 +11,12 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.util.concurrent.TimeUnit;
 
 
-public class DriverUtil {
+class DriverUtil {
 
     private static final String TAG = DriverUtil.class.getSimpleName();
 
     /**
-     *
      * @param browser - the string name of the browser to get a driver for
-     * @return
      */
     public static WebDriver getWebDriver(String browser){
         WebDriver driver = null;
