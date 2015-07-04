@@ -11,7 +11,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import java.util.concurrent.TimeUnit;
 
 
-class DriverUtil {
+public class DriverUtil {
 
     private static final String TAG = DriverUtil.class.getSimpleName();
 

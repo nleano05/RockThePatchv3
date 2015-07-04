@@ -41,7 +41,22 @@
 			
 			return $debugEnable;
 		}
-		
+
+
+        /**
+         *  This function checks if the current user is an admin
+         *
+         *  @param None
+         *
+         *  @return boolean
+         *  @throws - Nothing
+         *  @global - None
+         *  @notes  - None
+         *  @example - $isAdmin = lib_check::userIsAdmin();
+         *  @author - Patches
+         *  @version - 1.0
+         *  @history - Created 07/03/2015
+         */
 		public static function userIsAdmin() {
 			$reflector = new ReflectionClass(__CLASS__);
 			$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -53,7 +68,7 @@
 			
 			$isAdmin = FALSE;
 			
-			$email = "isupatches@yahoo.com"; //isset($_COOKIE['email']) ? base64_decode($_COOKIE['email']) : "";
+			$email = isset($_COOKIE['email']) ? base64_decode($_COOKIE['email']) : "";
 			$emailTemp = isset($_COOKIE['emailTemp']) ? base64_decode($_COOKIE['emailTemp']) : "";
 			
 			log_util::log(LOG_LEVEL_DEBUG, "email: " . $email);

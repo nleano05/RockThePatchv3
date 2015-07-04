@@ -31,7 +31,6 @@
 		Web Developer, Software	Engineer, Patches, Rock the Patch!"/>
 		
 		<!--[if lt IE 9]>
-			<!--suppress JSUnresolvedLibraryURL -->
 			<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 

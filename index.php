@@ -21,7 +21,7 @@
 	<!-- ### START Head ### -->
 	<head>
 		<!-- ### Basic Page Needs and Meta Data ### -->
-		<title>Rock the Patch! - Home Page</title>
+		<title>Rock the Patch! - v3 Home</title>
 		<meta name="robots" content="all" /> 
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
 		<meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>		
@@ -29,7 +29,6 @@
 		<meta name="keywords" content="patches, xhtm 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 		
 		<!--[if lt IE 9]>
-			<!--suppress JSUnresolvedLibraryURL -->
 			<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
