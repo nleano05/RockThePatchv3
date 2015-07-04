@@ -17,8 +17,8 @@ reboot.  This time I intend to write automated tests as I'm building as well.
 - XHTML 1.1
 - HTML 5
 - CSS3
-- PHP 5.4
-- MySQL 5.0.96
+- PHP 5.+
+- MySQL
 - JavasScript
 - JQuery
 - RSS 2.0
@@ -27,7 +27,7 @@ reboot.  This time I intend to write automated tests as I'm building as well.
 
 ###Planned tools:
 
-- EasyPHP 14.1
+- EasyPHP
 - Jenkins
 - Selenium
 - Intellij
