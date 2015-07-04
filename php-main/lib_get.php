@@ -29,14 +29,14 @@
 		 *  
 		 *  @param - None
 		 *  
-		 *  @return - None
+		 *  @return string $currentUrl
 		 *  @throws - Nothing
 		 *  @global - $gDebugMode, $gDebugFunctionColor, and $gDebugDivider
 		 *  @notes - None
 		 *  @example - lib_get::currentUrl();
 		 *  @author - Patches
 		 *  @version - 1.0
-		 *  @histor - Created 07/02/2015
+		 *  @history - Created 07/02/2015
 		 */
 		public static function currentUrl() {
 			$reflector = new ReflectionClass(__CLASS__);
@@ -55,4 +55,3 @@
 			return $currentURL;
 		}
 	}
-?>

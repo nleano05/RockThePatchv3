@@ -31,6 +31,7 @@
 		Web Developer, Software	Engineer, Patches, Rock the Patch!"/>
 		
 		<!--[if lt IE 9]>
+			<!--suppress JSUnresolvedLibraryURL -->
 			<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
@@ -48,8 +49,6 @@
 				#nav-bar ul li{display:inline;}
 				#nav-bar ul li:hover ul{position:absolute;margin-top:34px;margin-left:-171px;}
 				#user-nav ul li{display:inline;}
-				#social-media{margin-top:-7px;}
-				#contact-info{margin-top:-7px;}
 			</style>
 		<![endif]-->
 		
@@ -59,7 +58,8 @@
 	    <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
 	    <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
 		
-		<!-- ### JQuerey Imports ### -->
+		<!-- ### JQuery Imports ###, JSUnresolvedLibraryURL -->
+		<!--suppress JSUnresolvedLibraryURL -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		
 		<!-- ### Common Javascript Library Imports ### -->

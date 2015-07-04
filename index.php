@@ -29,6 +29,7 @@
 		<meta name="keywords" content="patches, xhtm 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 		
 		<!--[if lt IE 9]>
+			<!--suppress JSUnresolvedLibraryURL -->
 			<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 
@@ -46,8 +47,6 @@
 				#nav-bar ul li{display:inline;}
 				#nav-bar ul li:hover ul{position:absolute;margin-top:34px;margin-left:-171px;}
 				#user-nav ul li{display:inline;}
-				#social-media{margin-top:-7px;}
-				#contact-info{margin-top:-7px;}
 			</style>
 		<![endif]-->
 		
@@ -57,7 +56,8 @@
 	    <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
 	    <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
 		
-		<!-- ### JQuerey Imports ### -->
+		<!-- ### JQuerey Imports ###, JSUnresolvedLibraryURL, JSUnresolvedLibraryURL -->
+		<!--suppress JSUnresolvedLibraryURL -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		
 		<!-- ### Common Javascript Library Imports ### -->
@@ -86,7 +86,7 @@
 		
 		<!-- ### Javascript for the Slide Show / Gallery on the main page  -->
 		<script type="text/javascript">
-			// TODO - Re-enable this once I have images and a slde show again
+			// TODO - Re-enable this once I have images and a slide show again
 			// $(document).ready(function() 
 			// {		
 				// galleryDisplay();

@@ -1,8 +1,8 @@
 <?php
 	class EmailDistro {
-		private $id = "";
-		private $name = "";
-		private $emails = "";
+		private $id;
+		private $name;
+		private $emails;
 		
 		public function __construct($id = NULL, $name = NULL, $emails = NULL) {
 			$this->id = $id;
@@ -34,4 +34,3 @@
 			$this->emails = $emails;
 		}
 	}
-?>

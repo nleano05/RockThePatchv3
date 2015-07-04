@@ -17,12 +17,12 @@
 		 *  @param $message string (required) The message to log
 		 *  @param $resource object (optional) A resource to be printed along with the message		 
 		 *  
-		 *  @return - callee
+		 *  @return NULL
 		 *  @throws - Nothing
 		 *  @global - None
 		 *  @notes
 		 *  	- Currently only logs if gDebugMode is enabled
-		 *  	- Current doesn't take into account log level
+		 *  	- Currently does not take into account log level
 		 *  @todo Make this take into account log level
 		 *  
 		 *  @example - For just a message: log_util::log(LOG_LEVEL_DEBUG, "message");
@@ -32,7 +32,7 @@
 		 *  @version - 1.0
 		 *  @history - Created 07/02/2015
 		 */
-		public static function log($level, $message, $resource = NULL){
+		public static function log($level, $message, $resource = NULL) {
 			global $gDebugMode;
 			
 			if($gDebugMode) {
@@ -51,13 +51,13 @@
 		 *  
 		 *  @param - None 
 		 *  
-		 *  @return - None
+		 *  @return NULL
 		 *  @throws - Nothing
 		 *  @global - $gDebugMode and $gDebugDivider
 		 *  @notes 
 		 *  	- Used at the end of methods
 		 *  	- Currently only logs if gDebugMode is enabled
-		 *  	- Current doesn't take into account log level
+		 *  	- Currently does not take into account log level
 		 *  @todo - Make this take into account log level
 		 *  @example - log_util::logDivider();
 		 *  @author - Patches
@@ -75,15 +75,15 @@
 		/**
 		 *  This function outputs the function name and args
 		 *  
-		 *  @param $args object (required) The arguments for the function as a key/value pair	
+		 *  @param $args array (required) The arguments for the function as a key/value pair
 		 *  		 
-		 *  @return - None
+		 *  @return NULL
 		 *  @throws - Nothing
 		 *  @global - $gDebugMode and $gDebugFunctionColor
 		 *  @notes 
 		 *  	- Used at the start of methods
 		 *  	- Currently only logs if gDebugMode is enabled
-		 *  	- Current doesn't take into account log level
+		 *  	- Currently does not take into account log level
 		 *  @todo - Make this take into account log level
 		 *  @example - log_util::logFunctionStart();
 		 *  @author - Patches
@@ -101,4 +101,3 @@
 			}
 		}
 	}
-?>

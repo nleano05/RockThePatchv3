@@ -3,13 +3,13 @@
 	 *  This class houses functions related to getting, setting, and updating data in the database
 	 */
 	class lib_database {
-	
+
 		/**
 		 *  This function connects to the database
-		 *  
-		 *  @param	- None	
-		 *  		 
-		 *  @return - PDO() object or NULL
+		 *
+		 *  @param	- None
+		 *
+		 *  @return NULL|PDO
 		 *  @throws - Nothing
 		 *  @global - None
 		 *  @notes
@@ -38,7 +38,7 @@
 				}
 			} catch(PDOException $e) {
 				$dbh = null;
-				log_util::log(LOG_LEVEL_ERROR, "An error occured while establishing PDO connection", $e);
+				log_util::log(LOG_LEVEL_ERROR, "An error occurred while establishing PDO connection", $e);
 			}
 			
 			log_util::logDivider();
@@ -83,7 +83,7 @@
 		 *  @param $name string (optional) The name of the email distro to pull from the database
 		 *  @param $id int (optional) The id of the email distro to pull from the database	
 		 *  
-		 *  @return - An array of EmailDistro objects
+		 *  @return array of Email Distros
 		 *  @throws - Nothing
 		 *  @global - None
 		 *  @notes
@@ -114,15 +114,15 @@
 				log_util::log(LOG_LEVEL_DEBUG, "dbh IS NOT empty");
 				
 				if($name !== NULL) {
-					log_util::log(LOG_LEVEL_DEBUG, "Querying using name");
+					log_util::log(LOG_LEVEL_DEBUG, "Query using name");
 					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro WHERE name = ? ORDER BY name ASC");
 					$stmt->bindParam(1, $name, PDO::PARAM_STR);
 				} else if($id !==  NULL) {
-					log_util::log(LOG_LEVEL_DEBUG, "Querying using id");
+					log_util::log(LOG_LEVEL_DEBUG, "Query using id");
 					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro WHERE distro = ? ORDER BY name ASC");
 					$stmt->bindParam(1, $id, PDO::PARAM_INT);
 				} else {
-					log_util::log(LOG_LEVEL_DEBUG, "Querying for all");
+					log_util::log(LOG_LEVEL_DEBUG, "Query for all");
 					$stmt = $dbh->prepare("SELECT * FROM emailDistros LEFT JOIN emailDistroMembers ON emailDistros.id = emailDistroMembers.distro ORDER BY name ASC");
 				}
 				$stmt->execute();
@@ -135,7 +135,7 @@
 					$emailDistro = new EmailDistro();
 				
 					$currentDistro = $row['name'];	
-					$emailDistro->setName($row['name']);
+					$emailDistro->setName($currentDistro);
 					array_push($emailDistroMembers, $row['email']);
 					
 					log_util::log(LOG_LEVEL_DEBUG, "emailDistroMembers: ", $emailDistroMembers);
@@ -155,7 +155,7 @@
 							$emailDistro = new EmailDistro();
 							$emailDistroMembers = array();
 							$currentDistro = $row['name'];
-							$emailDistro->setName($row['name']);
+							$emailDistro->setName($currentDistro);
 							
 							array_push($emailDistroMembers, $row['email']);
 						} else {
@@ -186,5 +186,59 @@
 			
 			return $emailDistros;
 		}
+		
+		public static function getUser($id = NULL, $email = NULL, $userName = NULL) {
+				$reflector = new ReflectionClass(__CLASS__);
+				$parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+				$args = array();
+				foreach($parameters as $parameter) {
+					$args[$parameter->name] = ${$parameter->name};
+				}
+				log_util::logFunctionStart($args);
+				
+				$user = new User();
+				
+				$dbh = lib_database::connect();
+				
+				if(!empty($dbh)) {
+					log_util::log(LOG_LEVEL_DEBUG, "dbh IS NOT empty");
+					
+					if($id !== NULL) {
+						log_util::log(LOG_LEVEL_DEBUG, "Query using id");
+						$stmt = $dbh->prepare("SELECT * FROM users WHERE id = ?");
+						$stmt->bindParam(1, $id, PDO::PARAM_STR);
+					} else if($email !==  NULL) {
+						log_util::log(LOG_LEVEL_DEBUG, "Query using email");
+						$stmt = $dbh->prepare("SELECT * FROM users WHERE email = ?");
+						$stmt->bindParam(1, $email, PDO::PARAM_INT);
+					} else if($userName !== NULL) {
+						log_util::log(LOG_LEVEL_DEBUG, "Query using userName");
+						$stmt = $dbh->prepare("SELECT * FROM users WHERE userName = ?");
+						$stmt->bindParam(1, $userName, PDO::PARAM_INT);
+					}
+                    if(!empty($stmt)) {
+                        log_util::log(LOG_LEVEL_WARNING, "stmt WAS NOT empty");
+                        $stmt->execute();
+                        $row = $stmt->fetch();
+                    } else {
+                        log_util::log(LOG_LEVEL_WARNING, "stmt WAS empty");
+                    }
+					
+					if(!empty($row)) {
+						log_util::log(LOG_LEVEL_WARNING, "row WAS NOT empty");
+						
+					} else {
+						log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+					}
+				} else {	
+					log_util::log(LOG_LEVEL_ERROR, "dbh IS empty");
+				}
+				
+				$dbh = lib_database::disconnect();
+				
+				log_util::log(LOG_LEVEL_DEBUG, "user: ", $user);
+				log_util::logDivider();
+				
+				return $user;
+		}
 	}
-?>

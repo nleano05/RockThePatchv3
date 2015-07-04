@@ -1,4 +1,4 @@
-# RockThePatchv3
+# RockThePatchV3
 
 > *Developed by Patches 06/27/2015 - present*
 
@@ -33,7 +33,7 @@ reboot.  This time I intend to write automated tests as I'm building as well.
 - Intellij
 - Notepad++ with a crap ton of plugins
 
-###Planned Supported Browers:
+###Planned Supported Browsers:
 
  - IE>7
  - Chrome
@@ -41,7 +41,7 @@ reboot.  This time I intend to write automated tests as I'm building as well.
  - Firefox
  - Opera
 
-###Planned Suppoerted OS's:
+###Planned Supported OS's:
 
 - Windows
 - Mac
