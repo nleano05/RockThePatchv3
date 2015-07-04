@@ -1,6 +1,6 @@
 <?php
-	define("MASTER_ADMIN_EMAIL", "patches@rockthepatch.com");
-	define("MASTER_ADMIN_NAME", "Patches");
+define("MASTER_ADMIN_EMAIL", "patches@rockthepatch.com");
+define("MASTER_ADMIN_NAME", "Patches");
 
-	define("ROLE_ADMIN", "admin");
-    define("ROLE_USER", "user");
+define("ROLE_ADMIN", 1);
+define("ROLE_USER", 2);

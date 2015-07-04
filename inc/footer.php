@@ -21,10 +21,10 @@
 	<a href="aim:addbuddy?screenname=isuPatches"><img src="/images/social-media/aim.png" alt="Add Patches on AIM" title="Add Patches on AIM"/></a>
 	<a href="https://www.facebook.com/isuPatches"><img src="/images/social-media/facebook.png" alt="Add Patches on Facebook" title="Add Patches on Facebook"/></a>
 	<a href="https://www.facebook.com/rockthepatch"><img src="/images/social-media/facebook-alt.png" alt="Like Patches' Facebook Fan Page" title="Like Patches' Facebook Fan Page"/></a>
-	<a href="https://github.com/isuPatches"><img src="/images/social-media/github.png" alt="Follow Patches on GitHub" title="Follow Patches on GitHub" style="width:35px;height:auto"/></a>		
+	<a href="https://github.com/isuPatches"><img src="/images/social-media/github.png" alt="Follow Patches on GitHub" title="Follow Patches on GitHub" style="width:35px;height:auto;"/></a>
 	<a href="https://plus.google.com/u/0/+SarahKlinefelter89/posts"><img src="/images/social-media/google.png" alt="Add Patches on Google+" title="Add Patches on Google+"/></a>	
 	<a href="https://plus.google.com/u/0/+Rockthepatch/posts"><img src="/images/social-media/google-fan.png" alt="Follow Patches' Google+ Fan Page" title="Follow Patches' Google+ Fan Page"/></a>
-	<a href="http://pinterest.com/isuPatches/"><img src="/images/social-media/pinterest.png" alt="Follow Patches on Pintrest" title="Follow Patches on Pintrest" style="width:28px;height:auto"/></a>	
+	<a href="http://pinterest.com/isuPatches/"><img src="/images/social-media/pinterest.png" alt="Follow Patches on Pintrest" title="Follow Patches on Pintrest" style="width:28px;height:auto;"/></a>
 	<a href="http://www.last.fm/user/isuPatches"><img src="/images/social-media/lastfm.png" alt="Add Patches on Last FM" title="Add Patches on Last FM"/></a>
 	<a href="https://www.linkedin.com/pub/sarah-klinefelter/a8/b35/979"><img src="/images/social-media/linkedIN.png" alt="Connect with Patches on LinkedIN" title="Connect with Patches on LinkedIN"/></a>
 	<a href="http://www.pandora.com/profile/isupatches"><img src="/images/social-media/pandora.png" alt="Add Patches on Pandora Radio" title="Add Patches on Pandora Radio"/></a>

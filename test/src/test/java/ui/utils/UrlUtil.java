@@ -2,6 +2,7 @@ package ui.utils;
 
 import ui.models.Environment;
 
+@SuppressWarnings("StringConcatenationMissingWhitespace")
 public class UrlUtil {
 
     private static final String TAG = UrlUtil.class.getSimpleName();

@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 
+@SuppressWarnings("Annotation")
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

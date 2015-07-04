@@ -11,6 +11,7 @@ import ui.utils.Constants;
 import ui.utils.DriverUtil;
 import ui.utils.UrlUtil;
 
+@SuppressWarnings("Annotation")
 @Browser(browser = Constants.CHROME)
 public class IndexPageTest extends BasePageTest implements BasePageTest.Callbacks {
 
@@ -35,18 +36,18 @@ public class IndexPageTest extends BasePageTest implements BasePageTest.Callback
     @Test
     @Override
     public void testTitle() {
-        testTitle(gDriver, UrlUtil.URL_MAIN_PAGE, Constants.TITLE_MAIN_PAGE);
+        BasePageTest.testTitle(gDriver, UrlUtil.URL_MAIN_PAGE, Constants.TITLE_MAIN_PAGE);
     }
 
     @Test
     @Override
     public void testXHTMLValidation() {
-        testXHTMLValidation(gDriver, UrlUtil.URL_MAIN_PAGE);
+        BasePageTest.testXHTMLValidation(gDriver, UrlUtil.URL_MAIN_PAGE);
     }
 
     @Test
     @Override
     public void testHTML5Validation() {
-        testHTML5Validation(gDriver, UrlUtil.URL_MAIN_PAGE);
+        BasePageTest.testHTML5Validation(gDriver, UrlUtil.URL_MAIN_PAGE);
     }
 }

@@ -5,7 +5,7 @@ require_once('C:\Program Files (x86)\EasyPHP-DevServer-14.1VC11\data\localweb\ph
 /** @noinspection PhpUndefinedClassInspection */
 class AnnoyanceLevelTest extends PHPUnit_Framework_TestCase {
 
-    public function testConstructorNULL(){
+    public function testConstructorNULL() {
         $annoyanceLevel = new AnnoyanceLevel();
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -18,7 +18,7 @@ class AnnoyanceLevelTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($annoyanceLevel->isDefault() == NULL);
     }
 
-    public function testConstructorWithValues(){
+    public function testConstructorWithValues() {
         $annoyanceLevel = new AnnoyanceLevel(1, "name", 5, TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -31,7 +31,7 @@ class AnnoyanceLevelTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($annoyanceLevel->isDefault() == TRUE);
     }
 
-    public function testGettersAndSetters(){
+    public function testGettersAndSetters() {
         $annoyanceLevel = new AnnoyanceLevel();
 
         $annoyanceLevel->setId(1);

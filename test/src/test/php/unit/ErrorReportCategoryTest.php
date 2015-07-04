@@ -5,7 +5,7 @@ require_once('C:\Program Files (x86)\EasyPHP-DevServer-14.1VC11\data\localweb\ph
 /** @noinspection PhpUndefinedClassInspection */
 class ErrorReportCategoryTest extends PHPUnit_Framework_TestCase {
 
-    public function testConstructorNULL(){
+    public function testConstructorNULL() {
         $errorReportCategory = new ErrorReportCategory();
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -18,7 +18,7 @@ class ErrorReportCategoryTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($errorReportCategory->isDefault() == NULL);
     }
 
-    public function testConstructorWithValues(){
+    public function testConstructorWithValues() {
         $errorReportCategory = new ErrorReportCategory(1, "name", 2, TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -31,7 +31,7 @@ class ErrorReportCategoryTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($errorReportCategory->isDefault() == TRUE);
     }
 
-    public function testGettersAndSetters(){
+    public function testGettersAndSetters() {
         $errorReportCategory = new ErrorReportCategory();
 
         $errorReportCategory->setId(1);

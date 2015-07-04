@@ -1,11 +1,11 @@
 <?php
-    require_once('C:\Program Files (x86)\EasyPHP-DevServer-14.1VC11\data\localweb\php-main\models\User.php');
-    require_once('C:\Program Files (x86)\EasyPHP-DevServer-14.1VC11\data\localweb\php-main\lib_const.php');
+require_once('C:\Program Files (x86)\EasyPHP-DevServer-14.1VC11\data\localweb\php-main\models\User.php');
+require_once('C:\Program Files (x86)\EasyPHP-DevServer-14.1VC11\data\localweb\php-main\lib_const.php');
 
 /** @noinspection PhpUndefinedClassInspection */
 class UserTest extends PHPUnit_Framework_TestCase {
 
-    public function testConstructorNULL(){
+    public function testConstructorNULL() {
         $user = new User();
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -38,7 +38,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($user->getFriendStatus() == NULL);
     }
 
-    public function testConstructorWithValues(){
+    public function testConstructorWithValues() {
         $user = new User(1, "first", "last", "userName", "email@domain.com", "password", 2, "answer", TRUE, FALSE, "317-555-1234", ROLE_ADMIN, "some date", 3);
 
         /** @noinspection PhpUndefinedMethodInspection */
@@ -71,7 +71,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($user->getFriendStatus() == 3);
     }
 
-    public function testGettersAndSetters(){
+    public function testGettersAndSetters() {
         $user = new User();
 
         $user->setId(1);

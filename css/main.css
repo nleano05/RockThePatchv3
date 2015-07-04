@@ -1,39 +1,39 @@
 /**
 * General styles
 */
-body{margin:0;padding:0;background:#fff;font-family:Geneva, Verdana, Helvetica, Arial, sans-serif;}
-p{color:#111;padding:5px;margin:0;font-size:.9em;line-height:150%;}
+body{margin:0;padding:0;background: #ffffff;font-family:Geneva, Verdana, Helvetica, Arial, sans-serif;}
+p{color: #111111;padding:5px;margin:0;font-size:.9em;line-height:150%;}
 .clear{clear:both;}
 
 /**
 * Styles for main nav bar
 */
-#nav-bar {width:100%;height:auto;margin:0;padding:0;background:#111;border-top:1px #fff solid;border-bottom:1px #fff solid;text-align:center;z-index:3;}
+#nav-bar {width:100%;height:auto;margin:0;padding:0;background: #111111;border-top:1px #ffffff solid;border-bottom:1px #ffffff solid;text-align:center;z-index:3;}
 #nav-bar ul {margin:0;padding:0;list-style:none;font-weight:bold;}
-#nav-bar ul li {display:inline-block;padding:0;margin:0;border:1px #99FF00 solid;text-align:center;}
-#nav-bar ul li a {display:inline-block;width:165px;color:#fff;text-decoration:none;font-size:.8em;padding-top:10px;padding-bottom:10px;}
-#nav-bar ul li:hover{background:#99FF00;border:1px #fff solid;}
+#nav-bar ul li {display:inline-block;padding:0;margin:0;border:1px #99ff00 solid;text-align:center;}
+#nav-bar ul li a {display:inline-block;width:165px;color: #ffffff;text-decoration:none;font-size:.8em;padding-top:10px;padding-bottom:10px;}
+#nav-bar ul li:hover{background: #99ff00;border:1px #ffffff solid;}
 #nav-bar ul li ul {display:none;z-index:3;}
 #nav-bar ul li:hover ul {display:block;position:absolute;margin:0;padding:0;}
-#nav-bar ul li:hover ul li {display:block;width:180px;background:#111;border-left:1px #fff solid;border-bottom:1px #fff solid;border-top:1px #fff solid;}
-#nav-bar ul li:hover ul li a {color:#fff;font-size:.8em;}
-#nav-bar ul li:hover ul li:hover {background:#99FF00;}
-#nav-bar ul li:hover a , #nav-bar ul li:hover ul li:hover a {color:#111;}
+#nav-bar ul li:hover ul li {display:block;width:180px;background: #111111;border-left:1px #ffffff solid;border-bottom:1px #ffffff solid;border-top:1px #ffffff solid;}
+#nav-bar ul li:hover ul li a {color: #ffffff;font-size:.8em;}
+#nav-bar ul li:hover ul li:hover {background: #99ff00;}
+#nav-bar ul li:hover a , #nav-bar ul li:hover ul li:hover a {color: #111111;}
 /*#nav-bar ul li.current, #nav-bar ul li ul li.current{background:#424242;color:#fff;}
 #nav-bar ul li.current:hover, #nav-bar ul li ul li.current:hover{background:#99FF00;color:#fff;}*/
 
 /**
 * Styles for the footer area 
 */
-#social-media{width:100%;text-align:center;background:#99FF00;margin:0;padding:0}
+#social-media{width:100%;text-align:center;background: #99ff00;margin:0;padding:0;}
 #social-media img{margin:10px;width:30px;height:auto;}
 #note {width:100%;text-align:center;}
 #contact-info{float:left;}
 #share-buttons{float:left;}
 .html5 {width:85px;}
 .valid{margin:5px;}
-#share-buttons .share-button{background:#99FF00;margin:10px 15px;display:inline-block;text-align:center;}
+#share-buttons .share-button{background: #99ff00;margin:10px 15px;display:inline-block;text-align:center;}
 #share-buttons .share-button p {margin:auto;}
 #share-buttons .share-button a {display:block;width:180px;text-decoration:none;margin:auto;padding:5px 25px;}
-#share-buttons .share-button a:link, .share-button a:visited, .share-button a:active{color:#111;font-weight: bold;}
-#share-buttons .share-button a:hover{background:#99FF88;}
+#share-buttons .share-button a:link, .share-button a:visited, .share-button a:active{color: #111111;font-weight: bold;}
+#share-buttons .share-button a:hover{background: #99ff88;}
