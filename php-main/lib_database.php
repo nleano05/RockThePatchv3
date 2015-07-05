@@ -253,6 +253,61 @@ class lib_database {
         return $errorReportCategories;
     }
 
+    /**
+     *  This function gets all of the error report categories
+     *
+     * @param None
+     *
+     * @return array of FeatureRequestCategory objects
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $featureRequestCategories = lib_database::getFeatureRequestCategories();
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/04/2015
+     */
+    public static function getFeatureRequestCategories() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $featureRequestCategories = [];
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("SELECT * FROM feature_request_categories ORDER BY name ASC");
+            $stmt->execute();
+
+            /** @noinspection PhpAssignmentInConditionInspection */
+            while ($row = $stmt->fetch()) {
+                $featureRequestCategory = new FeatureRequestCategory();
+                $featureRequestCategory->setId($row['id']);
+                $featureRequestCategory->setName($row['name']);
+                $featureRequestCategory->setDistro($row['distro']);
+                $featureRequestCategory->setIsDefault((bool)$row['isDefault']);
+
+                array_push($featureRequestCategories, $featureRequestCategory);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "errorReportCategories", $featureRequestCategories);
+        log_util::logDivider();
+
+        return $featureRequestCategories;
+    }
+
 
     /**
      *  This function gets a specific user

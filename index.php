@@ -150,17 +150,15 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <div id="recent-updates">
             <h1>Recent Updates</h1>
 
-            <h2 style="text-align:center;">Winter Cleaning</h2>
+            <h2 style="text-align:center;">Back and Better Than Ever!</h2>
 
             <p>
-                I haven't posted a recent update on here for a very long time. I am still actively
-                working on this site if you couldn't tell by the 'Last Updated' time stamp in the
-                footer of every page. It's been slow going and no really new or cool features have
-                been worked on as of recent...
+                Welcome the new re-vamped v3 version of Rock the Patch!  After months of trials and tribulations,
+                the back-end and everything have been refactored, cleaned up, and improved!
                 <em><a href="/recent-updates-log.php" title="Recent Updates Log">...continue reading</a></em>
             </p>
 
-            <p><strong>Date Posted:</strong> 02/01/2014</p>
+            <p><strong>Date Posted:</strong> 07/04/2015</p>
 
             <p><em><a href="/recent-updates-log.php" title="Recent Updates Log">Want to see more?</a></em></p>
         </div>

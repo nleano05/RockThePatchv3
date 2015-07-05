@@ -1,0 +1,98 @@
+/**
+ *  Bulk of mobile logic should go here
+ */
+@media screen and (min-width: 0px) and (max-width: 720px) {
+    #content-area, #content-area-right, #content-area-left{width:100%;float:none;clear:both;}
+    #validation a {width: 100%;display: inline-block;margin: 5px;}
+
+    #feature-request, #recent-updates{border-left: 0;border-right:0;}
+
+    #login-mobile {
+        display: inline-block;
+        visibility: visible;
+        margin: 10px 0 0 0;
+        padding: 0;
+        background: black;
+        width: 100%;
+        height: auto;
+        min-width: 210px;
+        border-bottom: 1px #fff solid;
+        float: none;
+        clear: both;
+    }
+
+    #login {
+        display: none;
+        visibility: hidden;
+        width: 0;
+        height: 0;
+    }
+
+    #error-report-mobile {
+        display: block;
+        visibility: visible;
+        margin: 10px 0 10px 0;
+        padding: 0;
+        width: 100%;
+        height: auto;
+        background: #fff;
+        float: none;
+        border-bottom:2px #111 solid;
+    }
+
+    #error-report {
+        display: none;
+        visibility: hidden;
+        width: 0;
+        height: 0;
+    }
+}
+
+/**
+ *  Smaller screen logic
+ */
+@media screen and (min-width: 0px) and (max-width: 300px) {
+
+}
+
+/**
+ *  Clearing logic
+ */
+.container:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix:before,
+.clearfix:after,
+.row:before,
+.row:after {
+    content: '\0020';
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+.row:after,
+.clearfix:after {
+    clear: both;
+}
+
+.row,
+.clearfix {
+    display: inline-block;
+}
+
+.clear {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}

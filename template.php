@@ -31,8 +31,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
     <meta name="author" content="Patches"/>
     <meta name="keywords" content="music, art, guitar, bass, drums, drawing, writing, lyrics,
-		martial arts, Minton's Black Belt Academy, Master Chai, PHP, C, C++, Visual C#, Python, Perl,
-		Web Developer, Software	Engineer, Patches, Rock the Patch!"/>
+                martial arts, Minton's Black Belt Academy, Master Chai, PHP, C, C++, Visual C#, Python, Perl,
+                Web Developer, Software	Engineer, Patches, Rock the Patch!"/>
 
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>

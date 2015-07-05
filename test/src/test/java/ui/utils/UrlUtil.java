@@ -12,6 +12,11 @@ public class UrlUtil {
     public static final String BASE_STAGING_URL = "https://staging.rockthepatch.com/";
     public static final String BASE_PRODUCTION_URL = "https://rockthepatch.com/";
 
+    public static final String SHORT_DEV_URL = "127.0.0.1";
+    public static final String SHORT_INTEGRATION_URL = "integration.rockthepatch.com";
+    public static final String SHORT_STAGING_URL = "staging.rockthepatch.com";
+    public static final String SHORT_PRODUCTION_URL = "rockthepatch.com";
+
     public static final String URL_MAIN_PAGE = getBaseUrl() + "index.php";
 
     public static String getBaseUrl() {
