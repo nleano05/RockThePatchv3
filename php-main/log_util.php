@@ -1,5 +1,4 @@
 <?php
-define("LOG_LEVEL_ALL", 0);
 define("LOG_LEVEL_ERROR", 1);
 define("LOG_LEVEL_WARNING", 2);
 define("LOG_LEVEL_DEBUG", 3);
@@ -36,12 +35,26 @@ class log_util {
         global $gDebugMode;
 
         if ($gDebugMode) {
+            switch ($level) {
+                case LOG_LEVEL_DEBUG:
+                    echo("<p>");
+                    break;
+                case LOG_LEVEL_WARNING:
+                    echo("<p style='color:orange;'>");
+                    break;
+                case LOG_LEVEL_ERROR:
+                    echo("<p style='color:red;'>");
+                    break;
+                default:
+                    echo("<p>");
+                    break;
+            }
+            echo($message);
             if ($resource !== NULL) {
-                echo("<p>" . $message);
                 print_r($resource);
                 echo("</p>");
             } else {
-                echo("<p>" . $message . "<p>");
+                echo("<p>");
             }
         }
     }

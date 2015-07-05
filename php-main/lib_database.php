@@ -37,7 +37,7 @@ class lib_database {
             if (empty($dbh)) {
                 log_util::log(LOG_LEVEL_DEBUG, "PDO connection was empty.  dbh: ", $pdo);
             } else {
-                log_util::log(LOG_LEVEL_DEBUG, "PDO connection succeeded. dbh: ", $pdo);
+                log_util::log(LOG_LEVEL_WARNING, "PDO connection succeeded. dbh: ", $pdo);
             }
         } catch (PDOException $e) {
             $pdo = null;
@@ -93,7 +93,7 @@ class lib_database {
                 array_push($annoyanceLevels, $annoyanceLevel);
             }
         } else {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
         }
 
         $pdo = NULL;
@@ -242,7 +242,7 @@ class lib_database {
                 array_push($errorReportCategories, $errorReportCategory);
             }
         } else {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
         }
 
         $pdo = NULL;
@@ -297,7 +297,7 @@ class lib_database {
                 array_push($featureRequestCategories, $featureRequestCategory);
             }
         } else {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
         }
 
         $pdo = NULL;
@@ -360,32 +360,31 @@ class lib_database {
                 $stmt->bindParam(1, $userName, PDO::PARAM_INT);
             }
             if (!empty($stmt)) {
-                log_util::log(LOG_LEVEL_WARNING, "stmt WAS NOT empty");
+                log_util::log(LOG_LEVEL_DEBUG, "stmt WAS NOT empty");
                 $stmt->execute();
                 $row = $stmt->fetch();
 
-                $user = new User();
-                $user->setId($row['id']);
-                $user->setFirstName($row['firstName']);
-                $user->setLastName($row['lastName']);
-                $user->setUserName($row['userName']);
-                $user->setEmail($row['email']);
-                $user->setPassword($row['password']);
-                $user->setSecurityQuestion($row['securityQuestion']);
-                $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
-                $user->setEmailBlasts((bool)$row['emailBlasts']);
-                $user->setTextBlasts((bool)$row['textBlasts']);
-                $user->setRole($row['role']);
-                $user->setLastLoginAttempt($row['lastLoginAttempt']);
+                if (!empty($row)) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+
+                    $user = new User();
+                    $user->setId($row['id']);
+                    $user->setFirstName($row['firstName']);
+                    $user->setLastName($row['lastName']);
+                    $user->setUserName($row['userName']);
+                    $user->setEmail($row['email']);
+                    $user->setPassword($row['password']);
+                    $user->setSecurityQuestion($row['securityQuestion']);
+                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setEmailBlasts((bool)$row['emailBlasts']);
+                    $user->setTextBlasts((bool)$row['textBlasts']);
+                    $user->setRole($row['role']);
+                    $user->setLastLoginAttempt($row['lastLoginAttempt']);
+                } else {
+                    log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+                }
             } else {
                 log_util::log(LOG_LEVEL_WARNING, "stmt WAS empty");
-            }
-
-            if (!empty($row)) {
-                log_util::log(LOG_LEVEL_WARNING, "row WAS NOT empty");
-
-            } else {
-                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
             }
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
