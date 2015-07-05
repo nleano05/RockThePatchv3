@@ -198,6 +198,55 @@ class lib_database {
         return $emailDistros;
     }
 
+    public static function getEncryptionData($identifier, $noDebugModeOutput = FALSE){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $encryptionData = NULL;
+
+        $pdo = lib_database::connect();
+
+        if(!empty($dbh)) {
+            if(!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT null");
+            }
+
+            $stmt = $pdo->prepare("SELECT * FROM encryption WHERE identifier = ?");
+            $stmt->bindParam(1, $identifier, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+
+                $encryptionData = new EncryptionData();
+                $encryptionData->setId($row['id']);
+                $encryptionData->setIdentifier($row['identifier']);
+                $encryptionData->setCipher($row['cipher']);
+                $encryptionData->setKey($row['key']);
+                $encryptionData->setIv($row['iv']);
+                $encryptionData->setTime($row['time']);
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+
+        } else {
+            if(!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "$encryptionData: ", $encryptionData);
+        log_util::logDivider();
+
+        return $encryptionData;
+    }
+
     /**
      *  This function gets all of the error report categories
      *
@@ -316,7 +365,7 @@ class lib_database {
      * @param $email (optional) The email of the user to search for
      * @param $userName (optional) The user name of the user to search for
      *
-     * @return User object
+     * @return User|NULL
      * @throws - Nothing
      * @global - None
      * @notes  - None
@@ -338,7 +387,7 @@ class lib_database {
         }
         log_util::logFunctionStart($args);
 
-        $user = new User();
+        $user = NULL;
 
         $pdo = lib_database::connect();
 
@@ -382,5 +431,126 @@ class lib_database {
         log_util::logDivider();
 
         return $user;
+    }
+
+    /**
+     *  This function writes encryption data out to the database
+     *
+     * @param EncryptionData $encryptionData The encryption data to be updated
+     * @param bool|NULL $noDebugModeOutput If debug mode output is echoed out or not
+     *
+     * @return None
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     *
+     * @example - To update encryption data with debugMode output (if enabled) = lib_database::updateEncryptionData($encryptionData);
+     * @example - To update encryption data with no debugMode output = lib_database::updateEncryptionData($encryptionData, TRUE);
+     *
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/05/2015
+     */
+    public static function updateEncryptionData(EncryptionData $encryptionData, $noDebugModeOutput = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        if(!$noDebugModeOutput) {
+            log_util::logFunctionStart($args);
+        }
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            if (!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            }
+
+            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, key=?, iv=?, time=? WHERE idenifier = ?");
+            $stmt->bindParam(1, $encryptionData->getCipher(), PDO::PARAM_STR);
+            $stmt->bindParam(2, $encryptionData->getKey(), PDO::PARAM_STR);
+            $stmt->bindParam(3, $encryptionData->getIv(), PDO::PARAM_STR);
+            $stmt->bindParam(4, $encryptionData->getTime(), PDO::PARAM_STR);
+            $stmt->bindParam(5, $encryptionData->getIdentifier(), PDO::PARAM_STR);
+            $stmt->execute();
+
+        } else {
+            if(!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            }
+        }
+
+        if(!$noDebugModeOutput) {
+            log_util::logDivider();
+        }
+    }
+
+    /**
+     *  This function writes encryption data out to the database
+     *
+     * @param EncryptionData $encryptionData The enncryption data to be written out
+     * @param bool|NULL $noDebugModeOutput If debug mode output is echoed out or not
+     *
+     * @return None
+     * @throws - Nothing
+     * @global - None
+     * @notes
+     *      - Calls lib_database::updateEncryptionData() if there is already an entry for the identifier
+     * @example - To write encryption data with debugMode output (if enabled) = lib_database::writeEncryptionData($encryptionData);
+     * @example - To write encryption data with no debugMode output = lib_database::writeEncryptionData($encryptionData, TRUE);
+     *
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/05/2015
+     */
+    public static function writeEncryptionData(EncryptionData $encryptionData, $noDebugModeOutput = FALSE){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        if(!$noDebugModeOutput) {
+            log_util::logFunctionStart($args);
+        }
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            if (!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            }
+
+            $stmt = $pdo->prepare("SELECT * FROM encryption WHERE identifier = ?");
+            $stmt->bindParam(1, $encryptionData->getIdentifier(), PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(empty($row)) {
+                $stmt = $pdo->prepare("INSERT INTO encryption (identifier, cipher, key, iv, time) VALUE (?, ?, ?, ?, ?)");
+                $stmt->bindParam(1, $encryptionData->getIdentifier(), PDO::PARAM_STR);
+                $stmt->bindParam(2, $encryptionData->getCipher(), PDO::PARAM_STR);
+                $stmt->bindParam(3, $encryptionData->getKey(), PDO::PARAM_STR);
+                $stmt->bindParam(4, $encryptionData->getIv(), PDO::PARAM_STR);
+                $stmt->bindParam(5, $encryptionData->getTime(), PDO::PARAM_STR);
+                $stmt->execute();
+            } else {
+                lib_database::updateEncryptionData($encryptionData, $noDebugModeOutput);
+            }
+
+        } else {
+            if(!$noDebugModeOutput) {
+               log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            }
+        }
+
+        $pdo = NULL;
+
+        if(!$noDebugModeOutput) {
+            log_util::logDivider();
+        }
     }
 }
