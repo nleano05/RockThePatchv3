@@ -254,7 +254,7 @@ class lib_database {
     }
 
     /**
-     *  This function gets all of the error report categories
+     *  This function gets all of the feature request categories
      *
      * @param None
      *
