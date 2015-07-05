@@ -280,7 +280,7 @@ class lib_database {
 
         $pdo = lib_database::connect();
 
-        if(!empty($pdo)) {
+        if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
 
             $stmt = $pdo->prepare("SELECT * FROM feature_request_categories ORDER BY name ASC");
@@ -310,7 +310,7 @@ class lib_database {
 
 
     /**
-     *  This function gets a specific user
+     *  This function gets a specific user based off unique fields
      *
      * @param $id (optional) The id of the user to search for
      * @param $email (optional) The email of the user to search for
@@ -320,7 +320,6 @@ class lib_database {
      * @throws - Nothing
      * @global - None
      * @notes  - None
-     * @todo - Find a way to pass in a varying set of information and to make the search more flexible
      *
      * @example - To get user by id: $user = lib_database::getUser(1);
      * @example - To get user by email: $user = lib_database::getUser(NULL, "email@domain.com");
@@ -330,7 +329,7 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/03/2015
      */
-    public static function getUser($id = NULL, $email = NULL, $userName = NULL) {
+    public static function getUser($id = NULL, $userName = NULL, $email = NULL) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -346,45 +345,32 @@ class lib_database {
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
 
-            if ($id !== NULL) {
-                log_util::log(LOG_LEVEL_DEBUG, "Query using id");
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-                $stmt->bindParam(1, $id, PDO::PARAM_STR);
-            } else if ($email !== NULL) {
-                log_util::log(LOG_LEVEL_DEBUG, "Query using email");
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-                $stmt->bindParam(1, $email, PDO::PARAM_INT);
-            } else if ($userName !== NULL) {
-                log_util::log(LOG_LEVEL_DEBUG, "Query using userName");
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE userName = ?");
-                $stmt->bindParam(1, $userName, PDO::PARAM_INT);
-            }
-            if (!empty($stmt)) {
-                log_util::log(LOG_LEVEL_DEBUG, "stmt WAS NOT empty");
-                $stmt->execute();
-                $row = $stmt->fetch();
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? OR email = ? OR userName = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->bindParam(2, $userName, PDO::PARAM_INT);
+            $stmt->bindParam(3, $email, PDO::PARAM_INT);
 
-                if (!empty($row)) {
-                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+            $stmt->execute();
+            $row = $stmt->fetch();
 
-                    $user = new User();
-                    $user->setId($row['id']);
-                    $user->setFirstName($row['firstName']);
-                    $user->setLastName($row['lastName']);
-                    $user->setUserName($row['userName']);
-                    $user->setEmail($row['email']);
-                    $user->setPassword($row['password']);
-                    $user->setSecurityQuestion($row['securityQuestion']);
-                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
-                    $user->setEmailBlasts((bool)$row['emailBlasts']);
-                    $user->setTextBlasts((bool)$row['textBlasts']);
-                    $user->setRole($row['role']);
-                    $user->setLastLoginAttempt($row['lastLoginAttempt']);
-                } else {
-                    log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
-                }
+            if (!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+
+                $user = new User();
+                $user->setId($row['id']);
+                $user->setFirstName($row['firstName']);
+                $user->setLastName($row['lastName']);
+                $user->setUserName($row['userName']);
+                $user->setEmail($row['email']);
+                $user->setPassword($row['password']);
+                $user->setSecurityQuestion($row['securityQuestion']);
+                $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                $user->setEmailBlasts((bool)$row['emailBlasts']);
+                $user->setTextBlasts((bool)$row['textBlasts']);
+                $user->setRole($row['role']);
+                $user->setLastLoginAttempt($row['lastLoginAttempt']);
             } else {
-                log_util::log(LOG_LEVEL_WARNING, "stmt WAS empty");
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
             }
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");

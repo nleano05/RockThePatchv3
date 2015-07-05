@@ -15,6 +15,7 @@ require_once("models/User.php");
 global $gDebugMode;
 global $gDebugFunctionColor;
 global $gDebugDivider;
+global $gLoginStatus;
 global $gMasterAdminEmail;
 global $gMasterAdminName;
 
@@ -27,4 +28,25 @@ if (!isset($_COOKIE['debugMode'])) {
     $gDebugMode = lib_check::debugMode();
 } else {
     $gDebugMode = $_COOKIE['debugMode'];
+}
+
+class lib {
+
+    /**
+     *  This function checks if the file calling it is connected to the library by writing a simple echo statement
+     *
+     * @param None
+     *
+     * @return None
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - lib::testConnection();
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/04/2015
+     */
+    public static function testConnection(){
+        echo("<p>We're connected to the library now.</p>");
+    }
 }

@@ -66,6 +66,18 @@ a:active{color:#99ff00;}
 #error-report-mobile{display:none;visibility:hidden;width:0;height:0;}
 
 /**
+  * Styles for login area
+  */
+#login{margin:10px 0 0 0;padding:0;background:black;width:100%;height:auto;display:inline-block;min-width:210px;border-bottom:1px #fff solid;border-left: 2px #fff solid;}
+#login p, #login-mobile p{color:#fff;padding:10px;margin:0;}
+#login a, #login-mobile a{font-size:1.2em;}
+#login input.user-input, #login-mobile input.user-input{margin:5px 10px 5px 10px;width:80%;text-align:center;}
+#login h1, #login-mobile h1{font-size:20px;color:#111;padding:5px;margin:5px;background:#99ff00;}
+.forgot-register{float:left;padding:5px;margin:0;font-size:.8em;}
+.login-field{font-size:.9em;}
+#login-mobile{display:none;visibility:hidden;width:0;height:0;}
+
+/**
 * Styles for the footer area 
 */
 #footer{background:#111;margin:0;padding:0;height:auto;width:100%;clear:both;}

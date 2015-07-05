@@ -43,9 +43,8 @@ class lib_check {
         return $debugEnable;
     }
 
-
     /**
-     *  This function checks if the current user is an admin
+     *  This function checks if the currently logged in user is an admin
      *
      * @param None
      *
@@ -69,16 +68,9 @@ class lib_check {
 
         $isAdmin = FALSE;
 
-        $email = isset($_COOKIE['email']) ? base64_decode($_COOKIE['email']) : "";
-        $emailTemp = isset($_COOKIE['emailTemp']) ? base64_decode($_COOKIE['emailTemp']) : "";
+        $user = lib_get::currentUser();
 
-        log_util::log(LOG_LEVEL_DEBUG, "email: " . $email);
-        log_util::log(LOG_LEVEL_DEBUG, "emailTemp: " . $emailTemp);
-
-        $user = lib_database::getUser(NULL, $email);
-        $userTemp = lib_database::getUser(NULL, $emailTemp);
-
-        if ($user->getRole() === ROLE_ADMIN || $userTemp->getRole() === ROLE_ADMIN) {
+        if ($user->getRole() === ROLE_ADMIN) {
             log_util::log(LOG_LEVEL_DEBUG, "user WAS was an admin");
             $isAdmin = TRUE;
         } else {
