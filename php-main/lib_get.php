@@ -120,4 +120,25 @@ class lib_get {
 
         return $loginStatus;
     }
+
+    public static function referer() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        if(isset($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+        } else {
+            $referer = null;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "referer: " . $referer);
+        log_util::logDivider();
+
+        return $referer;
+    }
 }

@@ -78,6 +78,16 @@ a:active{color:#99ff00;}
 #login-mobile{display:none;visibility:hidden;width:0;height:0;}
 
 /**
+ * Styles for the RSS area
+ */
+#rss{width:100%;padding:0;margin:0 0 10px 0;font-size:.8em;line-height:140%;background:#fff;border:2px #111 solid;}
+#rss h1{font-size:1.3em;color:#111;font-weight:bold;padding:10px 0 10px 0;margin:0px;background:#99ff00;width:100%;text-align:center;border-bottom:2px #111 solid;}
+#rss h2{font-size:.9em;color:#111;font-weight:bold;padding:0 10px 0 10px;margin:0;}
+#rss dt{padding:0 10px 0 10px;}
+.rss-icon{width:50px;float:right;margin:0 10px 10px 10px;padding:0;}
+.rss-click{font-weight:bold;float:left;color:#99ff00;padding:10px;}
+
+/**
 * Styles for the footer area 
 */
 #footer{background:#111;margin:0;padding:0;height:auto;width:100%;clear:both;}

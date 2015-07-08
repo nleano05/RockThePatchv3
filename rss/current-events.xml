@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<?xml-stylesheet type="text/xsl" href="../rss/current-events.xsl"?>
+<?xml-stylesheet type="text/css" href="../css/rss.css"?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <language>en-us</language>
+    <title>Upcoming Rock the Patch! Events</title>
+    <link>http://www.rockthepatch.com</link>
+    <description>See what's coming up below:</description>
+    <atom:link href="https://www.rockthepatch.com/rss/current-events.xml"  title="Current Events" rel="self" type="application/rss+xml" />
+	
+	<item>
+      <title>Almost Done with User System</title>
+      <link>http://www.rockthepatch.com/rss/current-events.xml</link>
+      <description>All that needs wrapped up is the 'Account Info' page.  I should have login, logout, change password, forgot password, forgot username, and deactivate account complete</description>
+      <guid>http://www.indstate.edu/mpa/sarah/rockThePatch/rss/item0001</guid>
+      <pubDate>Thu, 21 Mar 2013 15:07:00 EST</pubDate>
+      <author>patches@rockthepatch.com (Patches)</author>
+    </item>
+	<item>
+      <title>Updates and Upgrades to the Site</title>
+      <link>http://www.rockthepatch.com/rss/current-events.xml</link>
+      <description>Added a new page to house the old updates for the website, fixed a lot of validation issues, fixed some broken links and pages, and did some quality control testing :)</description>
+      <guid>http://www.indstate.edu/mpa/sarah/rockThePatch/rss/item0002</guid>
+      <pubDate>Thu, 17 Jan 2013 13:28:00 EST</pubDate>
+      <author>patches@rockthepatch.com (Patches)</author>
+    </item>
+    <item>
+      <title>Renewal of Rock the Patch Domain and Hosting</title>
+      <link>http://www.rockthepatch.com/rss/current-events.xml</link>
+      <description>Renewed with go Daddy to keep the site open for another year and added a link to show I'm certified.</description>
+      <guid>http://www.indstate.edu/mpa/sarah/rockThePatch/rss/item0003</guid>
+      <pubDate>Thu, 17 Jan 2013 13:30:00 EST</pubDate>
+      <author>patches@rockthepatch.com (Patches)</author>
+    </item>
+    <item>
+      <title>Thursday's Open Mic at Ole Simms</title>
+      <link>https://www.facebook.com/olesimrells</link>
+      <description>Join Patches at open mic night at Terre Haute's Ole Simmerls Bar around 9 P.M. every Thursday.</description>
+      <guid>http://www.indstate.edu/mpa/sarah/rockThePatch/rss/item0004</guid>
+      <pubDate>Mon, 10 Oct 2011 09:15:00 EST</pubDate>
+      <author>patches@rockthepatch.com (Patches)</author>
+    </item>
+    <item>
+      <title>Fall Break is Here!</title>
+      <link>http://www.indstate.edu/academicaffairs/calendar.htm</link>
+      <description>School and work will not happen on Friday due to FALL BREAK!!!</description>
+      <guid>http://www.indstate.edu/mpa/sarah/rockThePatch/rss/item0005</guid>
+      <pubDate>Fri, 07 Oct 2011 02:23:00 EST</pubDate>
+      <author>patches@rockthepatch.com (Patches)</author>
+    </item>
+  </channel>
+</rss>
