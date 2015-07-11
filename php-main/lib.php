@@ -38,7 +38,7 @@ class lib {
      * @param string $identifier
      * @param bool|NULL $noDebugModeOutput
      *
-     * @return string|NULL decrypted data
+     * @return string|NULL $decryptedDataMCRYPT String of decrypted data
      * @throws - Nothing
      * @global - None
      * @notes  - None
@@ -132,11 +132,12 @@ class lib {
      * @param string|array $identifiers The identifiers the encrypted data is to be connected to
      * @param bool|NULL $noDebugModeOutput Wether this displays output if debug mode is enabled
      *
-     * @return string encrypted data
+     * @return string $encryptedDataMCRYPT The string of encrypted data
      * @throws - Nothing
      * @global - None
      * @notes
      *      - If identifiers is passed in as an array of strings, it will write out the same encryption data for each identifier
+     *  
      * @example - To encrypt data with debug mode output (if enabled): $encryptedString = lib::encrypt($data, $identifiers);
      * @example - To decrypt data with no debug mode output: $encryptedString = lib::encrypt($data, $identifiers, TRUE);
      *
@@ -221,6 +222,20 @@ class lib {
         return $encryptedDataMCRYPT;
     }
 
+    /**
+     *  This function uses curl to time how long it takes a page to load
+     *
+     * @param string &url The address of the page to ping
+     *
+     * @return string $timeMS The time in MS of how long the curl took
+     * @throws - Nothing
+     * @global - None
+     * @notes - None
+     * @example - $timeMS = lib::ping($url);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/10/2015
+     */
     public static function ping($url) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -251,6 +266,30 @@ class lib {
         return round($timeMS);
     }
 
+    /**
+     *  This function rediects the user to another page
+     *
+     * @param bool|NULL $withDelay A flag that determines if the redirect is going to use delay or not
+     * @param int|NULL $delay The number of seconds to delay
+     * @param bool|NULL $toReferer If the
+     * @param string $urlForRedirect The url to redirect to
+     *
+     * @return None
+     * @throws - Nothing
+     * @global - None
+     * @notes  -
+     *      - urlForRedirect is optional if you're going to the referer
+     *      - Ignores delay unless with delay is true
+     *  
+     * @example To redirect to referer with delay: lib::testConnection(true, 5, true);
+     * @example To redirect to referer with no delay: lib::testConnection(false, null, true);
+     * @example To redirect to another page with delay: lib::testConnection(true, 5, false, $url);
+     * @example To redirect to another page with no delay: lib::testConnection(false, 5, true, $url);
+     *
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/10/2015
+     */
     public static function redirect($withDelay = false, $delay = 5, $toReferer = true, $urlForRedirect) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();

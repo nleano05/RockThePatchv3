@@ -22,8 +22,7 @@ class log_util {
      * @notes
      *    - Currently only logs if gDebugMode is enabled
      *    - Currently does not take into account log level
-     * @todo Make this take into account log level
-     *
+     *  
      * @example - For just a message: log_util::log(LOG_LEVEL_DEBUG, "message");
      * @example - For a message with a resource: log_util::log(LOG_LEVEL_DEBUG, "message", $resource);
      *
@@ -71,7 +70,6 @@ class log_util {
      *    - Used at the end of methods
      *    - Currently only logs if gDebugMode is enabled
      *    - Currently does not take into account log level
-     * @todo - Make this take into account log level
      * @example - log_util::logDivider();
      * @author - Patches
      * @version - 1.0
@@ -97,7 +95,6 @@ class log_util {
      *    - Used at the start of methods
      *    - Currently only logs if gDebugMode is enabled
      *    - Currently does not take into account log level
-     * @todo - Make this take into account log level
      * @example - log_util::logFunctionStart();
      * @author - Patches
      * @version - 1.0

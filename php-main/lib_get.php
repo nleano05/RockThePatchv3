@@ -121,6 +121,20 @@ class lib_get {
         return $loginStatus;
     }
 
+    /**
+     *  This function returns the referer
+     *
+     * @param None
+     *
+     * @return string $referer
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $loginStatus = lib_get::referer();
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/10/2015
+     */
     public static function referer() {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
