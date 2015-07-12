@@ -1,6 +1,8 @@
 <!-- ### Style Adjustments for IE 7 ### -->
 <!--[if IE 7]>
 <style>
+    .share-button{margin: auto 15px;display: inline;}
+
     #social-media {
         margin-top: -7px;
     }
@@ -95,41 +97,41 @@ log_util::log(LOG_LEVEL_DEBUG, "currentURL: " . $currentURL);
         </p>
     </div>
 </div>
-<div id="validation">
-    <p>
-        <a href="http://validator.w3.org/check?uri=<?php echo($currentURL); ?>&amp;ss=1"
-           title="Check validation of this markup with HTML5 standards"><img src="/images/html5.png"
-                                                                             id="html5-validation-link"
-                                                                             alt="Check validation of this markup with HTML5 standards"
-                                                                             class="html5"/></a>
-            <a href="http://validator.w3.org/feed/check.cgi?url=https%3A//www.rockthepatch.com/rss/current-events.xml"
-               title="Check validation of the RSS Feed"><img src="/images/valid-rss.png"
-                                                             alt="Check validation of the RSS Feed" id="rss-validation-link"
-                                                             class="valid"/></a>
-
-            <a href="http://jigsaw.w3.org/css-validator/validator?uri=<?php echo($currentURLForCSS); ?>&amp;profile=css3"
-               title="Check validation of CSS stylesheets with CSS3 standards"><img src="/images/valid-css.png"
-                                                                                    id="css-validation-link"
-                                                                                    alt="Check validation of CSS stylesheets with CSS3 standards"
-                                                                                    class="valid"/></a>
-
-            <a href="http://validator.w3.org/check?uri=<?php echo($currentURL); ?>&amp;doctype=XHTML+1.1&amp;=1"
-               title="Check validation of this markup with XHTML 1.1 standards"><img src="/images/valid-xhtml11.png"
-                                                                                     id="xhtml-validation-link"
-                                                                                     alt="Check validation of this markup with XHTML 1.1 standards"
-                                                                                     class="valid"/></a>
-    </p>
-</div>
+<!--<div id="validation">-->
+<!--    <p>-->
+<!--        <a href="http://validator.w3.org/check?uri=--><?php //echo($currentURL); ?><!--&amp;ss=1"-->
+<!--           title="Check validation of this markup with HTML5 standards"><img src="/images/html5.png"-->
+<!--                                                                             id="html5-validation-link"-->
+<!--                                                                             alt="Check validation of this markup with HTML5 standards"-->
+<!--                                                                             class="html5"/></a>-->
+<!--        <a href="http://validator.w3.org/feed/check.cgi?url=https%3A//www.rockthepatch.com/rss/current-events.xml"-->
+<!--           title="Check validation of the RSS Feed"><img src="/images/valid-rss.png"-->
+<!--                                                         alt="Check validation of the RSS Feed" id="rss-validation-link"-->
+<!--                                                         class="valid"/></a>-->
+<!---->
+<!--        <a href="http://jigsaw.w3.org/css-validator/validator?uri=--><?php //echo($currentURLForCSS); ?><!--&amp;profile=css3"-->
+<!--           title="Check validation of CSS stylesheets with CSS3 standards"><img src="/images/valid-css.png"-->
+<!--                                                                                id="css-validation-link"-->
+<!--                                                                                alt="Check validation of CSS stylesheets with CSS3 standards"-->
+<!--                                                                                class="valid"/></a>-->
+<!---->
+<!--        <a href="http://validator.w3.org/check?uri=--><?php //echo($currentURL); ?><!--&amp;doctype=XHTML+1.1&amp;=1"-->
+<!--           title="Check validation of this markup with XHTML 1.1 standards"><img src="/images/valid-xhtml11.png"-->
+<!--                                                                                 id="xhtml-validation-link"-->
+<!--                                                                                 alt="Check validation of this markup with XHTML 1.1 standards"-->
+<!--                                                                                 class="valid"/></a>-->
+<!--    </p>-->
+<!--</div>-->
 <div class="clear"></div>
 <div id="contact-info">
     <p>
-        <strong>Created by:</strong> Patches, <a href="mailto:<?php if (isset($gMasterAdminEmail)) {
+        <strong>Created by:</strong> Patches,<br/> <a href="mailto:<?php if (isset($gMasterAdminEmail)) {
             echo($gMasterAdminEmail);
         } ?>?subject='Rock%20the%20Patch!'%20Email%20from%20user" title="Email <?php if (isset($gMasterAdminName)) {
             echo($gMasterAdminName);
         } ?>"><?php if (isset($gMasterAdminEmail)) {
                 echo($gMasterAdminEmail);
             } ?></a><br/>
-        <strong>Last Updated:</strong> <?php echo($timeModified . " GMT"); ?>
+        <strong>Updated:</strong> <?php echo($timeModified . " GMT"); ?>
     </p>
 </div>

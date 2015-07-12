@@ -3,10 +3,9 @@
  */
 @media screen and (min-width: 0px) and (max-width: 720px) {
     #content-area, #content-area-right, #content-area-left{width:100%;float:none;clear:both;}
-    #validation a {width: 100%;display: inline-block;margin: 5px;}
-
-    #feature-request, #recent-updates{border-left: 0;border-right:0;}
-
+    .share-button{width:100%;margin: 10px 0;padding:0;text-align: center;}
+    .share-button a{width: 100%;text-decoration: none;margin: 0;padding: 10px 0;text-align: center;}
+    #feature-request, #recent-updates, #rss {border-left: 0;border-right:0;}
     #login-mobile {
         display: inline-block;
         visibility: visible;

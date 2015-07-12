@@ -137,7 +137,7 @@ class lib {
      * @global - None
      * @notes
      *      - If identifiers is passed in as an array of strings, it will write out the same encryption data for each identifier
-     *  
+     *
      * @example - To encrypt data with debug mode output (if enabled): $encryptedString = lib::encrypt($data, $identifiers);
      * @example - To decrypt data with no debug mode output: $encryptedString = lib::encrypt($data, $identifiers, TRUE);
      *
@@ -280,7 +280,7 @@ class lib {
      * @notes  -
      *      - urlForRedirect is optional if you're going to the referer
      *      - Ignores delay unless with delay is true
-     *  
+     *
      * @example To redirect to referer with delay: lib::testConnection(true, 5, true);
      * @example To redirect to referer with no delay: lib::testConnection(false, null, true);
      * @example To redirect to another page with delay: lib::testConnection(true, 5, false, $url);

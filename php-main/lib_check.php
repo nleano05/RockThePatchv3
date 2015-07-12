@@ -167,10 +167,10 @@ class lib_check {
             $args[$parameter->name] = ${$parameter->name};
         }
         log_util::logFunctionStart($args);
-        $pattern = strtr($needle, array(
+        $pattern = strtr($needle, [
             '*' => '.*?', // 0 or more (lazy) - asterisk (*)
             '?' => '.', // 1 character - question mark (?)
-        ));
+        ]);
         log_util::logDivider();
         return preg_match("/$pattern/", $haystack);
     }

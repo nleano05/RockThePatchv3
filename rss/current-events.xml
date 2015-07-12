@@ -3,6 +3,7 @@
 <?xml-stylesheet type="text/xsl" href="../rss/current-events.xsl"?>
 <?xml-stylesheet type="text/css" href="../css/rss.css"?>
 
+<!--suppress XmlUnboundNsPrefix -->
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <language>en-us</language>

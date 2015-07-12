@@ -22,7 +22,6 @@ class log_util {
      * @notes
      *    - Currently only logs if gDebugMode is enabled
      *    - Currently does not take into account log level
-     *  
      * @example - For just a message: log_util::log(LOG_LEVEL_DEBUG, "message");
      * @example - For a message with a resource: log_util::log(LOG_LEVEL_DEBUG, "message", $resource);
      *
