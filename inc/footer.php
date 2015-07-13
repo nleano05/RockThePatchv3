@@ -1,7 +1,10 @@
 <!-- ### Style Adjustments for IE 7 ### -->
 <!--[if IE 7]>
 <style>
-    .share-button{margin: auto 15px;display: inline;}
+    .share-button {
+        margin: auto 15px;
+        display: inline;
+    }
 
     #social-media {
         margin-top: -7px;
@@ -26,56 +29,74 @@ log_util::log(LOG_LEVEL_DEBUG, "currentURL: " . $currentURL);
 <div id="social-media">
     <!--suppress HtmlUnknownTarget -->
     <a href="aim:addbuddy?screenname=isuPatches"><img src="/images/social-media/aim.png"
-                                                      class="aim-icon"
+                                                      onmouseover="this.src='/images/social-media/aim-hoover.png'"
+                                                      onmouseout="this.src='/images/social-media/aim.png'"
                                                       alt="Add Patches on AIM"
                                                       title="Add Patches on AIM"/></a>
     <a href="https://www.facebook.com/isuPatches"><img src="/images/social-media/facebook.png"
-                                                       class="facebook-icon"
+                                                       onmouseover="this.src='/images/social-media/facebook-hoover.png'"
+                                                       onmouseout="this.src='/images/social-media/facebook.png'"
                                                        alt="Add Patches on Facebook"
                                                        title="Add Patches on Facebook"/></a>
     <a href="https://www.facebook.com/rockthepatch"><img src="/images/social-media/facebook-alt.png"
-                                                         class="facebook-alt-icon"
+                                                         onmouseover="this.src='/images/social-media/facebook-alt-hoover.png'"
+                                                         onmouseout="this.src='/images/social-media/facebook-alt.png'"
                                                          alt="Like Patches' Facebook Fan Page"
                                                          title="Like Patches' Facebook Fan Page"/></a>
     <a href="https://github.com/isuPatches"><img src="/images/social-media/github.png"
-                                                 class="github-icon"
+                                                 onmouseover="this.src='/images/social-media/github-hoover.png'"
+                                                 onmouseout="this.src='/images/social-media/github.png'"
                                                  alt="Follow Patches on GitHub"
                                                  title="Follow Patches on GitHub"/></a>
     <a href="https://plus.google.com/u/0/+SarahKlinefelter89/posts"><img src="/images/social-media/google-plus.png"
-                                                                         class="google-plus-icon"
+                                                                         onmouseover="this.src='/images/social-media/google-plus-hoover.png'"
+                                                                         onmouseout="this.src='/images/social-media/google-plus.png'"
                                                                          alt="Add Patches on Google+"
                                                                          title="Add Patches on Google+"/></a>
     <a href="http://pinterest.com/isuPatches/"><img src="/images/social-media/pinterest.png"
-                                                    class="pinterest-icon"
+                                                    onmouseover="this.src='/images/social-media/pinterest-hoover.png'"
+                                                    onmouseout="this.src='/images/social-media/pinterest.png'"
                                                     alt="Follow Patches on Pintrest"
                                                     title="Follow Patches on Pintrest"/></a>
     <a href="http://www.last.fm/user/isuPatches"><img src="/images/social-media/lastfm.png"
-                                                      class="lastfm-icon"
+                                                      onmouseover="this.src='/images/social-media/lastfm-hoover.png'"
+                                                      onmouseout="this.src='/images/social-media/lastfm.png'"
                                                       alt="Add Patches on Last FM"
                                                       title="Add Patches on Last FM"/></a>
     <a href="https://www.linkedin.com/pub/sarah-klinefelter/a8/b35/979"><img src="/images/social-media/linkedin.png"
-                                                                             class="linkedin-icon"
+                                                                             onmouseover="this.src='/images/social-media/linkedin-hoover.png'"
+                                                                             onmouseout="this.src='/images/social-media/linkedin.png'"
                                                                              alt="Connect with Patches on LinkedIN"
                                                                              title="Connect with Patches on LinkedIN"/></a>
     <a href="http://www.pandora.com/profile/isupatches"><img src="/images/social-media/pandora.png"
-                                                             class="pandora-icon"
+                                                             onmouseover="this.src='/images/social-media/pandora-hoover.png'"
+                                                             onmouseout="this.src='/images/social-media/pandora.png'"
                                                              alt="Add Patches on Pandora Radio"
                                                              title="Add Patches on Pandora Radio"/></a>
-    <a href="https://www.rockthepatch.com/rss/current-events.xml" type="application/rss+xml"><img
-            src="/images/icons-and-logos/rss.png" class="rss-icon" alt="View or Subscribe to Patches' RSS Feed" title="Patches' RSS Feed"/></a>
+    <a href="https://www.rockthepatch.com/rss/current-events.xml" type="application/rss+xml"><img src="/images/icons-and-logos/rss.png"
+                                                                                                  onmouseover="this.src='/images/icons-and-logos/rss-hoover.png'"
+                                                                                                  onmouseout="this.src='/images/icons-and-logos/rss.png'"
+                                                                                                  alt="View or Subscribe to Patches' RSS Feed"
+                                                                                                  title="Patches' RSS Feed"/></a>
     <a href="https://soundcloud.com/isupatches"><img src="/images/social-media/soundcloud.png"
-                                                     class="soundcloud-icon"
+                                                     onmouseover="this.src='/images/social-media/soundcloud-hoover.png'"
+                                                     onmouseout="this.src='/images/social-media/soundcloud.png'"
                                                      alt="Follow Patches on SoundCloud"
                                                      title="Follow Patches on SoundCloud"/></a>
     <a href="http://twitter.com/#!/isuPatches"><img src="/images/social-media/twitter.png"
-                                                    alt="Follow Patches on Twitter" title="Follow Patches on Twitter"/></a>
+                                                    onmouseover="this.src='/images/social-media/twitter-hoover.png'"
+                                                    onmouseout="this.src='/images/social-media/twitter.png'"
+                                                    alt="Follow Patches on Twitter"
+                                                    title="Follow Patches on Twitter"/></a>
     <!--suppress HtmlUnknownTarget -->
     <a href="ymsgr:addfriend?isuPatches"><img src="/images/social-media/yahoo.png"
-                                              class="yahoo-icon"
+                                              onmouseover="this.src='/images/social-media/yahoo-hoover.png'"
+                                              onmouseout="this.src='/images/social-media/yahoo.png'"
                                               alt="Add Patches on Yahoo Messenger"
                                               title="Add Patches on Yahoo Messenger"/></a>
     <a href="http://www.youtube.com/isuPatches"><img src="/images/social-media/youtube.png"
-                                                     class="youtube-icon"
+                                                     onmouseover="this.src='/images/social-media/youtube-hoover.png'"
+                                                     onmouseout="this.src='/images/social-media/youtube.png'"
                                                      alt="Subscribe to Patches on YouTube"
                                                      title="Subscribe to Patches on YouTube"/></a>
 </div>

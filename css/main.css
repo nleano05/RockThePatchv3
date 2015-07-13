@@ -93,21 +93,9 @@ textarea{resize:none;}
 * Styles for footer area
 */
 #footer{background:#000000;margin:10px 0 0 0;padding:0;height:auto;width:100%;clear:both;}
-
 #social-media{width:100%;text-align:center;background:#76FF03;margin:0;padding:0;clear:both;}
 #social-media a{margin:0;padding:0;text-decoration: none; border: 0;}
-#social-media img{margin:10px 20px;padding:0;width: 48px;height: auto;}
-/*.aim-icon{content: url('../images/social-media/aim.png');}*/
-.aim-icon:hover{content: url('../images/social-media/aim-hoover.png');}
-.aim-icon:hover::after{content: url('../images/social-media/aim-hoover.png');}
-.facebook-icon::after{content:url('../images/social-media/facebook-hoover.png');}
-.facebook-alt-icon:hover{content:url('../images/social-media/facebook-alt-hoover.png');}
-.github-icon:hover{content:url('../images/social-media/github-hoover.png');}
-
-.pinterest-icon:hover{content:url('../images/social-media/pinterest-hoover.png');}
-.yahoo-icon:hover{content:url('../images/social-media/yahoo-hoover.png');}
-.youtube-icon:hover{content:url('../images/social-media/youtube-hoover.png');}
-
+#social-media img{margin:15px 20px 10px 20px;padding:0;width: 48px;height: auto;}
 #note {width:100%;text-align:center;padding:0;margin: 0;}
 #note p {padding:20px;margin: 0;color:#ffffff;}
 #share-buttons{width:100%;text-align:center;margin:0;padding:0;}
