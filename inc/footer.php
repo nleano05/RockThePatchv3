@@ -18,9 +18,6 @@
 <?php
 $currentURL = lib_get::currentUrl();
 
-$currentURLForCSS = $currentURL;
-log_util::log(LOG_LEVEL_DEBUG, "currentURLForCSS: " . $currentURLForCSS);
-
 $currentURL = "https://" . $currentURL;
 log_util::log(LOG_LEVEL_DEBUG, "currentURL: " . $currentURL);
 

@@ -79,6 +79,14 @@ textarea{resize:none;}
 #recent-updates p{font-size:1.0em;padding:10px;margin:0;}
 #recent-updates a{font-size:1.1em;}
 
+
+/**
+* Styles for validation area
+*/
+#validation{padding: 0;margin: 0;text-align: center;}
+.html5-icon{width:65px;margin: 10px;}
+.validation-icon{margin:10px;}
+
 /**
 * Styles for RSS area
 */
