@@ -30,6 +30,9 @@ if (!isset($_COOKIE['debugMode'])) {
     $gDebugMode = $_COOKIE['debugMode'];
 }
 
+/**
+ * This class contains core function of the site that are not related to get, database, and other operations
+ */
 class lib {
 
     /**
@@ -130,7 +133,7 @@ class lib {
      *
      * @param string $data The data to be encrypted
      * @param string|array $identifiers The identifiers the encrypted data is to be connected to
-     * @param bool|NULL $noDebugModeOutput Wether this displays output if debug mode is enabled
+     * @param bool|NULL $noDebugModeOutput Whether this displays output if debug mode is enabled
      *
      * @return string $encryptedDataMCRYPT The string of encrypted data
      * @throws - Nothing
@@ -225,7 +228,7 @@ class lib {
     /**
      *  This function uses curl to time how long it takes a page to load
      *
-     * @param string &url The address of the page to ping
+     * @param string $url The address of the page to ping
      *
      * @return string $timeMS The time in MS of how long the curl took
      * @throws - Nothing
@@ -267,7 +270,7 @@ class lib {
     }
 
     /**
-     *  This function rediects the user to another page
+     *  This function redirects the user to another page
      *
      * @param bool|NULL $withDelay A flag that determines if the redirect is going to use delay or not
      * @param int|NULL $delay The number of seconds to delay

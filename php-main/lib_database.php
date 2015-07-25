@@ -198,6 +198,22 @@ class lib_database {
         return $emailDistros;
     }
 
+    /**
+     *  This
+     *
+     * @param string $identifier The identifier of the encryption object to get from the database
+     * @param bool|null $noDebugModeOutput Whether or not to display output for debug mode if enabled
+     *
+     * @return EncryptionData|null
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - To get encryption data with output for debug mode if enabled: $encryptionData = lib_database::getEncryptionData($identifier);
+     * @example - To get encryption data with no output even if debug mode is enabled: $encryptionData = lib_database::getEncryptionData($identifier, TRUE);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 07/10/2015
+     */
     public static function getEncryptionData($identifier, $noDebugModeOutput = FALSE){
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -469,7 +485,7 @@ class lib_database {
                 log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
             }
 
-            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, key=?, iv=?, time=? WHERE idenifier = ?");
+            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, key=?, iv=?, time=? WHERE identifier = ?");
             $stmt->bindParam(1, $encryptionData->getCipher(), PDO::PARAM_STR);
             $stmt->bindParam(2, $encryptionData->getKey(), PDO::PARAM_STR);
             $stmt->bindParam(3, $encryptionData->getIv(), PDO::PARAM_STR);
@@ -491,7 +507,7 @@ class lib_database {
     /**
      *  This function writes encryption data out to the database
      *
-     * @param EncryptionData $encryptionData The enncryption data to be written out
+     * @param EncryptionData $encryptionData The encryption data to be written out
      * @param bool|NULL $noDebugModeOutput If debug mode output is echoed out or not
      *
      * @return None

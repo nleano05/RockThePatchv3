@@ -37,7 +37,7 @@ textarea{resize:none;}
 */
 #content-area{width:53%;height:auto;min-height:330px;margin:0;padding:15px 0;float:left;}
 #content-area p{padding:7px 20px 7px 20px;margin:0;line-height:150%;}
-#content-area h1{padding:7px 20px 7px 20px;margin:0;font-size:1.4em;}
+#content-area h1{padding:7px 20px 7px 20px;margin:0;font-size:1.3em;}
 #content-area h2{padding:7px 20px 7px 20px;margin:0;color:#D358F7;font-size:1.1em;}
 #content-area ul{line-height:150%;margin:7px;}
 #content-area ul li{color:#fff;padding: 0 5px;margin:0;font-size:.9em;}
@@ -50,10 +50,10 @@ textarea{resize:none;}
 * Styles for login area
 */
 #login{margin:10px 0 0 0;padding:0;background:black;width:100%;height:auto;display:inline-block;min-width:210px;border-bottom:1px #fff solid;border-left: 2px #fff solid;}
-#login p, #login-mobile p{color:#fff;padding:10px;margin:0;}
-#login a, #login-mobile a{font-size:1.3em;}
+#login p, #login-mobile p{color:#fff;padding:10px;margin:0;font-size:1.1em;}
+#login a, #login-mobile a{font-size:1.1em;}
 #login input.user-input, #login-mobile input.user-input{margin:5px 10px 5px 10px;width:80%;text-align:center;}
-#login h1, #login-mobile h1{font-size:1.4em;padding:5px;margin:5px;background:#76FF03;}
+#login h1, #login-mobile h1{font-size:1.3em;padding:5px;margin:5px;background:#76FF03;}
 #login-mobile{display:none;visibility:hidden;width:0;height:0;}
 .forgot-register{float:left;padding:5px;margin:0;font-size:.8em;}
 .login-field{font-size:1.1em;}
@@ -63,7 +63,7 @@ textarea{resize:none;}
 */
 #error-report, #feature-request{background:#ffffff;margin:10px 0 10px 0;padding:0;width:100%;height:auto;border:2px #111 solid;}
 #error-report-mobile h1{font-size:1.3em;padding:10px;margin:0;font-weight:bold;background:#76FF03;text-align:center;border-top:2px #111 solid;border-bottom:2px #111 solid;}
-#error-report h1, #error-report-mobile h1, #feature-request h1{font-size:1.3em;padding:10px;margin:0;font-weight:bold;background:#76FF03;text-align:center;border-bottom:2px #111 solid;}
+#error-report h1, #error-report-mobile h1, #feature-request h1{font-size:1.2em;padding:10px;margin:0;font-weight:bold;background:#76FF03;text-align:center;border-bottom:2px #111 solid;}
 #error-report p, #error-report-mobile p, #feature-request p{font-size:1.0em;padding:10px;margin:0;}
 #error-report a, #error-report-mobile a, #feature-request a{font-size:1.1em;word-break:break-all;}
 #error-report-mobile{display:none;visibility:hidden;width:0;height:0;}
@@ -74,7 +74,7 @@ textarea{resize:none;}
 * Styles for recent updates area
 */
 #recent-updates{margin:10px 0 10px 0;padding:0;width:100%;height:auto;background:#ffffff;border:2px #111 solid;}
-#recent-updates h1{font-size:1.4em;padding:10px;margin:0;font-weight:bold;background:#76FF03;text-align:center;border-bottom:2px #111 solid;}
+#recent-updates h1{font-size:1.3em;padding:10px;margin:0;font-weight:bold;background:#76FF03;text-align:center;border-bottom:2px #111 solid;}
 #recent-updates h2{font-size:1.2em;padding:10px;margin:0;font-weight:bold;}
 #recent-updates p{font-size:1.0em;padding:10px;margin:0;}
 #recent-updates a{font-size:1.1em;}
@@ -84,18 +84,19 @@ textarea{resize:none;}
 * Styles for validation area
 */
 #validation{padding: 0;margin: 0;text-align: center;}
-.html5-icon{width:65px;margin: 10px;}
+.html5-icon{width:60px;margin: 10px;}
 .validation-icon{margin:10px;}
 
 /**
 * Styles for RSS area
 */
-#rss{position: relative;width:100%;padding:0;margin:0 0 10px 0;font-size:1.0em;line-height:140%;background:#ffffff;border:2px #111 solid;}
-#rss h1{font-size:1.4em;font-weight:bold;padding:10px 0 10px 0;margin:0;background:#76FF03;width:100%;text-align:center;border-bottom:2px #111 solid;}
-#rss h2{font-size:1.1em;font-weight:bold;padding:0 10px 0 10px;margin:0;}
-#rss dt{padding:0 10px 0 10px;color:#212121;}
-.rss-icon{width:60px;padding:0;margin: 0;position:absolute;right: 15px;bottom: 10px;}
-.rss-click{font-weight:bold;color:#76FF03;padding:10px;height: auto;}
+#rss{position: relative;width:100%;padding:0;margin:0 0 10px 0;font-size:1.0em;line-height:140%;background:#111;border:2px #111 solid;}
+#rss h1{font-size:1.3em;font-weight:bold;padding:10px 0 10px 0;margin:0;background:#76FF03;width:100%;text-align:center;border-bottom:2px #111 solid;}
+#rss h2{font-size:1.2em;font-weight:bold;padding:0 10px 0 10px;margin:0;}
+#rss dt{padding:0 10px 0 10px;font-size: 1.0em;word-break:break-all;color: #ffffff;}
+#rss-feed{float:left;width: 85%;}
+.rss-icon{width:40px;padding:0;margin: 0;float: left;position: absolute;bottom: 15px; right: 10px;}
+.rss-click{font-weight:bold;color:#76FF03;padding:10px;height: auto;float: right;}
 
 /**
 * Styles for footer area
@@ -103,12 +104,12 @@ textarea{resize:none;}
 #footer{background:#000000;margin:10px 0 0 0;padding:0;height:auto;width:100%;clear:both;}
 #social-media{width:100%;text-align:center;background:#76FF03;margin:0;padding:0;clear:both;}
 #social-media a{margin:0;padding:0;text-decoration: none; border: 0;}
-#social-media img{margin:15px 20px 10px 20px;padding:0;width: 48px;height: auto;}
+#social-media img{margin:10px 20px 5px 20px;padding:0;width: 40px;height: auto;}
 #note {width:100%;text-align:center;padding:0;margin: 0;}
 #note p {padding:20px;margin: 0;color:#ffffff;}
 #share-buttons{width:100%;text-align:center;margin:0;padding:0;}
 .share-button{margin: 0 15px;padding:0;display: inline-block;text-align: center;}
-.share-button a{color: #000000;display:block;width:180px;text-decoration: none;background: #76FF03;margin: 0;padding: 10px 15px;float: left;text-align: center;}
+.share-button a{color: #000000;display:block;width:180px;text-decoration: none;background: #76FF03;margin: 0;padding: 5px 10px;float: left;text-align: center;}
 .share-button a:hover{background: #B2FF59;}
 .share-button p{text-align: center;padding:0;font-weight: bold;}
 #v3 {padding: 0 25px 25px 0;margin:0;}

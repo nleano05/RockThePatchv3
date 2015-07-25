@@ -95,7 +95,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         // "/images/index-slide-show/training.jpg"
         // );
 
-        // preloadImages(additionalImages);
+         preloadImages();
     </script>
 
     <!-- ### Javascript for the Slide Show / Gallery on the main page  -->
@@ -197,11 +197,6 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             <?php include('inc/rss-index.php'); ?>
         </div>
         <!-- ### END RSS feed ### -->
-        <!-- ### START validation ### -->
-        <div id="validation">
-            <?php include("inc/validation.php"); ?>
-        </div>
-        <!-- ### END validation ### -->
     </div>
     <!-- ### END content-area-right ### -->
     <!-- ### START Footer ### -->
