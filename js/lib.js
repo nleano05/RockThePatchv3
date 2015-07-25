@@ -1,12 +1,12 @@
 function preloadImages(additionalImages) {
     var mainImages = [
-        "/images/html5.png",
-        "/images/html5-hoover.png",
+        "/images/validation/html5.png",
+        "/images/validation/html5-hoover.png",
         "/images/icons-and-logos/rss.png",
         "/images/icons-and-logos/rss-hoover.png",
-        "/images/valid-css.png",
-        "/images/valid-rss.png",
-        "/images/valid-xhtml11.png",
+        "/images/validation/valid-css.png",
+        "/images/validation/valid-rss.png",
+        "/images/validation/valid-xhtml11.png",
         "/images/social-media/aim.png",
         "/images/social-media/aim-hoover.png",
         "/images/social-media/facebook.png",

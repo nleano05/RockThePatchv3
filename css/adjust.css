@@ -2,10 +2,32 @@
  *  Bulk of mobile logic should go here
  */
 @media screen and (min-width: 0px) and (max-width: 720px) {
-    #content-area, #content-area-right, #content-area-left{width:100%;float:none;clear:both;}
-    .share-button{width:100%;margin: 10px 0;padding:0;text-align: center;}
-    .share-button a{width: 100%;text-decoration: none;margin: 0;padding: 10px 0;text-align: center;}
-    #feature-request, #recent-updates, #rss {border-left: 0;border-right:0;}
+    #content-area, #content-area-right, #content-area-left {
+        width: 100%;
+        float: none;
+        clear: both;
+    }
+
+    .share-button {
+        width: 100%;
+        margin: 10px 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    .share-button a {
+        width: 100%;
+        text-decoration: none;
+        margin: 0;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    #recent-updates, #rss {
+        border-left: 0;
+        border-right: 0;
+    }
+
     #login-mobile {
         display: inline-block;
         visibility: visible;
@@ -27,19 +49,19 @@
         height: 0;
     }
 
-    #error-report-mobile {
+    #interactions-mobile {
         display: block;
         visibility: visible;
-        margin: 10px 0 10px 0;
+        margin: 0 0 10px 0;
         padding: 0;
-        width: 100%;
+        width: auto;
+        text-align: center;
         height: auto;
-        background: #fff;
+        background: #111111;
         float: none;
-        border-bottom:2px #111 solid;
     }
 
-    #error-report {
+    #interactions {
         display: none;
         visibility: hidden;
         width: 0;

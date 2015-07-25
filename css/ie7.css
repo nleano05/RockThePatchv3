@@ -1,0 +1,13 @@
+#nav-bar ul li {
+    display: inline;
+}
+
+#nav-bar ul li:hover ul {
+    position: absolute;
+    margin-top: 40px;
+    margin-left: -171px;
+}
+
+#user-nav ul li {
+    display: inline;
+}

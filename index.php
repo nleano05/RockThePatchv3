@@ -47,21 +47,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### Style Adjustments for IE 7 ### -->
     <!--[if IE 7]>
-    <style>
-        #nav-bar ul li {
-            display: inline;
-        }
-
-        #nav-bar ul li:hover ul {
-            position: absolute;
-            margin-top: 34px;
-            margin-left: -171px;
-        }
-
-        #user-nav ul li {
-            display: inline;
-        }
-    </style>
+        <link rel="stylesheet" href="/css/ie7.css" type="text/css" media="screen"/>
     <![endif]-->
 
     <!-- ### Favicons ### -->
@@ -163,11 +149,11 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             <p><em><a href="/recent-updates-log.php" title="Recent Updates Log">Want to see more?</a></em></p>
         </div>
         <!-- ### END recent-updates ### -->
-        <!-- ### START error-report ### -->
-        <div id="error-report">
-            <?php include("inc/error-report.php"); ?>
+        <!-- ### START contact-info ### -->
+        <div id="interactions">
+            <?php include("inc/interactions.php"); ?>
         </div>
-        <!-- ### END error-report ### -->
+        <!-- ### END contact-info ### -->
     </div>
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
@@ -182,21 +168,21 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             <?php include("inc/login.php"); ?>
         </div>
         <!-- ### END login ### -->
-        <!-- ### START error-report-mobile ### -->
-        <div id="error-report-mobile">
-            <?php include("inc/error-report.php"); ?>
+        <!-- ### START contact-info ### -->
+        <div id="interactions-mobile">
+            <?php include("inc/interactions.php"); ?>
         </div>
-        <!-- ### END error-report ### -->
-        <!-- ### START feature-request ### -->
-        <div id="feature-request">
-            <?php include("inc/feature-request.php"); ?>
-        </div>
-        <!-- ### END feature-request ### -->
+        <!-- ### END contact-info ### -->
         <!-- ### START RSS feed ### -->
         <div id="rss">
             <?php include('inc/rss-index.php'); ?>
         </div>
         <!-- ### END RSS feed ### -->
+        <!-- ### START validation ### -->
+        <div id="validation">
+            <?php include("inc/validation.php"); ?>
+        </div>
+        <!-- ### END validation ### -->
     </div>
     <!-- ### END content-area-right ### -->
     <!-- ### START Footer ### -->
