@@ -10,7 +10,7 @@ log_util::log(LOG_LEVEL_DEBUG, "currentURL: " . $currentURL);
 <p>
     <a href="http://validator.w3.org/check?uri=<?php echo($currentURL); ?>&amp;ss=1"
        title="Check validation of this markup with HTML5 standards"><img src="/images/validation/html5.png"
-                                                                         onmouseover="this.src='/images/validation/html5-hoover.png'"
+                                                                         onmouseover="this.src='/images/validation/html5-hover.png'"
                                                                          onmouseout="this.src='/images/validation/html5.png'"
                                                                          id="html5-validation-link"
                                                                          alt="Check validation of this markup with HTML5 standards"

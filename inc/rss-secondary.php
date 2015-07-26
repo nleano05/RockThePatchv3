@@ -6,7 +6,7 @@
 </div>
 <p class="rss-click">
     <a href="../rss/current-events.xml" type="application/rss+xml"><img src="/images/icons-and-logos/rss.png"
-                                                                        onmouseover="this.src='/images/icons-and-logos/rss-hoover.png'"
+                                                                        onmouseover="this.src='/images/icons-and-logos/rss-hover.png'"
                                                                         onmouseout="this.src='/images/icons-and-logos/rss.png'"
                                                                         alt="RSS Icon"
                                                                         title="View Patches' RSS Feed"

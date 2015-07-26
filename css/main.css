@@ -257,7 +257,7 @@ textarea {
 }
 
 .login-field-container p {
-    margin:0;
+    margin: 0;
     padding-left: 15px;
     text-align: left;
     font-size: 1.1em;
@@ -265,7 +265,7 @@ textarea {
 
 .login-field-container input {
     width: 95%;
-    padding:5px auto;
+    padding: 5px auto;
 }
 
 .forgot-register {
@@ -315,21 +315,20 @@ textarea {
 }
 
 /**
-* Styles for footer area
+* Styles for the interactions area
 */
 #interactions {
-    padding: 0 0 15px 0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     width: 100%;
-    height: auto;
     background: #111111;
 }
 
-#interactions-mobile{
-    display:none;
-    visibility:hidden;
-    width:0;
-    height:0;
+#interactions-mobile {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
 
 #interactions h1, #interactions-mobile h1 {
@@ -345,20 +344,35 @@ textarea {
 
 #interactions p, #interactions-mobile p {
     color: #ffffff;
-    padding: 10px 15px 10px 25px;
-}
-
-#interactions img, #interactions-mobile img {
-    width:40px;
-    height: 40px;
-    margin: 0 15px 0 15px;
-    padding: 0;
 }
 
 #interactions a, #interactions-mobile a {
     margin: 0;
     padding: 0;
     font-size: 0.9em;
+}
+
+.interactions-description {
+    padding: 10px 10px 20px 10px;
+    margin: 0;
+    text-align: center;
+}
+
+.interactions-section {
+    padding-left:40px;
+    padding-bottom: 20px;
+}
+
+.feature-request-img {
+     width: 40px;
+     height: 40px;
+     vertical-align: middle;
+}
+
+.error-report-img {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
 }
 
 /**
