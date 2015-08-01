@@ -128,6 +128,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             <ul>
                 <li><a href="/" title="Home">Home</a></li>
                 <li><a href="/about-patches.php" title="About Patches">About Patches</a></li>
+                <li><a href="/about-the-revamp.php" title="About The Revamp">About The Revamp</a></li>
                 <li>About This Site
                     <ul>
                         <li><a href="/site-map.php" title="Site Map">Site Map</a></li>
