@@ -1,3 +1,44 @@
+/**
+ *  This function hides an element/object on the screen
+ *
+ * @param what the element or object to hide
+ *
+ * @return Nothing
+ * @throws - Nothing
+ * @global - None
+ * @notes  - None
+ *
+ * @example - onclick="hidePageElement('possible-limitations')"
+ *
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 08/01/2015
+ */
+function hidePageElement(what) {
+    var obj = typeof what == 'object' ? what : document.getElementById(what);
+
+    obj.style.display = 'none';
+}
+
+/**
+ *  This function preloads images so the load time is better
+ *
+ * @param additionalImages array An array of additional images to preload for a page
+ *
+ * @return Nothing
+ * @throws - Nothing
+ * @global - None
+ * @notes
+ *      - Has a default list of images to preload that should be valid for all sections
+ *      - Can pass in array of additonal image locations to preload for images not specific to all pages
+ *
+ * @example - preloadImages();
+ * @example - preloadImages(additionalImages();
+ *
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 08/01/2015
+ */
 function preloadImages(additionalImages) {
     var mainImages = [
         "/images/validation/html5.png",
@@ -47,14 +88,12 @@ function preloadImages(additionalImages) {
 
     var preloadArray = [];
 
-    // Handles the images common to all pages
-    for (i = 0; i < mainImages.length; i++) {
+    for (var i = 0; i < mainImages.length; i++) {
         preloadArray[i] = new Image();
         preloadArray[i].src = mainImages[i];
     }
 
     if(additionalImages !== undefined) {
-        // Handles the additional images that are passed in (for images specific to only certain pages)
         for(i = 0; i < additionalImages.length; i++) {
             preloadArray[i] = new Image();
             preloadArray[i].src = additionalImages[i];
@@ -62,6 +101,46 @@ function preloadImages(additionalImages) {
     }
 }
 
+
+/**
+ *  This function makes an element/object on the screen visible
+ *
+ * @param what the element or object to show
+ *
+ * @return Nothing
+ * @throws - Nothing
+ * @global - None
+ * @notes  - None
+ *
+ * @example - onclick="showPageElement('possible-limitations')"
+ *
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 08/01/2015
+ */
+function showPageElement(what)  {
+    var obj = typeof what == 'object' ? what : document.getElementById(what);
+
+    obj.style.display = 'block';
+}
+
+
+/**
+ *  This function toggles the visibility of an element/object on the screen depending on if it's currently visible or not
+ *
+ * @param what the element or object to toggle the visibility of
+ *
+ * @return Nothing
+ * @throws - Nothing
+ * @global - None
+ * @notes  - None
+ *
+ * @example - onclick="togglePageElementVisibility('possible-limitations')"
+ *
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 08/01/2015
+ */
 function togglePageElementVisibility(what) {
     var obj = typeof what == 'object' ? what : document.getElementById(what);
 
@@ -70,6 +149,4 @@ function togglePageElementVisibility(what) {
     } else {
         obj.style.display = 'none';
     }
-
-    return false;
 }

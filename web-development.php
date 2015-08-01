@@ -25,7 +25,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Templates</title>
+    <title>Rock the Patch! v3 - Web Development</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -83,8 +83,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    document.getElementById("about-this-site").className  = "current";
-                    document.getElementById("templates").className  = "current";
+                    document.getElementById("tech-work").className  = "current";
+                    document.getElementById("web-development").className  = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
@@ -118,24 +118,45 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Templates</div>
-        <h1>Templates</h1>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Tech Work / Web Development</div>
+        <h1>Web Development</h1>
 
-        <p>Over the course of writing the first, second,a nd even third versions of this site, I have mixed and mashed several different
-            HTML5, responsive, and liquid templates so all credit goes to the respective creators.</p>
-
-        <h2>Templates I Borrowed From</h2>
+        <h2>Languages and Skills Acquired</h2>
 
         <ul>
-            <li><a href="http://designshack.net/?p=20665" title="Check out the Skeleton Tempalte">Skeleton</a></li>
-            <li><a href="http://html5boilerplate.com/" title="Check out the HTML5 Boilerplate">HTML5 Boilerplate</a></li>
-            <li><a href="http://weblion.psu.edu/" title="Check out Web Lion from Penn State">Penn State's Web Lion</a></li>
+            <li>HTML 5</li>
+            <li>XHTML 1.1</li>
+            <li>CSS and Print CSS</li>
+            <li>Media Query CSS work to adjust based on screen size</li>
+            <li>PHP / OOPhp</li>
+            <li>jQuery Implementation and Editing</li>
+            <li>JavaScript</li>
+            <li>phpMyAdmin and MySQL</li>
+            <li>XML</li>
+            <li>XSL(T)</li>
         </ul>
 
-        <p><em>My coding style has also developed from my programming experiences at Metova, Interactive Intelligence, and ISU
-            and my personal best practices standards have stemmed fom them as well.  Props to all of the amazing co-workers
-            that I am and have worked with.</em></p>
+        <h2>Courses and Work Experience</h2>
 
+        <ul>
+            <li>Assistant Web Programmer at ISU (September 2010 - May 2012)</li>
+            <li>Took Web Programming I and Web Programming II courses at ISU (2009 and 2011)</li>
+            <li>Took Computer Operations and Programming at JELCC (2005 - 2007)</li>
+            <li>Attended Web Design Camp at the Indianapolis Art Museum</li>
+        </ul>
+
+        <h2>Software / Tools Worked With</h2>
+        <ul>
+            <li>EasyPHP (<em>Used to have a local web server instance to test code before pushing to production</em>)</li>
+            <li>Microsoft Visual Studio.NET 2003-2013 (<em>Used for HTML and Script Editing - very rare</em>)</li>
+            <li>Notepad++ (<em>Used for HTML and Script Editing - frequently</em>)</li>
+            <li>SharePoint Designer 2007 (<em>Used for HTML editing - rare</em>)</li>
+            <li>Dream Weaver (<em>Used for HTML editing - rare</em>)</li>
+            <li>Adobe CS5 Web Premium Suite (<em>Used for image editing and flash - rare</em>)</li>
+            <li>GIMP 2.6 / GIMP 2.8 (<em>Used for image editing and creation - frequently</em>)</li>
+            <li>IE Tester (<em>Used for testing different versions of IE - frequently</em>)</li>
+            <li>FileZillia (<em>Used for FTP - frequently</em>)</li>
+        </ul>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->

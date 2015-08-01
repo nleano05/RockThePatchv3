@@ -25,12 +25,13 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Templates</title>
+    <title>Rock the Patch! v3 - Programming</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
     <meta name="author" content="Patches"/>
-    <meta name="keywords" content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
+    <meta name="keywords"
+          content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -83,8 +84,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    document.getElementById("about-this-site").className  = "current";
-                    document.getElementById("templates").className  = "current";
+                    document.getElementById("tech-work").className = "current";
+                    document.getElementById("programming").className = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
@@ -118,24 +119,129 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Templates</div>
-        <h1>Templates</h1>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Tech Work / Programming</div>
 
-        <p>Over the course of writing the first, second,a nd even third versions of this site, I have mixed and mashed several different
-            HTML5, responsive, and liquid templates so all credit goes to the respective creators.</p>
+        <h1>Programming</h1>
 
-        <h2>Templates I Borrowed From</h2>
+        <h2>Operating Systems and Languages Worked With</h2>
+
+        <p><strong>Operating Systems:</strong> Windows, Mac OS(X), Linux (<em>Backtrack >3, CentOS, Fedora, Kubuntu,
+                Mint Linux, Ubuntu</em>), and Unix</p>
+
+        <p><strong>Programming Languages:</strong> Assembly Language, C, C++, HTML (XHTML), Java, JavaScript, Perl, PHP
+            / OOPhp, Python,
+            Visual Basic.NET, and Visual C#.NET</p>
+
+        <p><em>Also have worked with Alice, Haskell, Flash MX, MS SQL, MyPHP Admin, MySQL, Selenium, SWI Prolog, Swift, XML, and
+                XSL(T)</em></p>
+
+        <p><strong>Software/Tool Experience:</strong> Active@ ISO Burner, Adobe Acrobat Pro, Alice,
+            Any Video Converter, Audacity, AutoHotKey, EasyPHP, Fiddler, Filezilla, GIMP, IE Tester, Jenkins, JCreator, Magic
+            Disc, Microsoft Office Suite, Notepad++, Open Office, Perforce, Postman, Putty, SourceTree, Test Complete,
+            Windows (Live) Movie Maker, WireShark, various other Microsoft products, and various recreational software
+            programs</p>
+
+        <p><strong>IDE Experience:</strong> Adobe CS5 Web Premium Suite, Android Studio, Blue J, Dev++, Intellij,
+            JCreator, Microsoft SharePoint Designer 2007, Microsoft Visual Studio.NET 2003-2013</p>
+
+        <h2>Notable Programming Projects</h2>
 
         <ul>
-            <li><a href="http://designshack.net/?p=20665" title="Check out the Skeleton Tempalte">Skeleton</a></li>
-            <li><a href="http://html5boilerplate.com/" title="Check out the HTML5 Boilerplate">HTML5 Boilerplate</a></li>
-            <li><a href="http://weblion.psu.edu/" title="Check out Web Lion from Penn State">Penn State's Web Lion</a></li>
+            <li>Binary Tree Creator - <em>PHP</em> (<a href="/binary-tree-creator.php" title="Binary Tree Creator">Check
+                    it out online now</a>)
+            </li>
+            <li>BZIP2 Compression - <em>PHP</em> (<a href="/bzip2.php" title="BZIP2">Check it out online now</a>)</li>
+            <li>Checkers - <em>Visual C#</em></li>
+            <li>Kill All Running Browsers - <em>Perl</em></li>
+            <li>Library Login - <em>Visual Basic.NET</em></li>
+            <li>Resource Manager - <em>Java</em> (<a href="/user-bonuses/downloads.php"
+                                                     title="Download ResourceManager.jar">Available for download</a>)
+            </li>
+            <li>Resource Optimizer - <em>Perl</em></li>
+            <li>Rock, Paper, Scissors, Chuck Norris - <em>HTML and PHP</em> (<a href="/rock-paper-scissors.php"
+                                                                                title="Play Rock, Paper, Scissors">Play
+                    Online Now</a>)
+            </li>
+            <li>Sticky Notes - <em>Visual C#</em></li>
+            <li>Subnet Calculator - <em>PHP</em> (<a href="/subnet-calculator.php" title="Subnet Calculator">Check it
+                    out online now</a>)
+            </li>
+            <li>Tic Tac Toe with mock AI - <em>Visual C#</em> (<a href="/user-bonuses/downloads.php"
+                                                                  title="Download Tic Tac Toe">Available for
+                    download</a>)
+            </li>
+            <li>War (the card game) - <em>Visual Basic.NET</em></li>
         </ul>
 
-        <p><em>My coding style has also developed from my programming experiences at Metova, Interactive Intelligence, and ISU
-            and my personal best practices standards have stemmed fom them as well.  Props to all of the amazing co-workers
-            that I am and have worked with.</em></p>
+        <h2>Work and Other Experience</h2>
 
+        <p><strong>Positions Held</strong></p>
+
+        <ul>
+            <li>Android Developer</li>
+            <li>Automated tester for VoIP company</li>
+            <li>Assistant Web Developer</li>
+        </ul>
+
+        <p><strong>Responsibilities</strong></p>
+
+        <ul>
+            <li>Mobile app development</li>
+            <li>Automated tester that maintained 340+ regression tests for Telephony, SIP Sec, and SoftPhone</li>
+            <li>Worked with Layar and Layar API to make an augmented reality layer for ISU</li>
+            <li>Trained faculty and students on how to use SharePoint Designer to maintain parts of ISU's web site</li>
+            <li>Worked with Adobe Acrobat to create fillable .pdf forms</li>
+        </ul>
+
+        <p><strong>Networking Experience</strong></p>
+
+        <ul>
+            <li>Have set up multiple networks with laptops, desktops, mobile devices, and gaming systems</li>
+            <li>Some CISCO training through New Horizons and work with CISICO iOS Devices</li>
+            <li>Some work with AudioCodes Mediant M1K Gateways</li>
+        </ul>
+
+        <p><strong>Other Skills and Experience</strong></p>
+
+        <ul>
+            <li>Work with AudioCodes and Polycom Phones</li>
+            <li>Knowledge of SIP and VoIP technology</li>
+            <li>Basic knowledge of TLS</li>
+            <li>Former member of Business Professionals of America with multiple awards</li>
+            <li>Built and upgraded two of my own personal computers with custom components</li>
+            <li>Have helped service and clean several computers</li>
+        </ul>
+
+        <h2>Academic Work</h2>
+
+        <p style="margin-left:15px;"><em>Academic Work</em></p>
+
+        <ul>
+            <li>B.S. in Computer Science and Math Minor from ISU received May 2012</li>
+            <li>Rewrote and implemented Library Login program for JELCC</li>
+            <li>Have worked with ALICE software to create a short animated video</li>
+            <li>Wrote manuals at JELCC for using Microsoft Access databases with Visual C# and Visual Basic.NET</li>
+            <li>Wrote program to switch .CSV from Windows Server to Novell format for JELCC</li>
+        </ul>
+
+        <p style="margin-left:15px;">Notable Courses Taken:</p>
+
+        <ul>
+            <li>Algorithms</li>
+            <li>Assembly Language</li>
+            <li>Databases</li>
+            <li>Data Structures</li>
+            <li>Formal Methods</li>
+            <li>Linux Administration</li>
+            <li>Web Programming I</li>
+            <li>Web Programming II</li>
+        </ul>
+
+        <h2>Honorable Mentions</h2>
+
+        <ul>
+            <li>Nominated for Women in Technology Raising Star award</li>
+        </ul>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->

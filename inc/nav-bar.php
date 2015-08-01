@@ -18,14 +18,14 @@
             <li id="resources-and-tools"><a href="/resources-and-tools.php" title="Resources">Resources and Tools</a>
             </li>
         </ul>
+    </li><li id="tech-work">
+        <a href="#" title="Tech Work">Tech Work</a>
+        <ul>
+            <li id="programming"><a href="/programming.php" title="Programming">Programming</a></li>
+            <li id="web-development"><a href="/web-development.php" title="Web Development">Web Development</a></li>
+        </ul>
     </li>
-    <!--<li id="tech-work">
-                <a href="#" title="Tech Work">Tech Work</a>
-                <ul>
-                    <li id="programming"><a href="/programming.php" title="Programming">Programming</a></li>
-                    <li id="web-development"><a href="/web-development.php" title="Web Development">Web Development</a></li>
-                </ul>
-            </li><li id="music-career">
+            <!--<li id="music-career">
                 <a href="#" title="Music Career">Music Career</a>
                 <ul>
                     <li id="bands-and-projects"><a href="/bands-and-projects.php" title="Bands and Projects">Bands and Projects</a></li>

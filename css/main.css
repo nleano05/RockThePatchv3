@@ -77,6 +77,12 @@ blockquote, blockquote p {
     color: #ffffff;
 }
 
+.float-left49 {
+    float: left;
+    width: 49%;
+    min-width: 250px;
+}
+
 /**
 * Styles for main nav bar
 */
@@ -239,7 +245,7 @@ blockquote, blockquote p {
 * Styles for login area
 */
 #login {
-    margin: -1px 0 0 0;
+    margin: 10px 0 10px 0;
     padding: 0;
     background: #111111;
     width: 100%;
@@ -249,7 +255,6 @@ blockquote, blockquote p {
     border-bottom: 1px #fff solid;
     border-left: 2px #fff solid;
     border-right: 2px #fff solid;
-    margin-bottom: 10px;
 }
 
 #login-mobile {
@@ -265,7 +270,7 @@ blockquote, blockquote p {
 
 #login p, #login-mobile p {
     color: #fff;
-    padding: 5px;
+    padding: 10px;
     margin: 0;
     font-size: 1.1em;
 }

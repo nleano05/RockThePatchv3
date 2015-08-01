@@ -132,11 +132,13 @@ class lib_check {
 
         $user = lib_get::currentUser();
 
-        if ($user->getRole() === ROLE_ADMIN) {
-            log_util::log(LOG_LEVEL_DEBUG, "user WAS was an admin");
-            $isAdmin = TRUE;
-        } else {
-            log_util::log(LOG_LEVEL_DEBUG, "user WAS NOT an admin");
+        if(!empty($user)) {
+            if ($user->getRole() === ROLE_ADMIN) {
+                log_util::log(LOG_LEVEL_DEBUG, "user WAS was an admin");
+                $isAdmin = TRUE;
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "user WAS NOT an admin");
+            }
         }
 
         log_util::logDivider();

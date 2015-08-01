@@ -166,7 +166,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
         <h2>Site Limitations</h2>
 
-        <p><a href="#" onclick="return togglePageElementVisibility('possible-limitations')">View/Hide Section >></a></p>
+        <p><a href="#" onclick="togglePageElementVisibility('possible-limitations')">View/Hide Section >></a></p>
         <div id="possible-limitations">
             <ul>
                 <li>Only certain U.S. and Canadian cellular carriers are supported<br/>

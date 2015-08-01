@@ -149,7 +149,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <h2>Better in-line documentation</h2>
 
         <p>
-            I'm now forcing myself to use annotations and proper PHPDocs that will tell
+            I'm now forcing myself to use annotations and proper Docs that will tell
             other developers or anyone else looking at the code about the functions, classes,
             history, expected parameters, possible returns, exceptions thrown,
             and other important notes.
@@ -167,7 +167,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
         <hr/>
 
-        <h2>More object oriented</h2>
+        <h2>More object oriented conventions</h2>
 
         <p>
             I had no idea how to truly write code in an object oriented fashion with PHP when I first
@@ -237,6 +237,15 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <p>
             I started using require_once and other techniques to cut down on resource usage to improve the performance
             of the site and have reworked a lot of the code to be less taxing and cleaner when iterating through data.
+        </p>
+
+        <hr/>
+
+        <h2>Better relative linking</h2>
+
+        <p>
+            Since I didn't have multiple environments before, moving towards having a dev, staging, integration, and
+            production environments has helped weed out how many relative linking problems.
         </p>
 
         <hr/>
