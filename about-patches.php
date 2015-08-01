@@ -110,7 +110,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <!-- ### END recent-updates ### -->
         <!-- ### START contact-info ### -->
         <div id="interactions">
-            <?php require_once("inc/interactions.php"); ?>
+            <?php require("inc/interactions.php"); ?>
         </div>
         <!-- ### END contact-info ### -->
     </div>
@@ -160,7 +160,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <!-- ### END login ### -->
         <!-- ### START contact-info ### -->
         <div id="interactions-mobile">
-            <?php require_once("inc/interactions.php"); ?>
+            <?php require("inc/interactions.php"); ?>
         </div>
         <!-- ### END contact-info ### -->
         <!-- ### START RSS feed ### -->
