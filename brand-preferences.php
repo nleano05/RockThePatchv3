@@ -25,13 +25,12 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Kudos</title>
+    <title>Rock the Patch! v3 - Brand Preferences</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
     <meta name="author" content="Patches"/>
-    <meta name="keywords"
-          content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
+    <meta name="keywords" content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -84,8 +83,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    document.getElementById("about-this-site").className = "current";
-                    document.getElementById("kudos").className = "current";
+                    document.getElementById("music-career").className  = "current";
+                    document.getElementById("brand-preferences").className  = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
@@ -119,83 +118,28 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Kudos</div>
-        <h1>Kudos</h1>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Music Career / Brand Preferences</div>
+        <h1>Brand Preferences</h1>
 
-        <h2>DanG (a.k.a. DANG)</h2>
-
-        <p>So what happens when you ask your friend who is a QA tester to test? They test things and find things. Dan
-            caught a nice
-            set of bugs and really pushed for usability enhancements. His idea and testing contributions helped with the
-            Account Edit form as well as many other aspects of the
-            site that were misbehaving when abused with additional spaces and he stumbled on a lot of my unintentional
-            mistakes.</p>
-
-        <h2>Ray</h2>
-
-        <p>Had some great ideas to make my site more professional such as the mailing list, log in being hidden after a
-            user has logged in,
-            and has also helped debug some things like me not allowing special characters in a few places I should have
-            :) He's tested some of the new features for
-            me and keeps coming up with great ideas for me to explore.</p>
-
-        <h2>Subu</h2>
-
-        <p>Has been and still is a wondrous help with driving this project. He helped me debug and get ideas for the
-            first version of this website.
-            He also helped a lot by checking over my code in the early stages and continues to explain some rather
-            complex ideas. He's also helped with the security of the
-            database as well as the overall vision for what this can become.</p>
-
-        <h2>Mack</h2>
-
-        <p>Great overall support and help with the graphic ideas :) She has been there since the site was born as have
-            many of you and
-            continues to encourage it's growth.</p>
-
-        <h2>Brian</h2>
-
-        <p>Awesome help with letting me know SQL injection was still possible on my site and getting me a list of steps
-            I can take
-            to prevent that.</p>
-
-        <h2>Chuckles</h2>
-
-        <p>Has been awesome to bounce ideas off of and has given me some avenues to explore: SALTS, OOPhp, and some
-            other security
-            and coding techniques.</p>
-
-        <h2>TiBug</h2>
-
-        <p>Caught an issue with the font size on her mobile device and volunteered to help me test. She normally gets to
-            test the new
-            features first and lets me know of any issues I didn't catch. She also caught one of my bugs with the
-            'Account Info' editing process.</p>
-
-        <h2>Sean</h2>
-
-        <p>Caught some typos I never would have with the spelling of JQuery on the main page and a sub-page.</p>
-
-        <h2>John</h2>
-
-        <p>Man oh man he caught an awesome bug! Directory browsing was causing an incorrect error page to be displayed.
-            He's tested a few things
-            and has reported typos, issues, etc.</p>
-
-        <h2>Denise</h2>
-
-        <p>Site testing and support. Another one of the testers I send in first to the new features :) She also has had
-            some great ideas
-            to contribute to the site.</p>
-
-        <h2>Patty</h2>
-
-        <p>Caught some typos on the main page.</p>
-
-        <br/>
-        <p><strong><em>And everyone else who supports me who I have not mentioned above, thank you! You are all wonderful.</em>
-            </strong</p>
-
+        <ul>
+            <li><a href="http://www.alvarezgtr.com/" title="Alvarez Guitars">Alvarez</a></li>
+            <li><a href="https://www.blackstaramps.com/" title="Blackstar Amplification">Blackstar Amplification</a></li>
+            <li><a href="http://www.bossus.com/" title="Boss Pedals">Boss</a></li>
+            <li><a href="http://www.dbzguitars.com/" title="DBZ Guitars">DBZ Guitars</a></li>
+            <li><a href="http://www.devieverfx.com/" title="Devi Ever: FX">Devi Ever: FX</a></li>
+            <li><a href="http://www2.gibson.com/Gibson.aspx" title="Gibson Guitars">Gibson</a></li>
+            <li><a href="http://www.ibanez.com/splash" title="Ibanez Guitars">Ibanez</a></li>
+            <li><a href="http://www.mesaboogie.com/" title="MESA Engineering">MESA Engineering</a></li>
+            <li><a href="http://www.ovationguitars.com/" title="Ovation Guitar">Ovation</a></li>
+            <li><a href="http://www.jimdunlop.com/" title="MXR Pedals and Dunlo">MXR Pedals and Dunlop</a></li>
+            <li><a href="http://www.pacificdrums.com/" title="Pacific Drums">Pacific Drums</a></li>
+            <li><a href="http://www.prsguitars.com/" title="PRS Guitars">PRS Guitars</a></li>
+            <li><a href="http://www.randallamplifiers.com/index.php" title="Randall Amplifiers">Randall</a></li>
+            <li><a href="http://www.remo.com/" title="Remo">Remo</a></li>
+            <li><a href="http://www.schecterguitars.com/" title="Schecter Guitars">Schecter</a></li>
+            <li><a href="http://usa.yamaha.com/products/musical-instruments/drums/" title="Yamaha Drums">Yamaha Drums</a></li>
+            <li><a href="http://zildjian.com/" title="Zildjian">Zildjian</a></li>
+        </ul>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->

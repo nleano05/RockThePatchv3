@@ -25,7 +25,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Kudos</title>
+    <title>Rock the Patch! v3 - Martial Arts</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -84,8 +84,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    document.getElementById("about-this-site").className = "current";
-                    document.getElementById("kudos").className = "current";
+                    document.getElementById("martial-arts").className = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
@@ -119,83 +118,55 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Kudos</div>
-        <h1>Kudos</h1>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Martial Arts</div>
+        <h1>Martial Arts</h1>
 
-        <h2>DanG (a.k.a. DANG)</h2>
+        <h2>Studies</h2>
 
-        <p>So what happens when you ask your friend who is a QA tester to test? They test things and find things. Dan
-            caught a nice
-            set of bugs and really pushed for usability enhancements. His idea and testing contributions helped with the
-            Account Edit form as well as many other aspects of the
-            site that were misbehaving when abused with additional spaces and he stumbled on a lot of my unintentional
-            mistakes.</p>
+        <p><strong>Current Discipline:</strong> Krav Maga<br/>
+            <strong>Former Disciplines:</strong> Tae Kwon Do (Songahm and Okinawan), Judo, and Akido</p>
 
-        <h2>Ray</h2>
+        <h2>Awards and Tournaments Competed In</h2>
 
-        <p>Had some great ideas to make my site more professional such as the mailing list, log in being hidden after a
-            user has logged in,
-            and has also helped debug some things like me not allowing special characters in a few places I should have
-            :) He's tested some of the new features for
-            me and keeps coming up with great ideas for me to explore.</p>
+        <p><strong>Decataur, IL Class B Tournament</strong><br/>
+            <em>October 8th, 2011</em></p>
+        <ul>
+            <li>2nd Place in Forms</li>
+            <li>2nd Place in Sparring</li>
+            <li>2nd Place in Weapons</li>
+        </ul>
+        <p><strong>Terre Haute, IN Class A Tournament (*Hosted by Minton's Black Belt Academy*)</strong><br/>
+            <em>April 23rd, 2011</em></p>
+        <ul>
+            <li>3rd Place in Sparring</li>
+            <li>2nd Place in Forms</li>
+        </ul>
+        <p><strong>Evansville, IN Class B Tournament</strong><br/>
+            <em>February 18th, 2011</em></p>
+        <ul>
+            <li>2nd Place in Sparring</li>
+        </ul>
 
-        <h2>Subu</h2>
-
-        <p>Has been and still is a wondrous help with driving this project. He helped me debug and get ideas for the
-            first version of this website.
-            He also helped a lot by checking over my code in the early stages and continues to explain some rather
-            complex ideas. He's also helped with the security of the
-            database as well as the overall vision for what this can become.</p>
-
-        <h2>Mack</h2>
-
-        <p>Great overall support and help with the graphic ideas :) She has been there since the site was born as have
-            many of you and
-            continues to encourage it's growth.</p>
-
-        <h2>Brian</h2>
-
-        <p>Awesome help with letting me know SQL injection was still possible on my site and getting me a list of steps
-            I can take
-            to prevent that.</p>
-
-        <h2>Chuckles</h2>
-
-        <p>Has been awesome to bounce ideas off of and has given me some avenues to explore: SALTS, OOPhp, and some
-            other security
-            and coding techniques.</p>
-
-        <h2>TiBug</h2>
-
-        <p>Caught an issue with the font size on her mobile device and volunteered to help me test. She normally gets to
-            test the new
-            features first and lets me know of any issues I didn't catch. She also caught one of my bugs with the
-            'Account Info' editing process.</p>
-
-        <h2>Sean</h2>
-
-        <p>Caught some typos I never would have with the spelling of JQuery on the main page and a sub-page.</p>
-
-        <h2>John</h2>
-
-        <p>Man oh man he caught an awesome bug! Directory browsing was causing an incorrect error page to be displayed.
-            He's tested a few things
-            and has reported typos, issues, etc.</p>
-
-        <h2>Denise</h2>
-
-        <p>Site testing and support. Another one of the testers I send in first to the new features :) She also has had
-            some great ideas
-            to contribute to the site.</p>
-
-        <h2>Patty</h2>
-
-        <p>Caught some typos on the main page.</p>
-
+        <h2>Previous Training</h2>
+        <ul>
+            <li>Former member of the <a href="http://ataonline.com/" title="ATA Online">American Tae Kwon Do Association
+                    (ATA)</a>
+                <ul>
+                    <li><em>Dojo:</em> <a href="http://www.mintonsblackbelt.com/" title="Mintons Black Belt Academey">Minton's
+                            Black Belt Academey</a></li>
+                    <li><em>Highest Belt Attained:</em> Blue Decided (Rank: 3D)</li>
+                    <li><em>Rank When Departed:</em> 4th in the state of Indiana</li>
+                </ul>
+            </li>
+            <li>Studied under Master Chai in Indianapolis in Okinawan Tae Kwon Do
+                <ul>
+                    <li><em>Highest Belt Attained:</em> Brown Belt</li>
+                </ul>
+            </li>
+        </ul>
         <br/>
-        <p><strong><em>And everyone else who supports me who I have not mentioned above, thank you! You are all wonderful.</em>
-            </strong</p>
 
+        <div class="clear"></div>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->

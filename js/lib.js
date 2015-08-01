@@ -103,6 +103,34 @@ function preloadImages(additionalImages) {
 
 
 /**
+ *  This function rotates through a list of images given a holder element and start index
+ *
+ * @param whichHolder The element that is holding the images
+ * @param startIndex The index of the image to start with
+ *
+ * @return Nothing
+ * @throws - Nothing
+ * @global - None
+ * @notes  - None
+ *
+ * @example - rotateImages(1, 0);
+ *
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 08/01/2015
+ */
+function rotateImages(whichHolder, startIndex) {
+    var rotatingImageArray = eval("rotatingImageArray" + whichHolder);
+    var rotatingImageHolder = eval("rotatingImageHolder" + whichHolder);
+    if(startIndex >= rotatingImageArray.length)
+    {
+        startIndex = 0;
+    }
+    rotatingImageHolder.src = rotatingImageArray[startIndex];
+    window.setTimeout("rotateImages(" + whichHolder + "," + (startIndex + 1) + ")", 3000);
+}
+
+/**
  *  This function makes an element/object on the screen visible
  *
  * @param what the element or object to show

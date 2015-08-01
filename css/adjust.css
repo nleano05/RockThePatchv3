@@ -73,6 +73,44 @@
  *  Smaller screen logic
  */
 @media screen and (min-width: 0px) and (max-width: 300px) {
+    #tabs ul li.tab-label a {
+        display: block;
+        width: 85px;
+        text-decoration: none;
+        margin: 0;
+        padding: 5px 0;
+        color: #76FF03;
+        border: none;
+        border-bottom: 0;
+    }
+
+    #tabs ul.tab-set {
+        float: none;
+        width: 100%;
+        margin: 10px 0;
+        padding: 0;
+        border-bottom: 1px #fff solid;
+        list-style-type: none;
+    }
+
+    #tabs ul li.tab-label {
+        background: black;
+        margin: 0;
+        padding: 0 8px;
+        text-align: left;
+        float: none;
+        font-size: .9em;
+    }
+
+    #tabs ul li.tab-label.active {
+        background: #fff;
+        margin: 0;
+        padding: 0 8px;
+        text-decoration: none;
+        position: relative;
+        top: 1px;
+        border: 1px #76FF03 solid;
+    }
 
 }
 

@@ -1,0 +1,65 @@
+#tabs {
+    width: 100%;
+    margin: 20px 0 0 0;
+    padding: 0;
+}
+
+#tabs ul.tab-set {
+    float: left;
+    width: 100%;
+    margin: 10px 0;
+    padding: 0;
+    border-bottom: 1px #fff solid;
+    list-style-type: none;
+}
+
+#tabs ul li.tab-label {
+    background: black;
+    margin: 0 0 0 8px;
+    padding: 0;
+    text-align: center;
+    float: left;
+    font-size: .9em;
+}
+
+* html #tabs ul li.tab-label {
+    display: inline;
+}
+
+#tabs ul li.tab-label a {
+    display: block;
+    width: 85px;
+    text-decoration: none;
+    margin: 0;
+    padding: 5px 0;
+    color: #76FF03;
+    border: 1px #fff solid;
+}
+
+#tabs ul li.tab-label a:hover, #tabs ul li.active a:hover {
+    text-decoration: none;
+    color: #111;
+}
+
+#tabs ul li.tab-label:hover {
+    background: #76FF03;
+}
+
+#tabs ul li.tab-label.active {
+    background: #424242;
+    margin: 0 0 0 8px;
+    padding: 0;
+    text-decoration: none;
+    position: relative;
+    top: 1px;
+}
+
+#tabs ul li.tab-label.active:hover {
+    background: #76FF03;
+}
+
+#tabs div.tab-content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}

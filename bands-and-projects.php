@@ -25,13 +25,12 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Kudos</title>
+    <title>Rock the Patch! v3 - Bands and Projects</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
     <meta name="author" content="Patches"/>
-    <meta name="keywords"
-          content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
+    <meta name="keywords" content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,6 +41,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### CSS Imports ### -->
     <link rel="stylesheet" href="/css/main.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="/css/tabs.css" type="text/css" media="screen"/>
     <link rel="stylesheet" href="/css/adjust.css" type="text/css" media="all"/>
     <link rel="stylesheet" href="/css/print.css" type="text/css" media="print"/>
 
@@ -56,6 +56,9 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
 
+    <!-- ### JQuerey Imports ### -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
     <!-- ### Common Javascript Library Imports ### -->
     <script type="text/javascript" src="/js/lib.js"></script>
     <script type="text/javascript" src="/js/lib-autoformat.js"></script>
@@ -64,11 +67,13 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <script type="text/javascript" src="/js/lib-populate.js"></script>
     <script type="text/javascript" src="/js/lib-sync.js"></script>
     <script type="text/javascript" src="/js/lib-toggle.js"></script>
+    <script type="text/javascript" src="/js/tabs.js"></script>
 
     <!-- ### Javascript to preload images on the page ### -->
     <script type="text/javascript">
         preloadImages();
     </script>
+
 </head>
 <!-- ### END Head ### -->
 <!-- ### START Body ### -->
@@ -84,8 +89,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    document.getElementById("about-this-site").className = "current";
-                    document.getElementById("kudos").className = "current";
+                    document.getElementById("music-career").className  = "current";
+                    document.getElementById("bands-and-projects").className  = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
@@ -119,83 +124,121 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Kudos</div>
-        <h1>Kudos</h1>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Music Career / Bands and Projects</div>
 
-        <h2>DanG (a.k.a. DANG)</h2>
+        <div id="tabs">
+            <ul class="tab-set">
+                <li class="tab-label"><a href="#tab1" title="Current">Current</a></li>
+                <li class="tab-label"><a href="#tab2" title="Previous">Previous</a></li>
+                <li class="tab-label"><a href="#tab3" title="Instructors">Instructors</a></li>
+            </ul>
 
-        <p>So what happens when you ask your friend who is a QA tester to test? They test things and find things. Dan
-            caught a nice
-            set of bugs and really pushed for usability enhancements. His idea and testing contributions helped with the
-            Account Edit form as well as many other aspects of the
-            site that were misbehaving when abused with additional spaces and he stumbled on a lot of my unintentional
-            mistakes.</p>
 
-        <h2>Ray</h2>
+            <div id="tab1" class="tab-content">
+                <h1>Current Projects</h1>
+                <ul>
+                    <li><em>Currently working on a demo that will have about 5-7 songs</em></li>
+                    <li>Currently looking for other musicians to begin a project or band</li>
+                </ul>
+                <p><strong>Passive Resistance (2007 - <em>present</em>)</strong><br/>as guitarist</p>
+                <p><em>Members:</em></p>
+                <ul>
+                    <li>Dusty Householder (<em>vocals</em>)</li>
+                </ul>
+            </div>
 
-        <p>Had some great ideas to make my site more professional such as the mailing list, log in being hidden after a
-            user has logged in,
-            and has also helped debug some things like me not allowing special characters in a few places I should have
-            :) He's tested some of the new features for
-            me and keeps coming up with great ideas for me to explore.</p>
+            <div id="tab2" class="tab-content">
+                <h1>Previous Bands</h1>
 
-        <h2>Subu</h2>
+                <div class="float-left49">
+                    <p><strong>Madhadder Escapade (2011 - 2012)</strong><br/>as bass player</p>
+                    <p><em>Memebers:</em></p>
+                    <ul>
+                        <li>Nate Massery (<em>lead guitar</em>)</li>
+                        <li>John Jerrell (<em>rhythm guitar</em>)</li>
+                    </ul>
+                    <br/>
 
-        <p>Has been and still is a wondrous help with driving this project. He helped me debug and get ideas for the
-            first version of this website.
-            He also helped a lot by checking over my code in the early stages and continues to explain some rather
-            complex ideas. He's also helped with the security of the
-            database as well as the overall vision for what this can become.</p>
+                    <p><strong>Working Title (2011 - 2011)</strong><br/>as guitarist / drummer</p>
+                    <p><em>Members:</em></p>
+                    <ul>
+                        <li>Eric Root (<em>drums / guitar</em>)</li>
+                        <li>Logan Michl (<em>guitar / drums</em>)</li>
+                    </ul>
+                    <br/>
 
-        <h2>Mack</h2>
+                    <p><strong>Greencaslte Band (2010 - 2011)</strong><br/>as drummer / guitarist</p>
+                    <p><em>Members:</em></p>
+                    <ul>
+                        <li>Charles Strong (<em>guitar / vocals</em>)</li>
+                        <li>Christopher Wilson (<em>bass / guitar</em>)</li>
+                        <li>Jordan Stevens (<em>guitar</em>)</li>
+                    </ul>
+                    <br/>
 
-        <p>Great overall support and help with the graphic ideas :) She has been there since the site was born as have
-            many of you and
-            continues to encourage it's growth.</p>
+                    <p><strong>She's Ransom (2008 - 2010)</strong><br/>as drummer</p>
+                    <p><em>Members:</em></p>
+                    <ul>
+                        <li>Josh McKenny (<em>guitar / vocals</em>)</li>
+                        <li>Kimberly McCurrey (<em>keyboards</em>)</li>
+                        <li>Kris Steagall (<em>bass</em>)</li>
+                        <li>Tina McCurrey (<em>vocals</em>)</li>
+                    </ul>
+                    <br/>
+                </div>
+                <div class="float-left49">
+                    <p><strong>Inside Jokes (2006 - 2007)</strong><br/>as guitarist</p>
+                    <p><em>Members:</em></p>
+                    <ul>
+                        <li>Britney (<em>guitar</em>)</li>
+                        <li>Dusty Householder (<em>vocals</em>)</li>
+                        <li>Sarah (<em>bass</em>)</li>
+                        <li>Sarah Goldstien (<em>vocals</em>)</li>
+                    </ul>
+                    <p><em>Guest Members:</em></p>
+                    <ul>
+                        <li>Jake Galle (<em>drums</em>)</li>
+                        <li>Justin Lattea (<em>vocals</em>)</li>
+                        <li>Nathan Canada (<em>vocals</em>)</li>
+                    </ul>
+                    <br/>
 
-        <h2>Brian</h2>
+                    <p><strong>Heart Attack/Untitled (2005 - 2006)</strong><br/>as guitarist</p>
+                    <p><em>Members:</em></p>
+                    <ul>
+                        <li>Brianna Wolfe (<em>guitar</em>)</li>
+                        <li>Jacob Borenstein (<em>bass</em>)</li>
+                    </ul>
+                    <br/>
 
-        <p>Awesome help with letting me know SQL injection was still possible on my site and getting me a list of steps
-            I can take
-            to prevent that.</p>
+                    <p><strong>Dysfunctional Revolution (2005)</strong><br/>as guitarist</p>
+                    <p><em>Members:</em></p>
+                    <ul>
+                        <li>Ethan Tenant (<em>guitar</em>)</li>
+                        <li>Nathan Canada (<em>vocals</em>)</li>
+                        <li>Nick Huster (<em>drums</em>)</li>
+                    </ul>
+                    <p><strong>Other Artists Worked With</strong></p>
+                    <ul>
+                        <li>Ben Shortridge (<em>vocals</em>)</li>
+                        <li>Brandon Sciotto (<em>vocals / guitar</em>)</li>
+                        <li>Brian Rumple (<em>guitar</em>)</li>
+                        <li>Clint Rogers (<em>vocals</em>)</li>
+                    </ul>
+                    <br/>
+                </div>
 
-        <h2>Chuckles</h2>
+                <div style="clear:both"></div>
+            </div>
 
-        <p>Has been awesome to bounce ideas off of and has given me some avenues to explore: SALTS, OOPhp, and some
-            other security
-            and coding techniques.</p>
-
-        <h2>TiBug</h2>
-
-        <p>Caught an issue with the font size on her mobile device and volunteered to help me test. She normally gets to
-            test the new
-            features first and lets me know of any issues I didn't catch. She also caught one of my bugs with the
-            'Account Info' editing process.</p>
-
-        <h2>Sean</h2>
-
-        <p>Caught some typos I never would have with the spelling of JQuery on the main page and a sub-page.</p>
-
-        <h2>John</h2>
-
-        <p>Man oh man he caught an awesome bug! Directory browsing was causing an incorrect error page to be displayed.
-            He's tested a few things
-            and has reported typos, issues, etc.</p>
-
-        <h2>Denise</h2>
-
-        <p>Site testing and support. Another one of the testers I send in first to the new features :) She also has had
-            some great ideas
-            to contribute to the site.</p>
-
-        <h2>Patty</h2>
-
-        <p>Caught some typos on the main page.</p>
-
-        <br/>
-        <p><strong><em>And everyone else who supports me who I have not mentioned above, thank you! You are all wonderful.</em>
-            </strong</p>
-
+            <div id="tab3" class="tab-content">
+                <h1>Former Guitar Instructors</h1>
+                <ul>
+                    <li>Ted Kirkindall (2006 - 2007)</li>
+                    <li>Tommy Benson (2005 - 2006)</li>
+                </ul>
+            </div>
+        </div>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->
