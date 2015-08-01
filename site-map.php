@@ -157,7 +157,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 </li>
                 <li>Art &amp; Writing
                     <ul>
-                        <li><a href="/excerpts-and-lyrics.php" title="Exceprts &amp; Lyrics">Exceprts &amp; Lyrics</a></li>
+                        <li><a href="/excerpts-and-lyrics.php" title="Excerpts &amp; Lyrics">Excerpts &amp; Lyrics</a></li>
                         <li><a href="/art-gallery.php" title="Art Gallery">Art Gallery</a></li>
                     </ul>
                 </li>
