@@ -19,20 +19,19 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
 <!-- ### Sends users with a older version of IE to a page so they can update ### -->
 <!--[if lt IE 7]>
-<meta http-equiv="refresh" content="0; url=https://www.rockthepatch.com/update-browser.php">
+<meta http-equiv="refresh" content="0; url=/update-browser.php">
 <![endif]-->
 
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! - Template</title>
+    <!-- TODO - Change this title for the new page -->
+    <title>Rock the Patch! v3 - Template</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
     <meta name="author" content="Patches"/>
-    <meta name="keywords" content="music, art, guitar, bass, drums, drawing, writing, lyrics,
-                martial arts, Minton's Black Belt Academy, Master Chai, PHP, C, C++, Visual C#, Python, Perl,
-                Web Developer, Software	Engineer, Patches, Rock the Patch!"/>
+    <meta name="keywords" content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -48,21 +47,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### Style Adjustments for IE 7 ### -->
     <!--[if IE 7]>
-    <style>
-        #nav-bar ul li {
-            display: inline;
-        }
-
-        #nav-bar ul li:hover ul {
-            position: absolute;
-            margin-top: 34px;
-            margin-left: -171px;
-        }
-
-        #user-nav ul li {
-            display: inline;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/ie7.css" type="text/css" media="screen"/>
     <![endif]-->
 
     <!-- ### Favicons ### -->
@@ -70,10 +55,6 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
-
-    <!-- ### JQuery Imports ###, JSUnresolvedLibraryURL -->
-    <!--suppress JSUnresolvedLibraryURL -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <!-- ### Common Javascript Library Imports ### -->
     <script type="text/javascript" src="/js/lib.js"></script>
@@ -86,10 +67,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### Javascript to preload images on the page ### -->
     <script type="text/javascript">
-        // TODO - re-enable this once I have a JS library again
-        //preloadImages();
+        preloadImages();
     </script>
-
 </head>
 <!-- ### END Head ### -->
 <!-- ### START Body ### -->
@@ -98,25 +77,21 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <div class="container">
     <!-- ### START header ### -->
     <div id="header">
-        <!-- ### START banner-image ### -->
-        <!-- TODO - Re-enable this -->
-        <!--<div id="banner-image"><img src="images/banner.png" alt="Banner Image" title="Banner Image" style="width:100%;height:100%;"/></div> -->
-        <!-- ### END banner-image ### -->
         <!-- ### START site-nav -->
         <div id="site-nav">
             <!-- ### START nav-bar ### -->
             <div id="nav-bar">
-                <?php include("inc/nav-bar.php"); ?>
+                <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    // TODO - Re-enable this once I have a nav bar again
-                    //document.getElementById("template").className  = "current";
+                    // TODO - Adjust nav for new page
+                    //document.getElementById("home").className  = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
             <!-- ### START user-nav ### -->
             <div id="user-nav">
-                <?php include("inc/user-nav.php"); ?>
+                <?php require_once("inc/user-nav.php"); ?>
             </div>
             <!-- ### END user-nav ### -->
         </div>
@@ -127,49 +102,57 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <div id="content-area-left">
         <!-- ### START login-mobile ### -->
         <div id="login-mobile">
-            <?php include("inc/login.php"); ?>
+            <?php require("inc/login.php"); ?>
         </div>
         <!-- ### END login ### -->
-        <!-- ### START error-report ### -->
-        <div id="error-report">
-            <?php include("inc/error-report.php"); ?>
+        <!-- ### START recent-updates ### -->
+        <div id="recent-updates">
+            <?php require_once("inc/recent-updates.php"); ?>
         </div>
-        <!-- ### END error-report ### -->
+        <!-- ### END recent-updates ### -->
+        <!-- ### START contact-info ### -->
+        <div id="interactions">
+            <?php require_once("inc/interactions.php"); ?>
+        </div>
+        <!-- ### END contact-info ### -->
     </div>
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Template</div>
-        <h1>Secondary Page Template</h1>
+        <h1>Template</h1>
+
+        <p>Page content goes here</p>
+
+        <h2>Heading 2</h2>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->
     <div id="content-area-right">
         <!-- ### START login ### -->
         <div id="login">
-            <?php include("inc/login.php"); ?>
+            <?php require("inc/login.php"); ?>
         </div>
         <!-- ### END login ### -->
-        <!-- ### START error-report-mobile ### -->
-        <div id="error-report-mobile">
-            <?php include("inc/error-report.php"); ?>
+        <!-- ### START contact-info ### -->
+        <div id="interactions-mobile">
+            <?php require_once("inc/interactions.php"); ?>
         </div>
-        <!-- ### END error-report ### -->
-        <!-- ### START feature-request ### -->
-        <div id="feature-request">
-            <?php include("inc/feature-request.php"); ?>
-        </div>
-        <!-- ### END feature-request ### -->
+        <!-- ### END contact-info ### -->
         <!-- ### START RSS feed ### -->
         <div id="rss">
-            <?php include("inc/rss.php"); ?>
+            <?php require_once('inc/rss.php'); ?>
         </div>
         <!-- ### END RSS feed ### -->
+        <!-- ### START validation ### -->
+        <div id="validation">
+            <?php require_once("inc/validation.php"); ?>
+        </div>
+        <!-- ### END validation ### -->
     </div>
     <!-- ### END content-area-right ### -->
     <!-- ### START Footer ### -->
     <div id="footer">
-        <?php include('inc/footer.php'); ?>
+        <?php require_once('inc/footer.php'); ?>
         <div id="footer-background"></div>
         <script type="text/javascript">
             var _gaq = _gaq || [];

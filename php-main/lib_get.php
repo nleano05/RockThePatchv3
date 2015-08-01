@@ -90,6 +90,99 @@ class lib_get {
         return $currentURL;
     }
 
+    public static function gitHubIssues($state, $labels){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $curlSession = curl_init();
+        $url = GITHUB_ISSUES_BASE_URL;
+        if(!empty($state)){
+            $url .=  "?state=" . $state;
+            if(!empty($labels)){
+                $url .= "&labels=" . $labels;
+            }
+        } else {
+            if(!empty($lables)){
+                $url .= "?labels" . $labels;
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "url: " . $url);
+
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_HEADER,0);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, false);
+        $headers = array(
+            "Cache-Control: no-cache",
+            "User-Agent: isuPatches-RockThePatch"
+        );
+        curl_setopt($curlSession, CURLOPT_HTTPHEADER, $headers);
+        $issues = curl_exec($curlSession);
+
+        if($issues === false) {
+            log_util::log(LOG_LEVEL_DEBUG, "Curl error: ", curl_error($curlSession));
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Operation completed without any errors");
+        }
+
+        curl_close($curlSession);
+
+        log_util::log(LOG_LEVEL_DEBUG, "Issues: ", $issues);
+        log_util::logDivider();
+
+        return $issues;
+    }
+
+    public static function gitHubMilestones($state){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $curlSession = curl_init();
+        $url = GITHUB_MILESTONES_BASE_URL;
+        if(!empty($state)){
+            $url .=  "?state=" . $state;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "url: " . $url);
+
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_HEADER,0);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, false);
+        $headers = array(
+            "Cache-Control: no-cache",
+            "User-Agent: isuPatches-RockThePatch"
+        );
+        curl_setopt($curlSession, CURLOPT_HTTPHEADER, $headers);
+        $milestones = curl_exec($curlSession);
+
+        if($milestones === false) {
+            log_util::log(LOG_LEVEL_DEBUG, "Curl error: ", curl_error($curlSession));
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Operation completed without any errors");
+        }
+
+        curl_close($curlSession);
+
+        log_util::log(LOG_LEVEL_DEBUG, "Milestones: ", $milestones);
+        log_util::logDivider();
+        
+        return $milestones;
+    }
+
     /**
      *  This function returns the login status for the current user
      *

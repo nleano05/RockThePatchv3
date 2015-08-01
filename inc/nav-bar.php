@@ -1,6 +1,10 @@
 <ul>
     <li id="home">
         <a href="/" title="Home">Home</a>
+    </li><li id="about-patches">
+        <a href="/about-patches.php" title="About Patches">About Patches</a>
+    </li><li id="about-the-revamp">
+        <a href="/about-the-revamp.php" title="About The Revamp">About The Revamp</a>
     </li><li id="about-this-site">
         <a href="#" title="About This Site">About This Site</a>
         <ul>

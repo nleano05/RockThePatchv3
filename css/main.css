@@ -46,6 +46,15 @@ textarea {
     resize: none;
 }
 
+blockquote, blockquote p {
+    font-size: 1.0em;
+    line-height: 150%;
+    color: #E6E6E6;
+    font-style: italic;
+    margin: 0;
+    padding: 5px 15px;
+}
+
 .button {
     background: #76FF03;
     color: #212121;
@@ -62,6 +71,10 @@ textarea {
 
 .clear {
     clear: both;
+}
+
+.font-white {
+    color: #ffffff;
 }
 
 /**
@@ -144,9 +157,15 @@ textarea {
     color: #111111;
 }
 
-/*TODO- Re-enable these once I have more pages */
-/*#nav-bar ul li.current, #nav-bar ul li ul li.current{background:#424242;color:#fff;}*/
-/*#nav-bar ul li.current:hover, #nav-bar ul li ul li.current:hover{background:#99FF00;color:#fff;}*/
+#nav-bar ul li.current, #nav-bar ul li ul li.current {
+    background: #424242;
+    color: #fff;
+}
+
+#nav-bar ul li.current:hover, #nav-bar ul li ul li.current:hover {
+    background: #99FF00;
+    color: #fff;
+}
 
 /**
 * Styles for main content area
@@ -164,19 +183,21 @@ textarea {
     padding: 7px 20px 7px 20px;
     margin: 0;
     line-height: 150%;
+    color: #ffffff;
 }
 
 #content-area h1 {
     padding: 7px 20px 7px 20px;
     margin: 0;
-    font-size: 1.3em;
+    font-size: 1.4em;
+    color: #76FF03;
 }
 
 #content-area h2 {
     padding: 7px 20px 7px 20px;
     margin: 0;
-    color: #D358F7;
-    font-size: 1.1em;
+    color: #B2FF59;
+    font-size: 1.2em;
 }
 
 #content-area ul {
@@ -319,7 +340,7 @@ textarea {
 */
 #interactions {
     padding: 0;
-    margin: 0;
+    margin: 10px 0 10px 0;
     width: 100%;
     background: #111111;
 }
@@ -359,14 +380,14 @@ textarea {
 }
 
 .interactions-section {
-    padding-left:40px;
+    padding-left: 40px;
     padding-bottom: 20px;
 }
 
 .feature-request-img {
-     width: 40px;
-     height: 40px;
-     vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
 }
 
 .error-report-img {
@@ -382,7 +403,7 @@ textarea {
     position: relative;
     width: 100%;
     padding: 0;
-    margin: 0 0 10px 0;
+    margin: 10px 0 10px 0;
     font-size: 1.0em;
     line-height: 140%;
     background: #111;

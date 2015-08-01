@@ -19,13 +19,13 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
 <!-- ### Sends users with a older version of IE to a page so they can update ### -->
 <!--[if lt IE 7]>
-<meta http-equiv="refresh" content="0; url=https://www.rockthepatch.com/update-browser.php">
+<meta http-equiv="refresh" content="0; url=/update-browser.php">
 <![endif]-->
 
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Home</title>
+    <title>Rock the Patch! v3 - About Patches</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -46,7 +46,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### Style Adjustments for IE 7 ### -->
     <!--[if IE 7]>
-        <link rel="stylesheet" href="/css/ie7.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="/css/ie7.css" type="text/css" media="screen"/>
     <![endif]-->
 
     <!-- ### Favicons ### -->
@@ -54,10 +54,6 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
-
-    <!-- ### JQuerey Imports ###, JSUnresolvedLibraryURL, JSUnresolvedLibraryURL -->
-    <!--suppress JSUnresolvedLibraryURL -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <!-- ### Common Javascript Library Imports ### -->
     <script type="text/javascript" src="/js/lib.js"></script>
@@ -70,26 +66,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### Javascript to preload images on the page ### -->
     <script type="text/javascript">
-        // TODO - re-enable this once I have an images and stuff again
-        // var additionalImages = new Array(
-        // "/images/index-slide-show/computer.jpg",
-        // "/images/index-slide-show/computer2.jpg",
-        // "/images/index-slide-show/drums.jpg",
-        // "/images/index-slide-show/guitars.jpg",
-        // "/images/index-slide-show/guitars2.jpg",
-        // "/images/index-slide-show/training.jpg"
-        // );
-
-         preloadImages();
-    </script>
-
-    <!-- ### Javascript for the Slide Show / Gallery on the main page  -->
-    <script type="text/javascript">
-        // TODO - Re-enable this once I have images and a slide show again
-        // $(document).ready(function()
-        // {
-        // galleryDisplay();
-        // });
+        preloadImages();
     </script>
 </head>
 <!-- ### END Head ### -->
@@ -106,7 +83,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php require_once("inc/nav-bar.php"); ?>
                 <!-- Script to display the current page in the navigation -->
                 <script type="text/javascript">
-                    document.getElementById("home").className  = "current";
+                    document.getElementById("about-patches").className  = "current";
                 </script>
             </div>
             <!-- ### END nav-bar ### -->
@@ -140,6 +117,37 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About Patches</div>
+
+        <h1>About Patches</h1>
+
+        <blockquote>
+            <p>"I have many passions, and over the years I have explored a lot of different outlets.  As a kid
+                I went to camp every summer from the age of 7 on up.  I took a photography camp, acted for the Civic Theater,
+                and learned HTML at a web summer course.  From there, my interests only grew.  At some point I took
+                Tae Kwon Do under Master Chai and competed at places like the Pan Am Plaza in downtown Indianapolis, winning
+                awards and making it to a brown belt before discontinuing.</p>
+
+            <p>In middle school I pursued art and was a member of the Artistically Talented program. It was around this period
+                when I had my first computer which was one of the old black, second generation iMacs.  I began to explore
+                the web and became a computer geek instantaneously.</p>
+
+            <p>In high school I took more art classes as well as enrolling at the J. Everett Light Career Center
+                for Computer Operations and Programming.  Meeting new people at North Central and J. Everett Light
+                Career Center opened the door wide open to the realm of music.  My first guitar was an Epiphone Les Paul
+                Special Edition II and I soon was offered the privellage of learning under Tommy Benson.</p>
+
+            <p>Playing guitar lead to buying a drum set and my first bands emerged through my social circle
+                and close friends.  Although Tommy had to discontinue giving me lessons, Ted Kirkindall was my
+                second instructor and I played several recitals at the Midwest School of Music. It was also in my last
+                two years of high school that I competed in competitions at local, district, and state for computer
+                programming through Business Professionals of America and won multiple awards.</p>
+
+            <p>In college and after, I have started pursuing all of my passions.  I write, I draw, I play guitar, I finished going to school
+                for a Computer Science degree with a Math minor, and I am a former member of the American Tae Kwon Do Association and trained
+                under Chief Master Minton.  I'm quite busy, but that's the way I like it. I'm quite fortunate to have
+                both a decent right and left side of my brain : )"</p>
+        </blockquote>
 
     </div>
     <!-- ### END content-area ### -->
