@@ -129,7 +129,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Art Gallery</div>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Art &amp; Writing / Art Gallery</div>
         <h1>Art Gallery</h1>
 
         <p>Here are the <strong>.jpg</strong> versions of some of the artwork that I have done.</p>

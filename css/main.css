@@ -35,7 +35,7 @@ img {
 }
 
 p {
-    color: #212121;
+    color: #ffffff;
     padding: 5px;
     margin: 0;
     font-size: 1.0em;
@@ -239,6 +239,55 @@ blockquote, blockquote p {
     padding: 10px 20px 0 20px;
     font-size: .9em;
     color: #fff;
+}
+
+/**
+* Styles for gallery on main page
+*/
+#gallery {
+    position: relative;
+    height: 250px;
+    width: 100%;
+}
+
+#gallery a {
+    float: left;
+    position: absolute;
+    width: 100%;
+}
+
+#gallery a img {
+    border: none;
+    width: 100%;
+    height: 250px;
+}
+
+#gallery a.show {
+    z-index: 1;
+    width: 100%;
+}
+
+#gallery .caption {
+    z-index: 2;
+    background-color: #76FF03;
+    color: #000;
+    height: auto;
+    width: 100%;
+    position: absolute;
+    bottom: 25px;
+    text-align: center;
+}
+
+#gallery .caption .content {
+    margin: 5px;
+    font-size: .9em;
+}
+
+#gallery .caption .content h3 {
+    margin: 0;
+    padding: 5px 0;
+    color: #111111;
+    font-size: 1em;
 }
 
 /**

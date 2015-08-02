@@ -3,7 +3,7 @@
  *
  * @param what the element or object to hide
  *
- * @return Nothing
+ * @return bool false
  * @throws - Nothing
  * @global - None
  * @notes  - None
@@ -18,6 +18,8 @@ function hidePageElement(what) {
     var obj = typeof what == 'object' ? what : document.getElementById(what);
 
     obj.style.display = 'none';
+
+    return false;
 }
 
 /**
@@ -135,7 +137,7 @@ function rotateImages(whichHolder, startIndex) {
  *
  * @param what the element or object to show
  *
- * @return Nothing
+ * @return bool false
  * @throws - Nothing
  * @global - None
  * @notes  - None
@@ -150,6 +152,8 @@ function showPageElement(what)  {
     var obj = typeof what == 'object' ? what : document.getElementById(what);
 
     obj.style.display = 'block';
+
+    return false;
 }
 
 
@@ -158,7 +162,7 @@ function showPageElement(what)  {
  *
  * @param what the element or object to toggle the visibility of
  *
- * @return Nothing
+ * @return bool false
  * @throws - Nothing
  * @global - None
  * @notes  - None
@@ -177,4 +181,5 @@ function togglePageElementVisibility(what) {
     } else {
         obj.style.display = 'none';
     }
+    return false;
 }

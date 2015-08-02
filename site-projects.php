@@ -118,7 +118,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Site Projects</div>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Site Projects</div>
         <h1>Site Projects</h1>
 
         <p>For a full list of project issues please check: <a href="https://github.com/isuPatches/RockThePatch/issues/" title="https://github.com/isuPatches/RockThePatch/issues/">https://github.com/isuPatches/RockThePatch/issues/</a> and filter on the 'Project' label.</p>

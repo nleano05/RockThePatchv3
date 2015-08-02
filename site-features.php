@@ -122,7 +122,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Site Features</div>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Site Features</div>
 
         <h1>Site Features</h1>
 
@@ -142,7 +142,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         </script>
 
         <ul>
-            <li><a href="#" onclick="togglePageElementVisibility('just-for-fun')"> Just For Fun >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('just-for-fun')"> Just For Fun >></a>
                 <div id="just-for-fun">
                     <ul>
                         <li>Binary Tree Creator</li>
@@ -154,7 +154,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('networking')"> Networking >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('networking')"> Networking >></a>
                 <div id="networking">
                     <ul>
                         <li>Social media area</li>
@@ -164,7 +164,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('reassurance')"> Reassurance >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('reassurance')"> Reassurance >></a>
                 <div id="reassurance">
                     <ul>
                         <li>Quick links to W3C validation</li>
@@ -173,7 +173,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('security')"> Security >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('security')"> Security >></a>
                 <div id="security">
                     <ul>
                         <li>An admin can lock out a user until they choose to unlock them</li>
@@ -190,7 +190,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('usability')"> Usability >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('usability')"> Usability >></a>
                 <div id="usability">
                     <ul>
                         <li>Mobile friendly</li>
@@ -205,7 +205,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('user-system')"> User System >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('user-system')"> User System >></a>
                 <div id="user-system">
                     <ul>
                         <li>Ability to edit account information</li>
@@ -226,7 +226,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('web-admin-features')"> Web Admin >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('web-admin-features')"> Web Admin >></a>
                 <div id="web-admin-features">
                     <ul>
                         <li>Error statistics</li>
@@ -253,7 +253,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('social-features')"> Social >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('social-features')"> Social >></a>
                 <div id="social-features">
                     <ul>
                         <li>Ability to search for friends</li>
@@ -263,7 +263,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('visibility')"> Visibility >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('visibility')"> Visibility >></a>
                 <div id="visibility">
                     <ul>
                         <li>Footer automatically displays the time stamp of when the page was last updated</li>
@@ -271,7 +271,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </ul>
                 </div>
             </li>
-            <li><a href="#" onclick="togglePageElementVisibility('other')"> Other >></a>
+            <li><a href="#" onclick="return togglePageElementVisibility('other')"> Other >></a>
                 <div id="other">
                     <ul>
                         <li>Back-end web service</li>

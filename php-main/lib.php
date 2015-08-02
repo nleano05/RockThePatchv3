@@ -10,6 +10,7 @@ require_once("models/AnnoyanceLevel.php");
 require_once("models/EmailDistro.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");
+require_once("models/Update.php");
 require_once("models/User.php");
 
 global $gDebugMode;

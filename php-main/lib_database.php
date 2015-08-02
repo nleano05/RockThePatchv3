@@ -367,10 +367,66 @@ class lib_database {
 
         $pdo = NULL;
 
-        log_util::log(LOG_LEVEL_DEBUG, "errorReportCategories", $featureRequestCategories);
+        log_util::log(LOG_LEVEL_DEBUG, "featureRequestCategories: ", $featureRequestCategories);
         log_util::logDivider();
 
         return $featureRequestCategories;
+    }
+
+
+    /**
+     *  This function returns all of the updates from the database
+     *
+     * @param None
+     *
+     * @return array of Update objects
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $updates = lib_database::getUpdates();
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 08/02/2015
+     */
+    public static function getUpdates() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $updates = [];
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("SELECT * FROM recent_updates ORDER BY date DESC");
+            $stmt->execute();
+
+            /** @noinspection PhpAssignmentInConditionInspection */
+            while ($row = $stmt->fetch()) {
+                $update = new Update();
+                $update->setId($row['id']);
+                $update->setTitle($row['title']);
+                $update->setText($row['text']);
+                $update->setDate($row['date']);
+
+                array_push($updates, $update);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "updates: ", $updates);
+        log_util::logDivider();
+
+        return $updates;
     }
 
 

@@ -121,12 +121,11 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Excerpts &amp; Lyrics</div>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Art &amp; Writing / Excerpts &amp; Lyrics</div>
         <h1>Excerpts &amp; Lyrics</h1>
 
         <script type="text/javascript">
-            document.ready = function()
-            {
+            document.ready = function() {
                 hidePageElement('excerpt1');
                 hidePageElement('excerpt2');
             };

@@ -70,26 +70,21 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
     <!-- ### Javascript to preload images on the page ### -->
     <script type="text/javascript">
-        // TODO - re-enable this once I have an images and stuff again
-        // var additionalImages = new Array(
-        // "/images/index-slide-show/computer.jpg",
-        // "/images/index-slide-show/computer2.jpg",
-        // "/images/index-slide-show/drums.jpg",
-        // "/images/index-slide-show/guitars.jpg",
-        // "/images/index-slide-show/guitars2.jpg",
-        // "/images/index-slide-show/training.jpg"
-        // );
+         var additionalImages = ["/images/index-slide-show/computer.jpg",
+         "/images/index-slide-show/computer2.jpg",
+         "/images/index-slide-show/drums.jpg",
+         "/images/index-slide-show/guitars.jpg",
+         "/images/index-slide-show/guitars2.jpg",
+         "/images/index-slide-show/training.jpg"];
 
-         preloadImages();
+         preloadImages(additionalImages);
     </script>
 
     <!-- ### Javascript for the Slide Show / Gallery on the main page  -->
     <script type="text/javascript">
-        // TODO - Re-enable this once I have images and a slide show again
-        // $(document).ready(function()
-        // {
-        // galleryDisplay();
-        // });
+         $(document).ready(function() {
+            galleryDisplay();
+         });
     </script>
 </head>
 <!-- ### END Head ### -->
@@ -140,7 +135,56 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
+        <div id="gallery">
+            <a href="index.php" class="show">
+                <img src="/images/index-slide-show/computer2.jpg" title="Computer Programmer" alt="&lt;h3>Programmer&lt;/h3>...with a web development background." width="500" height="200" />
+            </a>
+            <a href="index.php">
+                <img src="/images/index-slide-show/guitars2.jpg" title="Guitarist" alt="&lt;h3>Guitarist&lt;/h3>...who loves PRS, Gibson, Epiphone, Mesa, and Randall." width="500" height="200" />
+            </a>
+            <a href="index.php">
+                <img src="/images/index-slide-show/drums.jpg" title="Drummer"  alt="&lt;h3>Drummer&lt;/h3>...and Drum Off '09 and '10 competitor." width="500" height="200" />
+            </a>
+            <a href="index.php">
+                <img src="/images/index-slide-show/training.jpg" title="Martial Artist" alt="&lt;h3>Martial Artist&lt;/h3>...with multiple awards at various competitions." width="500" height="200" />
+            </a>
+            <a href="index.php">
+                <img src="/images/index-slide-show/guitars.jpg" title="Musician" alt="&lt;h3>Musician&lt;/h3>...and all around music enthusiast." width="500" height="200" />
+            </a>
+            <a href="index.php">
+                <img src="/images/index-slide-show/computer.jpg" title="CS and Math Major" alt="&lt;h3>CS Major and Math Minor&lt;/h3>...who has built multiple PC's." width="500" height="200" />
+            </a>
+            <div class="caption"><div class="content"></div></div>
+        </div>
+        <div class="clear"></div>
 
+        <h1>Welcome!</h1>
+
+        <p>Rock the Patch! is a site that lets you explore and get information about me, Patches. I'm
+            a Tennessee based software engineer, web developer, martial artist, musician, writer, and artist.
+            Find out more about my diverse interests by selecting an area and seeing where it takes you.</p>
+
+        <p>Login as an exclusive 'Rock the Patch!' user to see exclusive content and gain access
+            to streaming audio, downloads, and more.</p>
+
+        <h1>About This Site</h1>
+
+        <p>This page was written in what is being termed XHTML5 which is a specific combination of HTML tags and
+            attributes that validates with both HTML5 and XHTML 1.1 and also strives to use best practices. It also implements
+            OOPHP with some JavaScript, jQuery, RSS 2.0, XSL(T), XML 1.0, and CSS 3.0 thrown in. The goal is to be both functional
+            and aesthetically pleasing across multiple platforms...desktops and mobile devices alike.</p>
+
+        <ul>
+            <li><a href="/about-the-revamp.php" title="About the Revamp">About the Revamp</a></li>
+            <li><a href="/site-map.php" title="Site Map">Site Map</a></li>
+            <li><a href="/site-testing.php" title="Site Testing">Site Testing</a></li>
+            <li><a href="/site-projects.php" title="Site Projects">Site Projects</a></li>
+            <li><a href="/site-features.php" title="Site Features">Site Features</a></li>
+            <li><a href="/site-issues.php" title="Site Issues">Site Issues</a></li>
+            <li><a href="/kudos.php" title="Kudos">Kudos</a></li>
+            <li><a href="/templates.php" title="Templates">Templates</a></li>
+            <li><a href="/resources-and-tools.php" title="Resources and Tools">Resources and Tools</a></li>
+        </ul>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->

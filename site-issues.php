@@ -118,7 +118,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Site Issues</div>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Site Issues</div>
         <h1>Site Issues</h1>
 
         <p>Here is where you can come to get updated information about the known issues
@@ -166,7 +166,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
         <h2>Site Limitations</h2>
 
-        <p><a href="#" onclick="togglePageElementVisibility('possible-limitations')">View/Hide Section >></a></p>
+        <p><a href="#" onclick="return togglePageElementVisibility('possible-limitations')">View/Hide Section >></a></p>
         <div id="possible-limitations">
             <ul>
                 <li>Only certain U.S. and Canadian cellular carriers are supported<br/>
