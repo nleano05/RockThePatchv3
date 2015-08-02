@@ -121,8 +121,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
         <?php
             $updates  = lib_database::getUpdates();
-
-            if(!empty($updates)) {
+			
+            if(!empty($updates) && (count($updates) > 0)) {
                 $needToHideElement = FALSE;
                 foreach($updates as $update) {
                     echo("<p><a href=\"#\" onclick=" . "\"" . "return togglePageElementVisibility(" . "'status" . $update->getDate() . "'" . ")". "\"" . ">Status for " . $update->getDate() . " >></a></p>");
@@ -139,6 +139,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         echo("</script>");
                     }
                 }
+            } else {
+                echo("<p><em>No updates to display at this time</em><p>");
             }
         ?>
     </div>
