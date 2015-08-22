@@ -1,13 +1,14 @@
 <h1>Recent Updates</h1>
 
-<h2 style="text-align:center;">Back and Better Than Ever!</h2>
+<?php
+    $update = lib_database::getMostRecentUpdate();
 
-<p>
-    Welcome the new re-vamped v3 version of Rock the Patch!  After months of trials and tribulations,
-    the back-end and everything have been refactored, cleaned up, and improved!
-    <em><a href="/recent-updates-log.php" title="Recent Updates Log">...continue reading</a></em>
-</p>
-
-<p><strong>Date Posted:</strong> 07/04/2015</p>
+    if(!empty($update)) {
+        echo("<h2 style='text-align:center'>" . $update->getTitle() . "</h2>");
+        $updateText = substr($update->getText(), 0, 325);
+        echo("<p>" . $updateText . "<em><a href='/recent-updates-log.php' title='Recent Updates Log'>...continue reading</a></em></p>");
+        echo("<p>Date Posted: " . $update->getDate() . "</p>");
+    }
+?>
 
 <p><em><a href="/recent-updates-log.php" title="Recent Updates Log">Want to see more?</a></em></p>

@@ -33,12 +33,6 @@ class lib_database {
             $pdo = new PDO(DB_HOST, DB_USER, DB_PASS);
             $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-            if (empty($dbh)) {
-                log_util::log(LOG_LEVEL_DEBUG, "PDO connection was empty.  dbh: ", $pdo);
-            } else {
-                log_util::log(LOG_LEVEL_WARNING, "PDO connection succeeded. dbh: ", $pdo);
-            }
         } catch (PDOException $e) {
             $pdo = null;
             log_util::log(LOG_LEVEL_ERROR, "An error occurred while establishing PDO connection", $e);
@@ -373,6 +367,59 @@ class lib_database {
         return $featureRequestCategories;
     }
 
+    /**
+     *  This function gets the most recent update from the database
+     *
+     * @param None
+     *
+     * @return Update|null
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $update = lib_database::getMostRecentUpdate();
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 08/22/2015
+     */
+    public static function getMostRecentUpdate() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $update = NULL;
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("SELECT * FROM recent_updates ORDER BY date DESC");
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            /** @noinspection PhpAssignmentInConditionInspection */
+            if (!empty($row )) {
+                $update = new Update();
+                $update->setId($row['id']);
+                $update->setTitle($row['title']);
+                $update->setText($row['text']);
+                $update->setDate($row['date']);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "update: ", $update);
+        log_util::logDivider();
+
+        return $update;
+    }
 
     /**
      *  This function returns all of the updates from the database

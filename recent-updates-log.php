@@ -121,7 +121,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
         <?php
             $updates  = lib_database::getUpdates();
-			
+
             if(!empty($updates) && (count($updates) > 0)) {
                 $needToHideElement = FALSE;
                 foreach($updates as $update) {
