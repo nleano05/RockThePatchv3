@@ -92,7 +92,7 @@ class lib_check {
      * @version - 1.0
      * @history - Created 07/05/2015
      */
-    function startsWith($needle, $haystack) {
+    public static function startsWith($needle, $haystack) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -161,7 +161,7 @@ class lib_check {
      * @version - 1.0
      * @history - Created 07/05/2015
      */
-    function wildCardSearch($needle, $haystack) {
+    public static function wildCardSearch($needle, $haystack) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];

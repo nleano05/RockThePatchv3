@@ -43,6 +43,34 @@ class lib_database {
         return $pdo;
     }
 
+    public static function deleteUpdate($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $update = NULL;
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("DELETE FROM recent_updates WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     /**
      *  This function gets all of the annoyance levels
      *
@@ -422,6 +450,61 @@ class lib_database {
     }
 
     /**
+     *  This function gets an update based on unique id from the database
+     *
+     * @param None
+     *
+     * @return Update|null
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $update = lib_database::getUpdateById($id);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 08/23/2015
+     */
+    public static function getUpdateById($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $update = NULL;
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("SELECT * FROM recent_updates WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            /** @noinspection PhpAssignmentInConditionInspection */
+            if (!empty($row )) {
+                $update = new Update();
+                $update->setId($row['id']);
+                $update->setTitle($row['title']);
+                $update->setText($row['text']);
+                $update->setDate($row['date']);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "update: ", $update);
+        log_util::logDivider();
+
+        return $update;
+    }
+
+    /**
      *  This function returns all of the updates from the database
      *
      * @param None
@@ -608,6 +691,52 @@ class lib_database {
     }
 
     /**
+     *  This function updates an update in the database
+     *
+     * @param Update $update The update to be updated
+     *
+     * @return None
+     * @throws - Nothing
+     * @global - None
+     * @notes - None
+     * @example - lib_database::update($update);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 08/23/2015
+     */
+    public static function updateUpdate(Update $update) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("UPDATE recent_update SET title=?, text=?, date=? WHERE id = ?");
+            $title = $update->getTitle();
+            $text = $update->getText();
+            $date = $update->getDate();
+            $timestamp = date('Y-m-d H:i:s', strtotime($date));
+            $id = $update->getId();
+            $stmt->bindParam(1, $title, PDO::PARAM_STR);
+            $stmt->bindParam(2, $text, PDO::PARAM_STR);
+            $stmt->bindParam(3, $timestamp, PDO::PARAM_STR);
+            $stmt->bindParam(4, $id, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        log_util::logDivider();
+    }
+
+    /**
      *  This function writes encryption data out to the database
      *
      * @param EncryptionData $encryptionData The encryption data to be written out
@@ -671,5 +800,64 @@ class lib_database {
         if(!$noDebugModeOutput) {
             log_util::logDivider();
         }
+    }
+
+    /**
+     *  This function writes update data out to the database
+     *
+     * @param Update $update The update data to be written
+     *
+     * @return None
+     * @throws - Nothing
+     * @global - None
+     * @notes
+     *  - Calls lib_database::updateUpdate() if there is already an entry for the update id
+     * @example - lib_database::writeUpdate($update);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 08/23/2015
+     */
+    public static function writeUpdate(Update $update){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+
+            $stmt = $pdo->prepare("SELECT * FROM recent_updates WHERE id = ?");
+            $id = $update->getId();
+            echo("<p>id: " . $id . "</p>");
+            $stmt->bindParam(1, $id, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(empty($row)) {
+                $stmt = $pdo->prepare("INSERT INTO recent_updates (title, text, date) VALUE (?, ?, ?)");
+                $title = $update->getTitle();
+                $text = $update->getText();
+                $date = $update->getDate();
+                $timestamp = date('Y-m-d H:i:s', strtotime($date));
+                $stmt->bindParam(1, $title, PDO::PARAM_STR);
+                $stmt->bindParam(2, $text, PDO::PARAM_STR);
+                $stmt->bindParam(3, $timestamp, PDO::PARAM_STR);
+                $stmt->execute();
+            } else {
+                lib_database::updateUpdate($update);
+            }
+
+        } else {
+           log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
     }
 }

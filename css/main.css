@@ -77,6 +77,10 @@ blockquote, blockquote p {
     color: #ffffff;
 }
 
+.float-left {
+    float: left;
+}
+
 .float-left49 {
     float: left;
     width: 49%;

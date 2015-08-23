@@ -9,44 +9,31 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 $postKeys = array_keys($_POST);
 log_util::log(LOG_LEVEL_DEBUG, "postKeys: ", $postKeys);
 
+global $gUpdate;
+
 foreach($postKeys as $key){
     log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
 
-    if(lib_check::startsWith("delete-update-", $key)) {
-        $updateId = str_replace("delete-update-", "", $key);
+    if(lib_check::startsWith("edit-update-", $key)) {
+        $updateId = str_replace("edit-update-", "", $key);
 
-        log_util::log(LOG_LEVEL_DEBUG, "Delete update key found");
+        log_util::log(LOG_LEVEL_DEBUG, "Edit update key found");
         log_util::log(LOG_LEVEL_DEBUG, "Update id: " . $updateId);
-        lib_database::deleteUpdate($updateId);
+
+        $gUpdate = lib_database::getUpdateById($updateId);
     }
 }
 
-function displayUpdates($updates) {
-    $needToHideElement = FALSE;
-    foreach ($updates as $update) {
-        echo("<p><a href=\"#\" onclick=" . "\"" . "return togglePageElementVisibility(" . "'status" . $update->getDate() . "'" . ")" . "\"" . ">Status for " . $update->getDate() . " >></a></p>");
-        echo("<div id=\"status" . $update->getDate() . "\">");
-        echo("<h2>" . $update->getTitle() . "</h2>");
-        echo($update->getText());
-//        if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
-            echo("<form action='recent-updates-log.php' method='post' name='delete-update-form'>");
-                echo("<p class='float-left'><input type='submit' name='delete-update-" . $update->getId() . "' value='Delete Update' class='button' /></p>");
-            echo("</form>");
-            echo("<form action='add-or-edit-update.php' method='post' name='edit-update-form'>");
-                echo("<p class='float-left'><input type='submit' name='edit-update-" . $update->getId() . "' value='Edit Update' class='button' /></p>");
-            echo("</form>");
-//        }
-        echo("<div class='clear'></div>");
-        echo("<hr/>");
-        echo("</div>");
-        if (!$needToHideElement) {
-            $needToHideElement = TRUE;
-        } else {
-            echo("<script type=\"text/javascript\">");
-            echo(" hidePageElement(" . "'status" . $update->getDate() . "'" . "); ");
-            echo("</script>");
-        }
+if (isset($_POST['save-update'])) {
+    print_r($gUpdate);
+    if(empty($gUpdate)) {
+        $gUpdate = new Update();
     }
+    $gUpdate->setTitle($_POST['update-title']);
+    $gUpdate->setText($_POST['update-body']);
+    $gUpdate->setDate($_POST['update-date']);
+    log_util::log(LOG_LEVEL_DEBUG, "update: ", $gUpdate);
+    lib_database::writeUpdate($gUpdate);
 }
 ?>
 <!DOCTYPE html>
@@ -68,13 +55,18 @@ function displayUpdates($updates) {
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Recent Updates Log</title>
+    <?php
+        if(!empty($gUpdate)) {
+            echo("<title>Rock the Patch! v3 - Edit Update</title>");
+        } else {
+            echo("<title>Rock the Patch! v3 - Add Update</title>");
+        }
+    ?>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
     <meta name="author" content="Patches"/>
-    <meta name="keywords"
-          content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
+    <meta name="keywords" content="patches, xhtml 1.1, html5, xhtml5, rss, css3, xsl(T), programmer, rock the patch, writer, artist, musician, mobile"/>
 
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -99,9 +91,6 @@ function displayUpdates($updates) {
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
 
-    <!-- ### JQuerey Imports ### -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-
     <!-- ### Common Javascript Library Imports ### -->
     <script type="text/javascript" src="/js/lib.js"></script>
     <script type="text/javascript" src="/js/lib-autoformat.js"></script>
@@ -110,6 +99,11 @@ function displayUpdates($updates) {
     <script type="text/javascript" src="/js/lib-populate.js"></script>
     <script type="text/javascript" src="/js/lib-sync.js"></script>
     <script type="text/javascript" src="/js/lib-toggle.js"></script>
+
+    <!-- ### JQuery import for date picker ### -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <!-- ### Javascript to preload images on the page ### -->
     <script type="text/javascript">
@@ -160,23 +154,33 @@ function displayUpdates($updates) {
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Recent Updates Log</div>
-        <h1>Recent Updates Log</h1>
-
         <?php
-        $updates = lib_database::getUpdates();
-
-        if (!empty($updates) && (count($updates) > 0)) {
-            echo("<form action='add-or-edit-update.php' method='post' name='add-update-form'>");
-//            if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
-                echo("<p><input type='submit' name='add-update' value='Add Update' class='button' /></p>");
-//            }
-            echo("</form>");
-            displayUpdates($updates);
-        } else {
-            echo("<p><em>No updates to display at this time</em><p>");
-        }
+            if(!empty($gUpdate)) {
         ?>
+                <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Edit Update</div>
+                <h1>Edit Update</h1>
+        <?php
+            } else {
+        ?>
+                <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Add Update</div>
+                <h1>Add Update</h1>
+        <?php
+            }
+        ?>
+
+        <form action="add-or-edit-update.php" method="post" name="add-or-edit-update-form">
+            <p><strong>Update Title:</strong></p>
+            <p><input type="text" name="update-title" value="<?php if(!empty($_POST['update-title'])) { echo($_POST['update-title']); } else if(!empty($gUpdate) && !empty($gUpdate->getTitle())){ echo($gUpdate->getTitle()); } ?>"/></p>
+            <p><strong>Update:</strong></p>
+            <p><textarea name="update-body" rows="5" cols="1" style="width:100%;height:125px;"><?php if(!empty($_POST['update-text'])) { echo($_POST['update-text']); } else if(!empty($gUpdate) && !empty($gUpdate->getText())) { echo($gUpdate->getText()); }?></textarea></p>
+            <p><strong>Date:</strong></p>
+            <p><input id="update-date" name="update-date" type="text"  value="<?php if(!empty($_POST['update-date'])) { echo($_POST['update-date']); } else if(!empty($gUpdate) && !empty($gUpdate->getDate())){ echo($gUpdate->getDate()); } ?>"></p>
+            <p><input type='submit' name='save-update' value='Save Update' class='button' /></p>
+        </form>
+
+        <script language="javascript">
+             $('#update-date').datepicker();
+        </script>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->
