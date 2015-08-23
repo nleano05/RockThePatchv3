@@ -32,8 +32,8 @@ function displayUpdates($updates) {
             echo("<form action='recent-updates-log.php' method='post' name='delete-update-form'>");
                 echo("<p class='float-left'><input type='submit' name='delete-update-" . $update->getId() . "' value='Delete Update' class='button' /></p>");
             echo("</form>");
-            echo("<form action='add-or-edit-update.php' method='post' name='edit-update-form'>");
-                echo("<p class='float-left'><input type='submit' name='edit-update-" . $update->getId() . "' value='Edit Update' class='button' /></p>");
+            echo("<form action='add-or-edit-update.php?id=" . $update->getId() . "' method='post' name='edit-update-form'>");
+                echo("<p class='float-left'><input type='submit' name='edit-update' value='Edit Update' class='button' /></p>");
             echo("</form>");
 //        }
         echo("<div class='clear'></div>");

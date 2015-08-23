@@ -715,15 +715,17 @@ class lib_database {
 
         $pdo = lib_database::connect();
 
+        var_dump($update);
+
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
 
-            $stmt = $pdo->prepare("UPDATE recent_update SET title=?, text=?, date=? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE recent_updates SET title=?, text=?, date=? WHERE id = ?");
             $title = $update->getTitle();
             $text = $update->getText();
             $date = $update->getDate();
-            $timestamp = date('Y-m-d H:i:s', strtotime($date));
             $id = $update->getId();
+            $timestamp = date('Y-m-d H:i:s', strtotime($date));
             $stmt->bindParam(1, $title, PDO::PARAM_STR);
             $stmt->bindParam(2, $text, PDO::PARAM_STR);
             $stmt->bindParam(3, $timestamp, PDO::PARAM_STR);

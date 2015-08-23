@@ -10,18 +10,11 @@ $postKeys = array_keys($_POST);
 log_util::log(LOG_LEVEL_DEBUG, "postKeys: ", $postKeys);
 
 global $gUpdate;
+global $gUpdateId;
 
-foreach($postKeys as $key){
-    log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
-
-    if(lib_check::startsWith("edit-update-", $key)) {
-        $updateId = str_replace("edit-update-", "", $key);
-
-        log_util::log(LOG_LEVEL_DEBUG, "Edit update key found");
-        log_util::log(LOG_LEVEL_DEBUG, "Update id: " . $updateId);
-
-        $gUpdate = lib_database::getUpdateById($updateId);
-    }
+if(isset($_GET['id'])) {
+    $gUpdateId = $_GET['id'];
+    $gUpdate = lib_database::getUpdateById($gUpdateId);
 }
 
 if (isset($_POST['save-update'])) {
@@ -168,19 +161,39 @@ if (isset($_POST['save-update'])) {
             }
         ?>
 
-        <form action="add-or-edit-update.php" method="post" name="add-or-edit-update-form">
-            <p><strong>Update Title:</strong></p>
-            <p><input type="text" name="update-title" value="<?php if(!empty($_POST['update-title'])) { echo($_POST['update-title']); } else if(!empty($gUpdate) && !empty($gUpdate->getTitle())){ echo($gUpdate->getTitle()); } ?>"/></p>
-            <p><strong>Update:</strong></p>
-            <p><textarea name="update-body" rows="5" cols="1" style="width:100%;height:125px;"><?php if(!empty($_POST['update-text'])) { echo($_POST['update-text']); } else if(!empty($gUpdate) && !empty($gUpdate->getText())) { echo($gUpdate->getText()); }?></textarea></p>
-            <p><strong>Date:</strong></p>
-            <p><input id="update-date" name="update-date" type="text"  value="<?php if(!empty($_POST['update-date'])) { echo($_POST['update-date']); } else if(!empty($gUpdate) && !empty($gUpdate->getDate())){ echo($gUpdate->getDate()); } ?>"></p>
-            <p><input type='submit' name='save-update' value='Save Update' class='button' /></p>
-        </form>
+        <?php
+//            if(lib_get::loginStatus() == STATUS_LOGGED_IN) {
+//                if(lib_check::userIsAdmin()) {
+        ?>
+            <?php
+                if(!empty($gUpdateId)){
+                    echo("<form action='add-or-edit-update.php?id=$gUpdateId' method='post' name='add-or-edit-update-form'>");
+                } else {
+                    echo("<form action='add-or-edit-update.php' method='post' name='add-or-edit-update-form'>");
+                }
 
-        <script language="javascript">
-             $('#update-date').datepicker();
-        </script>
+            ?>
+                <p><strong>Update Title:</strong></p>
+                <p><input type="text" name="update-title" value="<?php if(!empty($_POST['update-title'])) { echo($_POST['update-title']); } else if(!empty($gUpdate) && !empty($gUpdate->getTitle())){ echo($gUpdate->getTitle()); } ?>"/></p>
+                <p><strong>Update:</strong></p>
+                <p><textarea name="update-body" rows="5" cols="1" style="width:100%;height:125px;"><?php if(!empty($_POST['update-text'])) { echo($_POST['update-text']); } else if(!empty($gUpdate) && !empty($gUpdate->getText())) { echo($gUpdate->getText()); }?></textarea></p>
+                <p><strong>Date:</strong></p>
+                <p><input id="update-date" name="update-date" type="text"  value="<?php if(!empty($_POST['update-date'])) { echo($_POST['update-date']); } else if(!empty($gUpdate) && !empty($gUpdate->getDate())){ echo($gUpdate->getDate()); } ?>"></p>
+                <p><input type='submit' name='save-update' value='Save Update' class='button' /></p>
+            </form>
+
+            <script language="javascript">
+                 $('#update-date').datepicker();
+            </script>
+
+        <?php
+//                } else {
+//                    echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
+//                }
+//            } else {
+//                echo("<p><em>" . NOTICE_MUST_BE_LOGGED_IN . "</em></p>");
+//            }
+        ?>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->
