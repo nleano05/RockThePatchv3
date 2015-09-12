@@ -28,14 +28,14 @@ function displayUpdates($updates) {
         echo("<div id=\"status" . $update->getDate() . "\">");
         echo("<h2>" . $update->getTitle() . "</h2>");
         echo($update->getText());
-//        if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
+        if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
             echo("<form action='recent-updates-log.php' method='post' name='delete-update-form'>");
                 echo("<p class='float-left'><input type='submit' name='delete-update-" . $update->getId() . "' value='Delete Update' class='button' /></p>");
             echo("</form>");
             echo("<form action='add-or-edit-update.php?id=" . $update->getId() . "' method='post' name='edit-update-form'>");
                 echo("<p class='float-left'><input type='submit' name='edit-update' value='Edit Update' class='button' /></p>");
             echo("</form>");
-//        }
+        }
         echo("<div class='clear'></div>");
         echo("<hr/>");
         echo("</div>");
@@ -168,9 +168,9 @@ function displayUpdates($updates) {
 
         if (!empty($updates) && (count($updates) > 0)) {
             echo("<form action='add-or-edit-update.php' method='post' name='add-update-form'>");
-//            if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
+            if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
                 echo("<p><input type='submit' name='add-update' value='Add Update' class='button' /></p>");
-//            }
+            }
             echo("</form>");
             displayUpdates($updates);
         } else {

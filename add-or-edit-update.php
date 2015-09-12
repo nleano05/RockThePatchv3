@@ -7,10 +7,13 @@ include("php-main/cookie.php");
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
 $postKeys = array_keys($_POST);
+log_util::log(LOG_LEVEL_DEBUG, "post: ", $_POST);
 log_util::log(LOG_LEVEL_DEBUG, "postKeys: ", $postKeys);
 
 global $gUpdate;
 global $gUpdateId;
+
+$gValidForm = FALSE;
 
 if(isset($_GET['id'])) {
     $gUpdateId = $_GET['id'];
@@ -18,16 +21,89 @@ if(isset($_GET['id'])) {
 }
 
 if (isset($_POST['save-update'])) {
-    print_r($gUpdate);
-    if(empty($gUpdate)) {
-        $gUpdate = new Update();
+    $gValidForm = checkInput();
+    if($gValidForm) {
+        if (empty($gUpdate)) {
+            $gUpdate = new Update();
+        }
+        $gUpdate->setTitle($_POST['update-title']);
+        $gUpdate->setText($_POST['update-body']);
+        $gUpdate->setDate($_POST['update-date']);
+        log_util::log(LOG_LEVEL_DEBUG, "update: ", $gUpdate);
+        lib_database::writeUpdate($gUpdate);
     }
-    $gUpdate->setTitle($_POST['update-title']);
-    $gUpdate->setText($_POST['update-body']);
-    $gUpdate->setDate($_POST['update-date']);
-    log_util::log(LOG_LEVEL_DEBUG, "update: ", $gUpdate);
-    lib_database::writeUpdate($gUpdate);
 }
+
+function checkInput(){
+    $validForm = TRUE;
+
+    global $gNoTitle, $gNoBody, $gNoDate, $gBlackTitle;
+
+    $updateTitle = isset($_POST['update-title']) ? $_POST['update-title'] : "";
+    $updateBody = isset($_POST['update-body']) ? $_POST['update-body'] : "";
+    $updateDate = isset($_POST['update-date']) ? $_POST['update-date'] : "";
+
+    $gNoTitle = lib_check::isEmpty($updateTitle);
+    if($gNoTitle) {
+        $validForm = FALSE;
+        log_util::log(LOG_LEVEL_DEBUG, "title WAS empty");
+    } else {
+        log_util::log(LOG_LEVEL_DEBUG, "title WAS NOT empty");
+    }
+
+    $gNoBody = lib_check::isEmpty($updateBody);
+    if($gNoBody) {
+        $validForm = FALSE;
+        log_util::log(LOG_LEVEL_DEBUG, "body WAS empty");
+    } else {
+        log_util::log(LOG_LEVEL_DEBUG, "body WAS NOT empty");
+    }
+
+    $gNoDate = lib_check::isEmpty($updateDate);
+    if($gNoDate) {
+        $validForm = FALSE;
+        log_util::log(LOG_LEVEL_DEBUG, "date WAS empty");
+    } else {
+        log_util::log(LOG_LEVEL_DEBUG, "date WAS NOT empty");
+    }
+
+    $gBlackTitle = lib_check::againstWhiteList($updateTitle);
+    if($gBlackTitle) {
+        $validForm = FALSE;
+        log_util::log(LOG_LEVEL_DEBUG, "title DID NOT match the white list");
+    } else {
+        log_util::log(LOG_LEVEL_DEBUG, "title DID match the white list");
+    }
+
+    return $validForm;
+}
+
+function displayOutputTitle() {
+    global $gNoTitle, $gBlackTitle;
+
+    if($gNoTitle) {
+        echo("<p class='error'>Please enter in a title for the update.</p>");
+    } else if ($gBlackTitle) {
+        echo("<p class='error'>The title entered contains characters that are not allowed.</p>");
+    }
+}
+
+function displayOutputBody() {
+    global $gNoBody;
+
+    if($gNoBody) {
+        echo("<p class='error'>Please enter in text for the update.</p>");
+    }
+}
+
+function displayOutputDate() {
+    global $gNoDate;
+
+    if($gNoDate) {
+        echo("<p class='error'>Please select a date for the update.</p>");
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <!-- ### Sets the class and language for IE 7,8, and 9 ### -->
@@ -162,8 +238,8 @@ if (isset($_POST['save-update'])) {
         ?>
 
         <?php
-//            if(lib_get::loginStatus() == STATUS_LOGGED_IN) {
-//                if(lib_check::userIsAdmin()) {
+            if(lib_get::loginStatus() == STATUS_LOGGED_IN) {
+                if(lib_check::userIsAdmin()) {
         ?>
             <?php
                 if(!empty($gUpdateId)){
@@ -174,25 +250,43 @@ if (isset($_POST['save-update'])) {
 
             ?>
                 <p><strong>Update Title:</strong></p>
-                <p><input type="text" name="update-title" value="<?php if(!empty($_POST['update-title'])) { echo($_POST['update-title']); } else if(!empty($gUpdate) && !empty($gUpdate->getTitle())){ echo($gUpdate->getTitle()); } ?>"/></p>
+                <p><input type="text" name="update-title" value="<?php if(isset($_POST['update-title'])) { echo($_POST['update-title']); } else if(!empty($gUpdate) && !empty($gUpdate->getTitle())){ echo($gUpdate->getTitle()); } ?>"/></p>
+                <?php
+                    if(!$gValidForm && isset($_POST['save-update'])) {
+                        displayOutputTitle();
+                    }
+                ?>
+
                 <p><strong>Update:</strong></p>
-                <p><textarea name="update-body" rows="5" cols="1" style="width:100%;height:125px;"><?php if(!empty($_POST['update-text'])) { echo($_POST['update-text']); } else if(!empty($gUpdate) && !empty($gUpdate->getText())) { echo($gUpdate->getText()); }?></textarea></p>
+                <p><textarea name="update-body" rows="5" cols="1" style="width:100%;height:125px;"><?php if(isset($_POST['update-body'])) { echo($_POST['update-body']); } else if(!empty($gUpdate) && !empty($gUpdate->getText())) { echo($gUpdate->getText()); }?></textarea></p>
+                <?php
+                    if(!$gValidForm && isset($_POST['save-update'])) {
+                        displayOutputBody();
+                    }
+                ?>
+
                 <p><strong>Date:</strong></p>
-                <p><input id="update-date" name="update-date" type="text"  value="<?php if(!empty($_POST['update-date'])) { echo($_POST['update-date']); } else if(!empty($gUpdate) && !empty($gUpdate->getDate())){ echo($gUpdate->getDate()); } ?>"></p>
+                <p><input id="update-date" name="update-date" type="text"  value="<?php if(isset($_POST['update-date'])) { echo($_POST['update-date']); } else if(!empty($gUpdate) && !empty($gUpdate->getDate())){ echo($gUpdate->getDate()); } ?>"></p>
+                <?php
+                    if(!$gValidForm && isset($_POST['save-update'])) {
+                        displayOutputDate();
+                    }
+                ?>
+
                 <p><input type='submit' name='save-update' value='Save Update' class='button' /></p>
             </form>
 
-            <script language="javascript">
+            <script type="text/javascript">
                  $('#update-date').datepicker();
             </script>
 
         <?php
-//                } else {
-//                    echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
-//                }
-//            } else {
-//                echo("<p><em>" . NOTICE_MUST_BE_LOGGED_IN . "</em></p>");
-//            }
+                } else {
+                    echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
+                }
+            } else {
+                echo("<p><em>" . NOTICE_MUST_BE_LOGGED_IN . "</em></p>");
+            }
         ?>
     </div>
     <!-- ### END content-area ### -->

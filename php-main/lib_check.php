@@ -6,6 +6,48 @@
 class lib_check {
 
     /**
+     *  This function uses preg_match to check if the given input matches a white list of characters
+     *
+     * @param string $input the string to check if it matches the white list
+     *
+     * @return bool
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $black = lib_check::againstWhiteList($input);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 09/12/2015
+     */
+    public static function againstWhiteList($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $black = FALSE;
+
+        $whiteList = "/^[a-zA-Z0-9@-]/";
+
+        $match = preg_match($whiteList, $input);
+
+        if(!$match) {
+            $black = TRUE;
+
+            log_util::log(LOG_LEVEL_DEBUG, "input DOES NOT match the white list");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input DOES match the white list");
+        }
+
+        log_util::logDivider();
+
+        return $black;
+    }
+
+    /**
      *  This function checks if debug mode should be disabled or enabled
      *
      * @param $enable boolean (optional) If debug mode is enabled or disabled
@@ -75,6 +117,44 @@ class lib_check {
         log_util::logDivider();
 
         return (substr($haystack, -$length) === $needle);
+    }
+
+    /**
+     *  This function checks if the given input is empty
+     *
+     * @param string $input The string to check if empty
+     *
+     * @return bool
+     * @throws - Nothing
+     * @global - None
+     * @notes  - None
+     * @example - $empty = lib_check::isEmpty($input);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 09/12/2015
+     */
+    public static function isEmpty($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $empty = FALSE;
+
+        if(($input == "") || ($input == NULL) || !isset($input) || empty($input)) {
+            $empty = TRUE;
+
+            log_util::log(LOG_LEVEL_DEBUG, "input IS empty");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input IS NOT empty");
+        }
+
+        log_util::logDivider();
+
+        return $empty;
     }
 
     /**

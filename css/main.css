@@ -73,6 +73,10 @@ blockquote, blockquote p {
     clear: both;
 }
 
+.error {
+    color: red !important;
+}
+
 .font-white {
     color: #ffffff;
 }

@@ -715,8 +715,6 @@ class lib_database {
 
         $pdo = lib_database::connect();
 
-        var_dump($update);
-
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
 
@@ -835,7 +833,6 @@ class lib_database {
 
             $stmt = $pdo->prepare("SELECT * FROM recent_updates WHERE id = ?");
             $id = $update->getId();
-            echo("<p>id: " . $id . "</p>");
             $stmt->bindParam(1, $id, PDO::PARAM_STR);
             $stmt->execute();
             $row = $stmt->fetch();
