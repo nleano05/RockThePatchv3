@@ -47,11 +47,11 @@ class lib_get {
         }
         log_util::logFunctionStart($args);
 
-        $id = isset($_COOKIE['id']) ? base64_decode($_COOKIE['id']) : "";
+        $loginStatusKey = isset($_COOKIE[COOKIE_LOGIN_STATUS_KEY]) ? str_replace("_login", "", base64_decode($_COOKIE[COOKIE_LOGIN_STATUS_KEY])) : "";
 
-        log_util::log(LOG_LEVEL_DEBUG, "id: " . $id);
+        log_util::log(LOG_LEVEL_DEBUG, "loginStatusKey: " . $loginStatusKey);
 
-        $currentUser = lib_database::getUser($id);
+        $currentUser = lib_database::getUser($loginStatusKey);
 
         log_util::log(LOG_LEVEL_DEBUG, "currentUser: ", $currentUser);
         log_util::logDivider();
@@ -193,7 +193,6 @@ class lib_get {
      * @global - None
      * @notes  - None
      * @example - $loginStatus = lib_get::loginStatus();
-     * @todo finish writing this function
      * @author - Patches
      * @version - 1.0
      * @history - Created 07/04/2015
@@ -207,9 +206,20 @@ class lib_get {
         }
         log_util::logFunctionStart($args);
 
-        $loginStatus = STATUS_LOGGED_OUT;
+        $loginStatusKey = isset($_COOKIE[COOKIE_LOGIN_STATUS_KEY]) ? base64_decode($_COOKIE[COOKIE_LOGIN_STATUS_KEY]) : NULL;
 
+        $loginStatus = STATUS_LOGGED_OUT;
+        if($loginStatusKey != NULL) {
+            log_util::log(LOG_LEVEL_DEBUG, "id WAS NOT null");
+            $loginStatus = lib::decrypt($loginStatusKey);
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "id WAS null");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "loginStatusKey: " . $loginStatusKey);
         log_util::log(LOG_LEVEL_DEBUG, "loginStatus: " . $loginStatus);
+
+        log_util::logDivider();
 
         return $loginStatus;
     }

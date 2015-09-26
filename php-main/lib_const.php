@@ -20,3 +20,10 @@ define("PATCHES", "isuPatches");
 
 define("NOTICE_MUST_BE_ADMIN", "Only administrators will be able to view this page");
 define("NOTICE_MUST_BE_LOGGED_IN", "Only logged in users will be able to view this page");
+
+define("LOCK_TYPE_NORMAL", 1);
+define("LOCK_TYPE_ADMIN", 2);
+
+define("COOKIE_DEBUG_MODE", "debug_mode");
+define("COOKIE_LOGIN_STATUS_KEY", "login_status_key");
+define("COOKIE_USER_ID", "user_id");

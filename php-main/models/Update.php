@@ -28,7 +28,11 @@ class Update {
         } else {
             trigger_error('Expected an string or null for $text.', E_USER_WARNING);
         }
-        $this->date = $date;
+        if (is_string($date) || $date == NULL) {
+            $this->date = $date;
+        } else {
+            trigger_error('Expected an string or null for $date.', E_USER_WARNING);
+        }
     }
 
     /**
@@ -96,6 +100,10 @@ class Update {
      * @param NULL|string $date
      */
     public function setDate($date) {
-        $this->date = $date;
+        if (is_string($date) || $date == NULL) {
+            $this->date = $date;
+        } else {
+            trigger_error('Expected an string or null for $date.', E_USER_WARNING);
+        }
     }
 }

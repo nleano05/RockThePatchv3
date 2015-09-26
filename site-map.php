@@ -185,9 +185,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             <?php
             $isAdmin = lib_check::userIsAdmin();
 
-            if($gLoginStatus == "Logged In")
-            {
-                ?>
+            if($gLoginStatus == STATUS_LOGGED_IN) {
+        ?>
                 <h2>For 'Rock the Patch!' Users</h2>
 
                 <ul>
@@ -206,13 +205,12 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
                 <ul>
                     <li><a href="../social/main.php" title="Social Main Page">Social Main Page</a></li>
-                    <li><a href="../social/profile.php<?php echo("?id=".getCurrentUser()->id) ?>" title="Mt Profile">My Profile</a></li>
+                    <li><a href="../social/profile.php<?php echo("?id=".lib_get::currentUser()->getId()) ?>" title="Mt Profile">My Profile</a></li>
                     <li><a href="../social/search-users.php" title="Search Users">Search Users</a></li>
                     <li><a href="../social/my-friends.php" title="My Friends">My Friends</a></li>
                 </ul>
                 <?php
-                if($isAdmin)
-                {
+                    if($isAdmin) {
                     ?>
                     <h2>For Admin Users</h2>
 

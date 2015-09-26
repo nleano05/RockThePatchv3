@@ -6,8 +6,10 @@ require_once("lib_database.php");
 require_once("lib_get.php");
 require_once("log_util.php");
 
+require_once("models/AccountLock.php");
 require_once("models/AnnoyanceLevel.php");
 require_once("models/EmailDistro.php");
+require_once("models/EncryptionData.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");
 require_once("models/Update.php");
@@ -25,16 +27,82 @@ $gDebugDivider = "--------------------------------------------------------------
 $gMasterAdminEmail = MASTER_ADMIN_EMAIL;
 $gMasterAdminName = MASTER_ADMIN_NAME;
 
-if (!isset($_COOKIE['debugMode'])) {
+if (!isset($_COOKIE[COOKIE_DEBUG_MODE])) {
     $gDebugMode = lib_check::debugMode();
 } else {
-    $gDebugMode = $_COOKIE['debugMode'];
+    $gDebugMode = $_COOKIE[COOKIE_DEBUG_MODE];
 }
 
 /**
  * This class contains core function of the site that are not related to get, database, and other operations
  */
 class lib {
+
+    public static function cookieCreate($cookie, $value, $sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+
+        global $gDebugMode;
+
+        if($gDebugMode && !$noDebugModeOutput) {
+            log_util::logFunctionStart($args);
+        }
+
+        $_COOKIE[$cookie] = $value;
+        if($sendHeaders)  {
+            if($gDebugMode && !$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_DEBUG, "We ARE in debug mode, cannot send headers");
+            } else {
+                setcookie($cookie, $value, time()+3600, '/', '.rockthepatch.com', TRUE);
+                $referer = lib_get::referer();
+                // Added for EasyPHP
+                if(strpos($referer, 'http://127.0.0.1') !== FALSE ) {
+                    setcookie($cookie, $value, time()+3600, '/', '127.0.0.1', FALSE);
+                }
+            }
+        }
+
+        if($gDebugMode && !$noDebugModeOutput) {
+            log_util::log(LOG_LEVEL_DEBUG, "Cookie: ", $_COOKIE);
+            log_util::logDivider();
+        }
+    }
+
+    public static function cookieDestroy($cookie) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        global $gDebugMode;
+
+        if(isset($_COOKIE[$cookie])) {
+            unset($_COOKIE[$cookie]);
+        }
+
+        if($gDebugMode) {
+            log_util::log(LOG_LEVEL_DEBUG, "We ARE in debug mode, cannot send headers");
+        } else {
+            setcookie($cookie, "", time()-3600, '/', '.rockthepatch.com', TRUE);
+            setcookie($cookie, "", time()+1, '/', '.rockthepatch.com', TRUE);
+            $referer = lib_get::referer();
+
+            if(strpos($referer, 'http://127.0.0.1') !== FALSE) {
+                setcookie($cookie, "", time()-3600, '/', '127.0.0.1', FALSE);
+                setcookie($cookie, "", time()+1, '/', '127.0.0.1', FALSE);
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "Cookie: ", $_COOKIE);
+        log_util::logDivider();
+    }
 
     /**
      *  This function decrypts data given an identifier
@@ -156,11 +224,13 @@ class lib {
         foreach ($parameters as $parameter) {
             $args[$parameter->name] = ${$parameter->name};
         }
-        if (!$noDebugModeOutput) {
+
+        if(!$noDebugModeOutput) {
             log_util::logFunctionStart($args);
         }
 
         $encoding = MCRYPT_RIJNDAEL_256;
+        $mode = MCRYPT_MODE_ECB;
         $salt = "!kQm*fF3pXe1Kbm%9";
         $key = hash('SHA256', $salt . $data, true);
 
@@ -174,7 +244,6 @@ class lib {
             log_util::log(LOG_LEVEL_DEBUG, "dataUTF8: " . $dataUTF8);
         }
 
-        $mode = MCRYPT_MODE_ECB;
         $ivSize = mcrypt_get_iv_size($encoding, $mode);
         $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
 
@@ -202,7 +271,7 @@ class lib {
                 $encryptionData = new EncryptionData();
                 $encryptionData->setIdentifier($identifier);
                 $encryptionData->setKey($key);
-                $encryptionData->setCipher($cipher);
+                $encryptionData->setCipher($encryptedDataMCRYPT);
                 $encryptionData->setIv($iv);
                 $encryptionData->setTime($time);
                 lib_database::writeEncryptionData($encryptionData, $noDebugModeOutput);
@@ -212,7 +281,7 @@ class lib {
             $encryptionData = new EncryptionData();
             $encryptionData->setIdentifier($identifiers);
             $encryptionData->setKey($key);
-            $encryptionData->setCipher($cipher);
+            $encryptionData->setCipher($encryptedDataMCRYPT);
             $encryptionData->setIv($iv);
             $encryptionData->setTime($time);
             lib_database::writeEncryptionData($encryptionData, $noDebugModeOutput);

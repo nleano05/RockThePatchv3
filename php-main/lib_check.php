@@ -185,6 +185,41 @@ class lib_check {
         return (substr($haystack, 0, $length) === $needle);
     }
 
+    public static function userInDb($id, $email, $userName, $password, $temp, $noDebugModeOutput = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        if(!$noDebugModeOutput) {
+            log_util::logFunctionStart($args);
+        }
+
+        $userInDB = FALSE;
+
+        $db = $temp ? "users_temp" : "users";
+        if(!$noDebugModeOutput) {
+            log_util::log(LOG_LEVEL_DEBUG, "db:" . $db);
+        }
+
+        $user = lib_database::getUser($id, $email, $userName, $password, $temp, $noDebugModeOutput);
+
+        if(!empty($user)) {
+            log_util::log(LOG_LEVEL_DEBUG, "user WAS was in database");
+            $userInDB = TRUE;
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "user WAS NOT in database");
+        }
+
+        if(!$noDebugModeOutput) {
+            log_util::log(LOG_LEVEL_DEBUG, "userInDB:" . $userInDB);
+            log_util::logDivider();
+        }
+
+        return $userInDB;
+    }
+
     /**
      *  This function checks if the currently logged in user is an admin
      *
@@ -224,6 +259,66 @@ class lib_check {
         log_util::logDivider();
 
         return $isAdmin;
+    }
+
+
+    public static function userIsLocked($userName, $email, $noDebugModeOutput = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        if(!$noDebugModeOutput) {
+            log_util::logFunctionStart($args);
+        }
+
+        $user = lib_database::getUser(NULL, $userName, $email, NULL, FALSE, $noDebugModeOutput);
+
+        $accountLock = new AccountLock();
+        $accountLock->setLocked(FALSE);
+        $accountLock->setType(LOCK_TYPE_NORMAL);
+        $accountLock->setTimeLocked($user->getTimeLocked());
+        if($user->getLocked()) {
+            if(!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_DEBUG, "User IS locked");
+            }
+
+            if($user->getTimeLocked() != "00:00:00"){
+                if(!$noDebugModeOutput) {
+                    log_util::log(LOG_LEVEL_DEBUG, "User WAS NOT locked by admin");
+                }
+
+                $timeDifference = strtotime(gmdate('Y/m/d H:i:s')) - strtotime($user->getTimeLocked());
+                $accountLock->setTimeDifference($timeDifference);
+                if(!$noDebugModeOutput) {
+                    log_util::log(LOG_LEVEL_DEBUG, "timeDifference: " . $timeDifference);
+                }
+
+                if($timeDifference >= (30 * 60)) {
+                    if(!$noDebugModeOutput) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Unlocking user due to time");
+                    }
+                    $accountLock->setLocked(FALSE);
+                }
+            } else {
+                if(!$noDebugModeOutput) {
+                    log_util::log(LOG_LEVEL_DEBUG, "User WAS locked by admin");
+                }
+                $accountLock->setType(LOCK_TYPE_ADMIN);
+            }
+        } else {
+            if(!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_DEBUG, "User IS NOT locked");
+            }
+        }
+
+        if(!$noDebugModeOutput) {
+            log_util::log(LOG_LEVEL_DEBUG, "accountLock: ", $accountLock);
+            log_util::logDivider();
+        }
+
+        return $accountLock;
     }
 
     /**

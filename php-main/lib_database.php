@@ -15,7 +15,7 @@ class lib_database {
      * @global - None
      * @notes
      *    - Used internally by lib_database class to create and return a PDO connection
-     * @example - $dbh = lib_database::connect();
+     * @example - $pdo = lib_database::connect();
      * @author  - Patches
      * @version - 1.0
      * @history - Created 07/03/2015
@@ -80,7 +80,7 @@ class lib_database {
      * @throws - Nothing
      * @global - None
      * @notes  - None
-     * @example  - $dbh = lib_database::getAnnoyanceLevels();
+     * @example  - $annoyanceLevels = lib_database::getAnnoyanceLevels();
      * @author - Patches
      * @version - 1.0
      * @history - Created 07/03/2015
@@ -249,9 +249,9 @@ class lib_database {
 
         $pdo = lib_database::connect();
 
-        if(!empty($dbh)) {
+        if(!empty($pdo)) {
             if(!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT null");
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
             }
 
             $stmt = $pdo->prepare("SELECT * FROM encryption WHERE identifier = ?");
@@ -266,9 +266,9 @@ class lib_database {
                 $encryptionData->setId($row['id']);
                 $encryptionData->setIdentifier($row['identifier']);
                 $encryptionData->setCipher($row['cipher']);
-                $encryptionData->setKey($row['key']);
+                $encryptionData->setKey($row['encryption_key']);
                 $encryptionData->setIv($row['iv']);
-                $encryptionData->setTime($row['time']);
+                $encryptionData->setTime($row['encryption_time']);
             } else {
                 log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
             }
@@ -279,7 +279,9 @@ class lib_database {
             }
         }
 
-        log_util::log(LOG_LEVEL_DEBUG, "$encryptionData: ", $encryptionData);
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "encryptionData: ", $encryptionData);
         log_util::logDivider();
 
         return $encryptionData;
@@ -566,6 +568,9 @@ class lib_database {
      * @param $id (optional) The id of the user to search for
      * @param $email (optional) The email of the user to search for
      * @param $userName (optional) The user name of the user to search for
+     * @param $password (optional)
+     * @param $temp (optional)
+     * @param $temp (optional)
      *
      * @return User|NULL
      * @throws - Nothing
@@ -580,14 +585,16 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/03/2015
      */
-    public static function getUser($id = NULL, $userName = NULL, $email = NULL) {
+    public static function getUser($id = NULL, $userName = NULL, $email = NULL, $password = NULL, $temp = FALSE, $noDebugModeOutput = FALSE) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
         foreach ($parameters as $parameter) {
             $args[$parameter->name] = ${$parameter->name};
         }
-        log_util::logFunctionStart($args);
+        if(!$noDebugModeOutput) {
+            log_util::logFunctionStart($args);
+        }
 
         $user = NULL;
 
@@ -596,41 +603,94 @@ class lib_database {
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
 
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? OR email = ? OR userName = ?");
+            $db = $temp ? "users_temp" : "users";
+
+            $stmt = $pdo->prepare("SELECT * FROM " . $db . " WHERE id = ? OR email = ? OR userName = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt->bindParam(2, $userName, PDO::PARAM_INT);
             $stmt->bindParam(3, $email, PDO::PARAM_INT);
-
             $stmt->execute();
             $row = $stmt->fetch();
 
             if (!empty($row)) {
-                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                if(!$noDebugModeOutput) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                }
 
-                $user = new User();
-                $user->setId($row['id']);
-                $user->setFirstName($row['firstName']);
-                $user->setLastName($row['lastName']);
-                $user->setUserName($row['userName']);
-                $user->setEmail($row['email']);
-                $user->setPassword($row['password']);
-                $user->setSecurityQuestion($row['securityQuestion']);
-                $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
-                $user->setEmailBlasts((bool)$row['emailBlasts']);
-                $user->setTextBlasts((bool)$row['textBlasts']);
-                $user->setRole($row['role']);
-                $user->setLastLoginAttempt($row['lastLoginAttempt']);
+                if($password != NULL) {
+                    $id = $row['id'];
+
+                    $decryptedPassword = lib::decrypt($id . "_pass", $noDebugModeOutput);
+                    if(!$noDebugModeOutput) {
+                        log_util::log(LOG_LEVEL_DEBUG, "id: " . $id);
+                        log_util::log(LOG_LEVEL_DEBUG, "decryptedPassword: " . $decryptedPassword);
+                    }
+
+//                    if(($decryptedPassword === $password) || ($decryptedPassword === $password)){
+                        if(!$noDebugModeOutput) {
+                            if(!$noDebugModeOutput) {
+                                log_util::log(LOG_LEVEL_DEBUG, "Password DID match one of the decrypted passwords");
+                            }
+                        }
+
+                        $user = new User();
+                        $user->setId($row['id']);
+                        $user->setFirstName($row['firstName']);
+                        $user->setLastName($row['lastName']);
+                        $user->setUserName($row['userName']);
+                        $user->setEmail($row['email']);
+                        $user->setPassword($row['password']);
+                        $user->setSecurityQuestion($row['securityQuestion']);
+                        $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                        $user->setEmailBlasts((bool)$row['emailBlasts']);
+                        $user->setTextBlasts((bool)$row['textBlasts']);
+                        $user->setRole($row['role']);
+                        $user->setLocked($row['locked']);
+                        $user->setTimeLocked($row['timeLocked']);
+                        $user->setConsecutiveFailedLoginAttempts($row['consecutiveFailedLoginAttempts']);
+                        $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
+//                    } else {
+//                        if(!$noDebugModeOutput) {
+//                            if(!$noDebugModeOutput) {
+//                                log_util::log(LOG_LEVEL_DEBUG, "Password DID NOT match one of the decrypted passwords");
+//                            }
+//                        }
+//                    }
+                } else {
+                    $user = new User();
+                    $user->setId($row['id']);
+                    $user->setFirstName($row['firstName']);
+                    $user->setLastName($row['lastName']);
+                    $user->setUserName($row['userName']);
+                    $user->setEmail($row['email']);
+                    $user->setPassword($row['password']);
+                    $user->setSecurityQuestion($row['securityQuestion']);
+                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setEmailBlasts((bool)$row['emailBlasts']);
+                    $user->setTextBlasts((bool)$row['textBlasts']);
+                    $user->setRole($row['role']);
+                    $user->setLocked($row['locked']);
+                    $user->setTimeLocked($row['timeLocked']);
+                    $user->setConsecutiveFailedLoginAttempts($row['consecutiveFailedLoginAttempts']);
+                    $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
+                }
             } else {
-                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+                if(!$noDebugModeOutput) {
+                    log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+                }
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            if(!$noDebugModeOutput) {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            }
         }
 
         $pdo = NULL;
 
-        log_util::log(LOG_LEVEL_DEBUG, "user: ", $user);
-        log_util::logDivider();
+        if(!$noDebugModeOutput) {
+            log_util::log(LOG_LEVEL_DEBUG, "user: ", $user);
+            log_util::logDivider();
+        }
 
         return $user;
     }
@@ -671,12 +731,18 @@ class lib_database {
                 log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
             }
 
-            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, key=?, iv=?, time=? WHERE identifier = ?");
-            $stmt->bindParam(1, $encryptionData->getCipher(), PDO::PARAM_STR);
-            $stmt->bindParam(2, $encryptionData->getKey(), PDO::PARAM_STR);
-            $stmt->bindParam(3, $encryptionData->getIv(), PDO::PARAM_STR);
-            $stmt->bindParam(4, $encryptionData->getTime(), PDO::PARAM_STR);
-            $stmt->bindParam(5, $encryptionData->getIdentifier(), PDO::PARAM_STR);
+            $identifier = $encryptionData->getIdentifier();
+            $cipher = $encryptionData->getCipher();
+            $key = $encryptionData->getKey();
+            $iv = $encryptionData->getIv();
+            $time = $encryptionData->getTime();
+
+            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, encryption_key=?, iv=?, encryption_time=? WHERE identifier = ?");
+            $stmt->bindParam(1, $cipher, PDO::PARAM_STR);
+            $stmt->bindParam(2, $key, PDO::PARAM_STR);
+            $stmt->bindParam(3, $iv, PDO::PARAM_STR);
+            $stmt->bindParam(4, $time, PDO::PARAM_STR);
+            $stmt->bindParam(5, $identifier, PDO::PARAM_STR);
             $stmt->execute();
 
         } else {
@@ -684,6 +750,8 @@ class lib_database {
                 log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
             }
         }
+
+        $pdo = NULL;
 
         if(!$noDebugModeOutput) {
             log_util::logDivider();
@@ -733,6 +801,8 @@ class lib_database {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
         }
 
+        $pdo = NULL;
+
         log_util::logDivider();
     }
 
@@ -772,18 +842,23 @@ class lib_database {
                 log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
             }
 
+            $identifier = $encryptionData->getIdentifier();
             $stmt = $pdo->prepare("SELECT * FROM encryption WHERE identifier = ?");
-            $stmt->bindParam(1, $encryptionData->getIdentifier(), PDO::PARAM_STR);
+            $stmt->bindParam(1, $identifier, PDO::PARAM_STR);
             $stmt->execute();
             $row = $stmt->fetch();
 
             if(empty($row)) {
-                $stmt = $pdo->prepare("INSERT INTO encryption (identifier, cipher, key, iv, time) VALUE (?, ?, ?, ?, ?)");
-                $stmt->bindParam(1, $encryptionData->getIdentifier(), PDO::PARAM_STR);
-                $stmt->bindParam(2, $encryptionData->getCipher(), PDO::PARAM_STR);
-                $stmt->bindParam(3, $encryptionData->getKey(), PDO::PARAM_STR);
-                $stmt->bindParam(4, $encryptionData->getIv(), PDO::PARAM_STR);
-                $stmt->bindParam(5, $encryptionData->getTime(), PDO::PARAM_STR);
+                $cipher = $encryptionData->getCipher();
+                $key = $encryptionData->getKey();
+                $iv = $encryptionData->getIv();
+                $time = $encryptionData->getTime();
+                $stmt = $pdo->prepare("INSERT INTO encryption (identifier, cipher, encryption_key, iv, encryption_time) VALUE (?, ?, ?, ?, ?)");
+                $stmt->bindParam(1, $identifier, PDO::PARAM_STR);
+                $stmt->bindParam(2, $cipher, PDO::PARAM_STR);
+                $stmt->bindParam(3, $key, PDO::PARAM_STR);
+                $stmt->bindParam(4, $iv, PDO::PARAM_STR);
+                $stmt->bindParam(5, $time, PDO::PARAM_STR);
                 $stmt->execute();
             } else {
                 lib_database::updateEncryptionData($encryptionData, $noDebugModeOutput);

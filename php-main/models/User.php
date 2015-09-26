@@ -16,7 +16,10 @@ class User {
     private $textBlasts;
     private $cell;
     private $role;
-    private $lastLoginAttempt;
+    private $locked;
+    private $timeLocked;
+    private $consecutiveFailedLoginAttempts;
+    private $lastLoginAttemptTime;
     private $friendStatus;
 
     /**
@@ -32,7 +35,10 @@ class User {
      * @param bool|NULL $textBlasts
      * @param string|NULL $cell
      * @param int|NULL $role
-     * @param string|NULL $lastLoginAttempt
+     * @param bool|NULL $locked
+     * @param int|NULL $timeLocked
+     * @param int|NULL $consecutiveFailedLoginAttempts
+     * @param string|NULL $lastLoginAttemptTime
      * @param int|NULL $friendStatus
      */
     public function __construct(
@@ -48,7 +54,10 @@ class User {
         $textBlasts = NULL,
         $cell = NULL,
         $role = NULL,
-        $lastLoginAttempt = NULL,
+        $locked = NULL,
+        $timeLocked = NULL,
+        $consecutiveFailedLoginAttempts = NULL,
+        $lastLoginAttemptTime = NULL,
         $friendStatus = NULL) {
 
         if (is_int($id) || $id == NULL) {
@@ -111,8 +120,23 @@ class User {
         } else {
             trigger_error('Expected an int or null for $role.', E_USER_WARNING);
         }
-        if (is_string($lastLoginAttempt) || $lastLoginAttempt == NULL) {
-            $this->lastLoginAttempt = $lastLoginAttempt;
+        if (is_bool($locked) || $locked == NULL) {
+            $this->locked = $locked;
+        } else {
+            trigger_error('Expected an bool or null for $locked.', E_USER_WARNING);
+        }
+        if (is_string($timeLocked) || $timeLocked == NULL) {
+            $this->timeLocked = $timeLocked;
+        } else {
+            trigger_error('Expected an string or null for $timeLocked.', E_USER_WARNING);
+        }
+        if (is_int($consecutiveFailedLoginAttempts) || $consecutiveFailedLoginAttempts == NULL) {
+            $this->consecutiveFailedLoginAttempts = $consecutiveFailedLoginAttempts;
+        } else {
+            trigger_error('Expected an int or null for $consecutiveFailedLoginAttempts.', E_USER_WARNING);
+        }
+        if (is_string($lastLoginAttemptTime) || $lastLoginAttemptTime == NULL) {
+            $this->lastLoginAttemptTime = $lastLoginAttemptTime;
         } else {
             trigger_error('Expected a string or null for $role.', E_USER_WARNING);
         }
@@ -340,18 +364,72 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return bool|NULL $locked
      */
-    public function getLastLoginAttempt() {
-        return $this->lastLoginAttempt;
+    public function getLocked() {
+        return $this->locked;
     }
 
     /**
-     * @param string|NULL $lastLoginAttempt
+     * @param bool|NULL $locked
      */
-    public function setLastLoginAttempt($lastLoginAttempt) {
-        if (is_string($lastLoginAttempt) || $lastLoginAttempt == NULL) {
-            $this->lastLoginAttempt = $lastLoginAttempt;
+    public function setLocked($locked) {
+        if (is_bool($locked) || $locked == NULL) {
+            $this->locked = $locked;
+        } else {
+            trigger_error('Expected an bool or null for $locked.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return string|NULL $timeLocked
+     */
+    public function getTimeLocked() {
+        return $this->timeLocked;
+    }
+
+    /**
+     * @param string|NULL $timeLocked
+     */
+    public function setTimeLocked($timeLocked) {
+        if (is_string($timeLocked) || $timeLocked == NULL) {
+            $this->timeLocked = $timeLocked;
+        } else {
+            trigger_error('Expected an string or null for $timeLocked.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return int|NULL $consecutiveFailedLoginAttempts
+     */
+    public function getConsecutiveFailedLoginAttempts() {
+        return $this->consecutiveFailedLoginAttempts;
+    }
+
+    /**
+     * @param int|NULL $consecutiveFailedLoginAttempts
+     */
+    public function setConsecutiveFailedLoginAttempts($consecutiveFailedLoginAttempts) {
+        if (is_int($consecutiveFailedLoginAttempts) || $consecutiveFailedLoginAttempts == NULL) {
+            $this->consecutiveFailedLoginAttempts = $consecutiveFailedLoginAttempts;
+        } else {
+            trigger_error('Expected an int or null for $consecutiveFailedLoginAttempts.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return string|NULL
+     */
+    public function getLastLoginAttemptTime() {
+        return $this->lastLoginAttemptTime;
+    }
+
+    /**
+     * @param string|NULL $lastLoginAttemptTime
+     */
+    public function setLastLoginAttemptTime($lastLoginAttemptTime) {
+        if (is_string($lastLoginAttemptTime) || $lastLoginAttemptTime == NULL) {
+            $this->lastLoginAttemptTime = $lastLoginAttemptTime;
         } else {
             trigger_error('Expected a string or null for $role.', E_USER_WARNING);
         }

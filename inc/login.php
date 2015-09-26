@@ -3,7 +3,6 @@
 if ($gLoginStatus != STATUS_LOGGED_IN) {
     log_util::log(LOG_LEVEL_DEBUG, "User IS NOT logged in");
     ?>
-<!--    <h1 style="text-align:center;">Login</h1>-->
 
     <form method="post" name="login-form" action="/user-system/login.php" style="padding:0;margin:0;">
 
@@ -14,7 +13,7 @@ if ($gLoginStatus != STATUS_LOGGED_IN) {
             <div class="clear"></div>
 
             <p><strong>Password:</strong></p>
-            <label><input type="text" name="login-user-name-or-email"/></label>
+            <label><input type="password" name="login-password"/></label>
             <div class="clear"></div>
         </div>
 
@@ -48,15 +47,14 @@ if ($gLoginStatus != STATUS_LOGGED_IN) {
 } else {
     log_util::log(LOG_LEVEL_DEBUG, "User IS logged in");
     ?>
-<!--    <h1 style="text-align:center;">Logged In</h1>-->
     <?php
     $currentUser = lib_get::currentUser();
 
-    if ($currentUser->getUserName() != "" && $currentUser->getUserName() != NULL) {
+    if ($currentUser != NULL && $currentUser->getUserName() != "" && $currentUser->getUserName() != NULL) {
         ?>
         <p><strong>Current User:</strong> <?php echo($currentUser->getUserName()); ?> </p>
         <?php
-    } else if ($currentUser->getEmail() != "" && $currentUser->getEmail() != NULL) {
+    } else if ($currentUser != NULL && $currentUser->getEmail() != "" && $currentUser->getEmail() != NULL) {
         ?>
         <p><strong>Current User:</strong> <?php echo($currentUser->getEmail()); ?> </p>
         <?php
