@@ -264,7 +264,7 @@ class lib_database {
                 log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
 
                 $encryptionData = new EncryptionData();
-                $encryptionData->setId($row['id']);
+                $encryptionData->setId((int)$row['id']);
                 $encryptionData->setIdentifier($row['identifier']);
                 $encryptionData->setCipher($row['cipher']);
                 $encryptionData->setKey($row['encryption_key']);
@@ -435,7 +435,7 @@ class lib_database {
             /** @noinspection PhpAssignmentInConditionInspection */
             if (!empty($row )) {
                 $update = new Update();
-                $update->setId($row['id']);
+                $update->setId((int)$row['id']);
                 $update->setTitle($row['title']);
                 $update->setText($row['text']);
                 $update->setDate($row['date']);
@@ -635,21 +635,21 @@ class lib_database {
                         }
 
                         $user = new User();
-                        $user->setId($row['id']);
+                        $user->setId((int)$row['id']);
                         $user->setFirstName($row['firstName']);
                         $user->setLastName($row['lastName']);
                         $user->setUserName($row['userName']);
                         $user->setEmail($row['email']);
                         $user->setPassword($row['password']);
-                        $user->setSecurityQuestion($row['securityQuestion']);
+                        $user->setSecurityQuestion((int)$row['securityQuestion']);
                         $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
                         $user->setEmailBlasts((bool)$row['emailBlasts']);
                         $user->setTextBlasts((bool)$row['textBlasts']);
-                        $user->setRole($row['role']);
-                        $user->setLocked($row['locked']);
-                        $user->setLockedByAdmin($row['lockedByAdmin']);
+                        $user->setRole((int)$row['role']);
+                        $user->setLocked((bool)$row['locked']);
+                        $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
                         $user->setTimeLocked($row['timeLocked']);
-                        $user->setConsecutiveFailedLoginAttempts($row['consecutiveFailedLoginAttempts']);
+                        $user->setConsecutiveFailedLoginAttempts((int)$row['consecutiveFailedLoginAttempts']);
                         $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
 //                    } else {
 //                        if(!$noDebugModeOutput) {
@@ -660,21 +660,21 @@ class lib_database {
 //                    }
                 } else {
                     $user = new User();
-                    $user->setId($row['id']);
+                    $user->setId((int)$row['id']);
                     $user->setFirstName($row['firstName']);
                     $user->setLastName($row['lastName']);
                     $user->setUserName($row['userName']);
                     $user->setEmail($row['email']);
                     $user->setPassword($row['password']);
-                    $user->setSecurityQuestion($row['securityQuestion']);
+                    $user->setSecurityQuestion((int)$row['securityQuestion']);
                     $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
                     $user->setEmailBlasts((bool)$row['emailBlasts']);
                     $user->setTextBlasts((bool)$row['textBlasts']);
-                    $user->setRole($row['role']);
-                    $user->setLocked($row['locked']);
-                    $user->setLockedByAdmin($row['lockedByAdmin']);
+                    $user->setRole((int)$row['role']);
+                    $user->setLocked((bool)$row['locked']);
+                    $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
                     $user->setTimeLocked($row['timeLocked']);
-                    $user->setConsecutiveFailedLoginAttempts($row['consecutiveFailedLoginAttempts']);
+                    $user->setConsecutiveFailedLoginAttempts((int)$row['consecutiveFailedLoginAttempts']);
                     $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
                 }
             } else {
