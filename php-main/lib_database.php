@@ -33,6 +33,7 @@ class lib_database {
             $pdo = new PDO(DB_HOST, DB_USER, DB_PASS);
             $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         } catch (PDOException $e) {
             $pdo = null;
             log_util::log(LOG_LEVEL_ERROR, "An error occurred while establishing PDO connection", $e);
@@ -646,6 +647,7 @@ class lib_database {
                         $user->setTextBlasts((bool)$row['textBlasts']);
                         $user->setRole($row['role']);
                         $user->setLocked($row['locked']);
+                        $user->setLockedByAdmin($row['lockedByAdmin']);
                         $user->setTimeLocked($row['timeLocked']);
                         $user->setConsecutiveFailedLoginAttempts($row['consecutiveFailedLoginAttempts']);
                         $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
@@ -670,6 +672,7 @@ class lib_database {
                     $user->setTextBlasts((bool)$row['textBlasts']);
                     $user->setRole($row['role']);
                     $user->setLocked($row['locked']);
+                    $user->setLockedByAdmin($row['lockedByAdmin']);
                     $user->setTimeLocked($row['timeLocked']);
                     $user->setConsecutiveFailedLoginAttempts($row['consecutiveFailedLoginAttempts']);
                     $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
@@ -756,6 +759,106 @@ class lib_database {
         if(!$noDebugModeOutput) {
             log_util::logDivider();
         }
+    }
+
+    public static function updateUserLockAttributes($id, $passed) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set($timezone);
+        $lastLoginAttemptTime = gmdate("Y-m-d H:i:s");
+
+        log_util::log(LOG_LEVEL_DEBUG, "lastLoginAttemptTime: " . $lastLoginAttemptTime);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if(!$passed) {
+                $user = lib_database::getUser($id);
+
+                $consecutiveFailedLoginAttemptsFromDB = $user->getConsecutiveFailedLoginAttempts();
+                $timeLockedFromDB = $user->getTimeLocked();
+
+                log_util::log(LOG_LEVEL_DEBUG, "consecutiveFailedLoginAttemptsFromDB: " . $consecutiveFailedLoginAttemptsFromDB);
+                log_util::log(LOG_LEVEL_DEBUG, "timeLockedFromDB: " . $timeLockedFromDB);
+
+                if(! $user->getLockedByAdmin()) {
+                    log_util::log(LOG_LEVEL_DEBUG, "User WAS NOT locked by administrator");
+
+                    if($consecutiveFailedLoginAttemptsFromDB < 4) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Below max consecutive number of failed login attempts");
+                        $locked = FALSE;
+                        $lockedByAdmin = FALSE;
+                        $timeLocked = "";
+                        $consecutiveFailedLoginAttempts = ((int)$consecutiveFailedLoginAttemptsFromDB) + 1;
+                    } else if($consecutiveFailedLoginAttemptsFromDB == 4) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Reached max consecutive number of failed login attempts, locking user");
+                        $locked = TRUE;
+                        $lockedByAdmin = FALSE;
+                        $timeLocked = gmdate('Y/m/d H:i:s');
+                        $consecutiveFailedLoginAttempts = ((int)$consecutiveFailedLoginAttemptsFromDB) + 1;
+                    }  else if($consecutiveFailedLoginAttemptsFromDB > 4) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Exceeded max consecutive number of failed login attempts");
+                        $timeDifference = strtotime(gmdate('Y/m/d H:i:s')) - strtotime($timeLockedFromDB);
+                        log_util::log(LOG_LEVEL_DEBUG, "timeDifference: " . $timeDifference);
+
+                        if($timeDifference >= (30 * 60)) {
+                            log_util::log(LOG_LEVEL_DEBUG, "timeDifference IS greater than 30 minutes...unlocking the user");
+                            $locked = FALSE;
+                            $lockedByAdmin = FALSE;
+                            $consecutiveFailedLoginAttempts = 0;
+                            $timeLocked = "";
+                        } else {
+                            log_util::log(LOG_LEVEL_DEBUG, "timeDifference IS NOT greater than 30 minutes...NOT unlocking the user");
+                            $locked = TRUE;
+                            $lockedByAdmin = FALSE;
+                            $consecutiveFailedLoginAttempts = ((int)$consecutiveFailedLoginAttemptsFromDB) + 1;
+                            $timeLocked = $timeLockedFromDB;
+                        }
+                    }
+                } else {
+                    log_util::log(LOG_LEVEL_DEBUG, "user WAS locked by administrator");
+                    $locked = TRUE;
+                    $lockedByAdmin = TRUE;
+                    $timeLocked = "00:00:00";
+                    $consecutiveFailedLoginAttempts = ((int)$consecutiveFailedLoginAttemptsFromDB) + 1;
+                }
+            } else {
+                $locked = FALSE;
+                $lockedByAdmin = FALSE;
+                $timeLocked = "";
+                $consecutiveFailedLoginAttempts = 0;
+            }
+
+            $locked = (int) $locked;
+            $lockedByAdmin = (int) $lockedByAdmin;
+
+            log_util::log(LOG_LEVEL_DEBUG, "locked: " . $locked);
+            log_util::log(LOG_LEVEL_DEBUG, "timeLocked: " . $timeLocked);
+            log_util::log(LOG_LEVEL_DEBUG, "consecutiveFailedLoginAttempts" . $consecutiveFailedLoginAttempts);
+
+            $stmt = $pdo->prepare("UPDATE users SET locked=?, lockedByAdmin=?, timeLocked=?, consecutiveFailedLoginAttempts=?, lastLoginAttemptTime=? WHERE id = ?");
+            $stmt->bindParam(1, $locked, PDO::PARAM_INT);
+            $stmt->bindParam(2, $lockedByAdmin, PDO::PARAM_INT);
+            $stmt->bindParam(3, $timeLocked, PDO::PARAM_STR);
+            $stmt->bindParam(4, $consecutiveFailedLoginAttempts, PDO::PARAM_INT);
+            $stmt->bindParam(5, $lastLoginAttemptTime, PDO::PARAM_STR);
+            $stmt->bindParam(6, $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+        }
+
+        $pdo = NULL;
+        log_util::logDivider();
     }
 
     /**
@@ -875,6 +978,193 @@ class lib_database {
         if(!$noDebugModeOutput) {
             log_util::logDivider();
         }
+    }
+
+    public static function writeLoginLogAndStatistics() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+//        global $debugMode, $debugFunctionColor, $debugDivider;
+//        if($debugMode)
+//        {
+//            echo("<p style='color:$debugFunctionColor;'>function dbWriteLoginStatisticsAndLog {userNameOrEmail: " . $userNameOrEmail . ", passed: " . $passed . "}</p>");
+//        }
+//
+//        if($debugMode)
+//        {
+//            echo("<p>userNameOrEmail: " . $userNameOrEmail . "</p>");
+//            echo("<p>passed: " . $passed . "</p>");
+//        }
+//
+//        $dbh = dbConnect();
+//
+//        if(!empty($dbh))
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>dbh IS NOT null</p>");
+//            }
+//
+//            $stmt = $dbh->prepare("SELECT * FROM users WHERE userName = ? OR email = ?");
+//            $stmt->bindParam(1, $userNameOrEmail, PDO::PARAM_STR);
+//            $stmt->bindParam(2, $userNameOrEmail, PDO::PARAM_STR);
+//            $stmt->execute();
+//            $row = $stmt->fetch();
+//        }
+//        else
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>dbh IS null</p>");
+//            }
+//        }
+//
+//        $user = $row['email'];
+//        if(empty($user))
+//        {
+//            $user = $userNameOrEmail;
+//        }
+//        if($debugMode)
+//        {
+//            echo("<p>user: " . $user . "</p>");
+//        }
+//
+//        if(!empty($dbh))
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>dbh IS NOT null</p>");
+//            }
+//
+//            $stmt = $dbh->prepare("SELECT * FROM login_statistics WHERE userName = ?");
+//            $stmt->bindParam(1, $user, PDO::PARAM_STR);
+//            $stmt->execute();
+//            $row = $stmt->fetch();
+//        }
+//        else
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>dbh IS null</p>");
+//            }
+//        }
+//
+//        if(!empty($row))
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>Entry for the user is already in the database, doing UPDATE</p>");
+//            }
+//
+//            $attempts = $row['attempts'] + 1; // Increment
+//            if($passed) // Increment
+//            {
+//                $succeeded = $row['succeeded'] + 1;
+//                $failed = $row['failed'];
+//            }
+//            else
+//            {
+//                $succeeded = $row['succeeded'];
+//                $failed = $row['failed'] + 1;
+//            }
+//
+//            if(!empty($dbh))
+//            {
+//                if($debugMode)
+//                {
+//                    echo("<p>dbh IS NOT null</p>");
+//                }
+//
+//                $stmt = $dbh->prepare("UPDATE login_statistics SET attempts=?, failed=?, succeeded=? WHERE user = ?");
+//                $stmt->bindParam(1, $attempts, PDO::PARAM_INT);
+//                $stmt->bindParam(2, $failed, PDO::PARAM_INT);
+//                $stmt->bindParam(3, $succeeded, PDO::PARAM_INT);
+//                $stmt->bindParam(4, $user, PDO::PARAM_STR);
+//                $stmt->execute();
+//            }
+//            else
+//            {
+//                if($debugMode)
+//                {
+//                    echo("<p>dbh IS null</p>");
+//                }
+//            }
+//        }
+//        else
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>Entry for the user IS NOT already in the database, doing INSERT</p>");
+//            }
+//
+//            $attempts = 1; // First attempt
+//            if($passed) // First attempt
+//            {
+//                $succeeded = 1;
+//                $failed = 0;
+//            }
+//            else
+//            {
+//                $succeeded = 0;
+//                $failed = 1;
+//            }
+//
+//            if(!empty($dbh))
+//            {
+//                if($debugMode)
+//                {
+//                    echo("<p>dbh IS NOT null</p>");
+//                }
+//
+//                $stmt = $dbh->prepare("INSERT INTO login_statistics (userName, attempts, failed, succeeded) VALUE (?, ?, ?, ?)");
+//                $stmt->bindParam(1, $user, PDO::PARAM_STR);
+//                $stmt->bindParam(2, $attempts, PDO::PARAM_INT);
+//                $stmt->bindParam(3, $failed, PDO::PARAM_INT);
+//                $stmt->bindParam(4, $succeeded, PDO::PARAM_INT);
+//                $stmt->execute();
+//            }
+//            else
+//            {
+//                if($debugMode)
+//                {
+//                    echo("<p>dbh IS null</p>");
+//                }
+//            }
+//        }
+//
+//        if(!empty($dbh))
+//        {
+//            if($debugMode)
+//            {
+//                echo("<p>dbh IS NOT null</p>");
+//            }
+//
+//            $timezone = date_default_timezone_get();
+//            date_default_timezone_set($timezone);
+//            $time = gmdate('Y/m/d H:i:s');
+//
+//            $stmt = $dbh->prepare("INSERT INTO login_log (userName, success, loginTime) VALUE (?, ?, ?)");
+//            $stmt->bindParam(1, $userNameOrEmail, PDO::PARAM_STR);
+//            $stmt->bindParam(2, $passed, PDO::PARAM_BOOL);
+//            $stmt->bindParam(3, $time, PDO::PARAM_STR);
+//            $stmt->execute();
+//        } else {
+//            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+//            if($debugMode)
+//            {
+//                echo("<p>dbh IS null</p>");
+//            }
+//        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
     }
 
     /**

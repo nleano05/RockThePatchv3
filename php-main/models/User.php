@@ -55,6 +55,7 @@ class User {
         $cell = NULL,
         $role = NULL,
         $locked = NULL,
+        $lockedByAdmin = NULL,
         $timeLocked = NULL,
         $consecutiveFailedLoginAttempts = NULL,
         $lastLoginAttemptTime = NULL,
@@ -124,6 +125,11 @@ class User {
             $this->locked = $locked;
         } else {
             trigger_error('Expected an bool or null for $locked.', E_USER_WARNING);
+        }
+        if (is_bool($lockedByAdmin) || $lockedByAdmin == NULL) {
+            $this->lockedByAdmin = $lockedByAdmin;
+        } else {
+            trigger_error('Expected a bool or null for $lockedByAdmin.', E_USER_WARNING);
         }
         if (is_string($timeLocked) || $timeLocked == NULL) {
             $this->timeLocked = $timeLocked;
@@ -378,6 +384,24 @@ class User {
             $this->locked = $locked;
         } else {
             trigger_error('Expected an bool or null for $locked.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return bool|NULL $lockedByAdmin
+     */
+    public function getLockedByAdmin() {
+        return $this->lockedByAdmin;
+    }
+
+    /**
+     * @param bool|NULL $lockedByAdmin
+     */
+    public function setLockedByAdmin($lockedByAdmin) {
+        if (is_bool($lockedByAdmin) || $lockedByAdmin == NULL) {
+            $this->lockedByAdmin = $lockedByAdmin;
+        } else {
+            trigger_error('Expected an bool or null for $lockedByAdmin.', E_USER_WARNING);
         }
     }
 

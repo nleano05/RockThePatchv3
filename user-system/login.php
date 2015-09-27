@@ -14,7 +14,7 @@ if(isset($_POST['login-debug-mode'])) {
         login(TRUE, TRUE);
     } else {
         log_util::log(LOG_LEVEL_DEBUG, "Logged in, redirecting to referer");
-        //lib::redirect(FALSE, NULL, FALSE, "/index.php");
+        lib::redirect(FALSE, NULL, FALSE, "/index.php");
     }
 } else {
     if($gLoginStatus == STATUS_LOGGED_OUT) {
@@ -22,7 +22,7 @@ if(isset($_POST['login-debug-mode'])) {
         login(TRUE, FALSE);
     } else {
         log_util::log(LOG_LEVEL_DEBUG, "Logged in, redirecting to referer");
-        //lib::redirect(FALSE, NULL, FALSE, "/index.php");
+        lib::redirect(FALSE, NULL, FALSE, "/index.php");
     }
 }
 
@@ -41,7 +41,7 @@ function displayOutputLogin() {
 
         $referer = lib_get::referer();
         if($referer != null && !lib_check::endsWith("/user-system/login.php", $referer)) {
-            //lib::redirect(FALSE, NULL, TRUE, NULL);
+            lib::redirect(FALSE, NULL, TRUE, NULL);
         } else {
             echo("<p><strong><em>The referer was the login page so you are not being redirected...</em></strong></p>");
         }
@@ -78,7 +78,7 @@ function displayOutputLogin() {
         $referer = lib_get::referer();
 
         if($referer != null && !lib_check::endsWith("/user-system/login.php", $referer)) {
-            //lib::redirect(TRUE, NULL, TRUE, NULL);
+            lib::redirect(TRUE, NULL, TRUE, NULL);
         } else {
             echo("<p><strong><em>The referer was the login page so you are not being redirected...</em></strong></p>");
         }
@@ -116,20 +116,15 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
             lib::encrypt(STATUS_LOGGED_IN, $gUser->getId() . "_login", $noDebugModeOutput);
             lib::cookieCreate(COOKIE_LOGIN_STATUS_KEY, base64_encode($gUser->getId() . "_login"), $sendHeaders, $noDebugModeOutput);
 
-//            dbUpdateLogin(TRUE);
-//            dbWriteLoginStatisticsAndLog(strtolower($_POST['login-user-name-or-email']), TRUE);
+            lib_database::updateUserLockAttributes($gUser->getId(), TRUE);
+            lib_database::writeLoginLogAndStatistics($gUser->getUserName(), FALSE);
         } else {
             if (!$noDebugModeOutput) {
                 log_util::log(LOG_LEVEL_DEBUG, "Login DID NOT succeed");
             }
 
-//            // We update the database with the failed attempt
-//            dbUpdateLogin(FALSE);
-//            if (isset($_POST['login-user-name-or-email'])) {
-//                dbWriteLoginStatisticsAndLog(strtolower($_POST['login-user-name-or-email']), FALSE);
-//            } else {
-//                dbWriteLoginStatisticsAndLog("", FALSE);
-//            }
+            lib_database::updateUserLockAttributes($gUser->getId(), FALSE);
+            lib_database::writeLoginLogAndStatistics($gUser->getUserName(), FALSE);
         }
     } else {
         log_util::log(LOG_LEVEL_WARNING, "User WAS null");
