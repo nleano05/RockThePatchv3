@@ -534,6 +534,136 @@ class lib {
         log_util::logDivider();
     }
 
+    public static function sendMail($to, $subject, $body, $ccAdmin = FALSE, $html = TRUE, $attachment = NULL, $attachmentType = NULL, $encoding = "utf-8", $fromName = "Patches", $fromAddress = "patches@rockthepatch.com") {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $timestamp = time();
+        $currentDate = getdate($timestamp);
+        $currentDateMon = $currentDate['mon'];
+        $currentDateMonth = $currentDate['month'];
+        $currentDateYear = $currentDate['year'];
+        $currentDateDay = $currentDate['mday'];
+
+        if($currentDateMon < 10) {
+            $currentDateMon = "0".$currentDateMon;
+            $date = $currentDateMon."/".$currentDateDay."/".$currentDateYear;
+        } else {
+            $date = $currentDateMon."/".$currentDateDay."/".$currentDateYear;
+        }
+        $body .= "<strong><em>Date sent:</strong> $date</em>\r\n\r\n";
+
+        $eol= "\n";
+        $msg = "";
+
+        $headers = "";
+        $headers .= "From: " . $fromName . " <" . $fromAddress . ">" .$eol;
+        if($ccAdmin){
+            $headers .= "CC: " . $fromName . " <" . $fromAddress . ">" . $eol;
+        }
+        $headers .= "Return-Path: " . $fromName . " <" . $fromAddress . ">" . $eol;
+        $headers .= "Reply-To: " . $fromName . " <" . $fromAddress . ">" . $eol;
+        $headers .= "Message-ID: <" . time() . "TheSystem@" . $_SERVER['SERVER_NAME'] . ">" .$eol;  // This helps to avoid spam-filters*/
+        $headers .= "X-Mailer: PHP v" . phpversion() . $eol; // This helps to avoid spam-filters
+        $headers .= "MIME-Version: 1.0" . $eol;
+
+        log_util::log(LOG_LEVEL_DEBUG, "headers: " . $headers);
+
+        if(!empty($attachment)) {
+            log_util::log(LOG_LEVEL_DEBUG, "Attachment IS NOT empty");
+
+            $mimeBoundary = md5(time());
+
+            log_util::log(LOG_LEVEL_DEBUG, "mimeBoundary: " . $mimeBoundary);
+
+            $headers .= "Content-Type: multipart/mixed; boundary=\"" . $mimeBoundary . "\"" . $eol;
+
+            log_util::log(LOG_LEVEL_DEBUG, "headers: " . $headers);
+
+            $handle = fopen($attachment, 'rb');
+            $fileContents = fread($handle, filesize($attachment));
+            $fileContents = chunk_split(base64_encode($fileContents)); // Encoding the date for the transition by using base64_encode()
+            $fileType = filetype($attachment);
+            fclose($handle);
+
+            $msg .= "--" . $mimeBoundary . $eol;
+            $msg .= "Content-Type: " . $attachmentType . "; name=\"" . $attachment . "\"" . $eol;
+            $msg .= "Content-Transfer-Encoding: base64" . $eol;
+            $msg .= "Content-Disposition: attachment; filename=\"" . basename($attachment) . "\"" . $eol . $eol; // !! This line needs TWO end of lines !! IMPORTANT !!
+            $msg .= $fileContents . $eol . $eol;
+            $msg .= "Content-Type: multipart/mixed" . $eol;
+
+            log_util::log(LOG_LEVEL_DEBUG, "attachment: " . $attachment);
+
+            if(file_exists($attachment)) {
+                log_util::log(LOG_LEVEL_DEBUG, "The file DOES exist");
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "The file DOES NOT exist");;
+            }
+
+            log_util::log(LOG_LEVEL_DEBUG, "basename(attachment): " . basename($attachment));
+            log_util::log(LOG_LEVEL_DEBUG, "msg: " . $msg);
+
+            if($html) {
+                $contentType = "text/html";
+            } else {
+                $contentType = "text/plain";
+            }
+
+            $msg .= "--" . $mimeBoundary . $eol;
+
+            log_util::log(LOG_LEVEL_DEBUG, "contentType: " . $contentType);
+            log_util::log(LOG_LEVEL_DEBUG, "encoding: " . $encoding);
+
+            $msg .= "Content-Type: " . $contentType . "; charset=\"" . $encoding . "\"" . $eol . $eol; // *NOTE* NEED TWO $EOLS HERE!
+            $msg .= $body . $eol . $eol;
+
+            $msg .= "--" . $mimeBoundary . "--" . $eol . $eol;  // finish with two eol's for better security. see Injection.
+        } else {
+            if($html) {
+                $contentType = "text/html";
+            } else {
+                $contentType = "text/plain";
+            }
+
+            $headers .= "Content-Type: " . $contentType . "; charset=\"" . $encoding . "\"" . $eol . $eol;  // *NOTE* NEED TWO $EOLS HERE!
+            $msg .= $body . $eol . $eol;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "headers: " . $headers);
+        log_util::log(LOG_LEVEL_DEBUG, "msg: " . $msg);
+
+        ini_set('sendmail_from', $fromAddress);
+
+        if(is_array($to)) {
+            $emailList = "";
+            foreach($to as $value) {
+                $emailList .= $value . ", ";
+            }
+            $emailList = rtrim($emailList, ", ");
+            log_util::log(LOG_LEVEL_DEBUG, "emailList: " . $emailList);
+            $success = mail($emailList, $subject, $msg, $headers);
+        } else {
+            $success = mail($to, $subject, $msg, $headers);
+        }
+
+        ini_restore('sendmail_from');
+
+        if($success) {
+            log_util::log(LOG_LEVEL_DEBUG, "Mail WAS sent successfully");
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "Mail WAS NOT sent successfully");
+        }
+        log_util::logDivider();
+
+        return $success;
+    }
+
     /**
      *  This function checks if the file calling it is connected to the library by writing a simple echo statement
      *

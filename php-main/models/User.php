@@ -36,6 +36,7 @@ class User {
      * @param string|NULL $cell
      * @param int|NULL $role
      * @param bool|NULL $locked
+     * @param bool|NULL $lockedByAdmin
      * @param int|NULL $timeLocked
      * @param int|NULL $consecutiveFailedLoginAttempts
      * @param string|NULL $lastLoginAttemptTime
@@ -154,7 +155,7 @@ class User {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $id
      */
     public function getId() {
         return $this->id;
@@ -172,7 +173,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $firstName
      */
     public function getFirstName() {
         return $this->firstName;
@@ -190,7 +191,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $lastName
      */
     public function getLastName() {
         return $this->lastName;
@@ -208,7 +209,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $userName
      */
     public function getUserName() {
         return $this->userName;
@@ -226,7 +227,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $email
      */
     public function getEmail() {
         return $this->email;
@@ -244,7 +245,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $password
      */
     public function getPassword() {
         return $this->password;
@@ -262,7 +263,7 @@ class User {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $securityQuestion
      */
     public function getSecurityQuestion() {
         return $this->securityQuestion;
@@ -280,7 +281,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $securityQuestionAnswer
      */
     public function getSecurityQuestionAnswer() {
         return $this->securityQuestionAnswer;
@@ -298,7 +299,7 @@ class User {
     }
 
     /**
-     * @return bool|NULL
+     * @return bool|NULL $emailBlasts
      */
     public function getEmailBlasts() {
         return $this->emailBlasts;
@@ -316,7 +317,7 @@ class User {
     }
 
     /**
-     * @return bool|NULL
+     * @return bool|NULL $textBlasts
      */
     public function getTextBlasts() {
         return $this->textBlasts;
@@ -334,7 +335,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $cell
      */
     public function getCell() {
         return $this->cell;
@@ -352,7 +353,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $role
      */
     public function getRole() {
         return $this->role;
@@ -442,7 +443,7 @@ class User {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $lastLoginAttemptTime
      */
     public function getLastLoginAttemptTime() {
         return $this->lastLoginAttemptTime;
@@ -460,7 +461,7 @@ class User {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $friendStatus
      */
     public function getFriendStatus() {
         return $this->friendStatus;

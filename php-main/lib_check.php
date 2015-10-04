@@ -157,6 +157,31 @@ class lib_check {
         return $empty;
     }
 
+    public static function same($input1, $input2) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $same = FALSE;
+
+        if($input1 == $input2) {
+            $same = TRUE;
+
+            log_util::log(LOG_LEVEL_DEBUG, "input1 IS the same as input2");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input1 IS NOT the same as input2");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "same: " . $same);
+        log_util::logDivider();
+
+        return $same;
+    }
+
     /**
      *  This function checks if a string begins with another string
      *
@@ -183,6 +208,64 @@ class lib_check {
         $length = strlen($needle);
         log_util::logDivider();
         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    public static function stringLength($input, $length, $operator) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $result = FALSE;
+
+        switch($operator) {
+            case "<":
+                log_util::log(LOG_LEVEL_DEBUG, "Operator is less than");
+                if(strlen($input) < $length) {
+                    $result = TRUE;
+                }
+                break;
+            case ">":
+                log_util::log(LOG_LEVEL_DEBUG, "Operator is greater than");
+                if(strlen($input) > $length) {
+                    $result = TRUE;
+                }
+                break;
+            case "=":
+                log_util::log(LOG_LEVEL_DEBUG, "Operator is equal");
+                if(strlen($input) == $length) {
+                    $result = TRUE;
+                }
+                break;
+            case "<=":
+                log_util::log(LOG_LEVEL_DEBUG, "Operator is less than or equal to");
+                if(strlen($input) <= $length) {
+                    $result = TRUE;
+                }
+                break;
+            case ">=":
+                log_util::log(LOG_LEVEL_DEBUG, "Operator is greater than or equal to");
+                if(strlen($input) >= $length) {
+                    $result = TRUE;
+                }
+                break;
+            default:
+                log_util::log(LOG_LEVEL_ERROR, "Invalid operator");
+                $result = FALSE;
+                break;
+        }
+
+        if($result) {
+            log_util::log(LOG_LEVEL_DEBUG, strlen($input) . " " . $operator . " " . $length . " DID evaluate to true");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, strlen($input) . " " . $operator . " " . $length . " DID NOT evaluate to true");
+        }
+        log_util::logDivider();
+
+        return $result;
     }
 
     public static function userInDb($id, $email, $userName, $password, $temp, $noDebugModeOutput = FALSE) {
@@ -319,6 +402,122 @@ class lib_check {
         }
 
         return $accountLock;
+    }
+
+    public static function validEmail($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $validEmail = FALSE;
+        $email = str_replace(' ', '', $input);
+
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $validEmail = TRUE;
+            log_util::log(LOG_LEVEL_DEBUG, "input IS a valid email");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input IS NOT a valid email");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "validEmail: " . $validEmail);
+        log_util::logDivider();
+
+        return $validEmail;
+    }
+
+    public static function validPassword($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        global $gPasswordNotCharNum, $gPasswordTooShort, $gPasswordTooLong, $gPasswordNoCapitalLetter, $gPasswordNoLowercaseLetter, $gPasswordNoNumber;
+
+        $gPasswordNotCharNum = $gPasswordTooShort = $gPasswordTooLong = $gPasswordNoCapitalLetter = $gPasswordNoLowercaseLetter = $gPasswordNoNumber = FALSE;
+
+        if(ctype_alnum($input) // Check to make sure input is numbers and digits only
+            && strlen($input) >= 7 // Check to make sure the input is at least 7 chars
+            && strlen($input) < 21 // Check to make sure the input isn't more than 20 chars
+            && preg_match('`[A-Z]`', $input) // Check for at least one upper case
+            && preg_match('`[a-z]`', $input) // Check for at least one lower case
+            && preg_match('`[0-9]`', $input)) // Check for at least one digit
+        {
+            $validPassword = TRUE;
+            log_util::log(LOG_LEVEL_DEBUG, "The password IS considered a good password");
+        } else {
+            $validPassword = FALSE;
+
+            log_util::log(LOG_LEVEL_DEBUG, "The password IS NOT considered a good password");
+
+
+            if(!ctype_alnum($input)) {
+                $gPasswordNotCharNum = TRUE;
+            }
+            log_util::log(LOG_LEVEL_DEBUG, "gPasswordNotCharNum: " . $gPasswordNotCharNum . "</p>");
+
+            if(strlen($input) < 7) {
+                $gPasswordTooShort = TRUE;
+            }
+            log_util::log(LOG_LEVEL_DEBUG, "gPasswordTooShort: " . $gPasswordTooShort . "</p>");
+
+            if(strlen($input) > 20) {
+                $gPasswordTooLong = TRUE;
+            }
+            log_util::log(LOG_LEVEL_DEBUG, "gPasswordTooLong: " . $gPasswordTooLong . "</p>");
+
+            if(!preg_match('`[A-Z]`', $input)) {
+                $gPasswordNoCapitalLetter = TRUE;
+            }
+            log_util::log(LOG_LEVEL_DEBUG, "gPasswordNoCapitalLetter: " . $gPasswordNoCapitalLetter . "</p>");
+
+            if(!preg_match('`[a-z]`', $input)) {
+                $gPasswordNoLowercaseLetter = TRUE;
+            }
+            log_util::log(LOG_LEVEL_DEBUG, "gPasswordNoLowercaseLetter: " . $gPasswordNoLowercaseLetter . "</p>");
+
+            if(!preg_match('`[0-9]`', $input)) {
+                $gPasswordNoNumber = TRUE;
+            }
+            log_util::log(LOG_LEVEL_DEBUG, "gPasswordNoNumber: " . $gPasswordNoNumber . "</p>");
+        }
+
+        log_util::logDivider();
+
+        return $validPassword;
+    }
+
+    public static function validPhone($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $validPhone = FALSE;
+
+        $pattern = "/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/";
+        $result = preg_match($pattern, $input);
+
+        if($result) {
+            $validPhone = TRUE;
+            log_util::log(LOG_LEVEL_DEBUG, "input IS a valid phone");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input IS NOT a valid phone");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "validPhone: " . $validPhone);
+        log_util::logDivider();
+
+        return $validPhone;
     }
 
     /**
