@@ -304,6 +304,88 @@ blockquote, blockquote p {
 }
 
 /**
+* Styles for
+*/
+
+form {
+    width: 100%;
+    height: auto;
+}
+
+.label {
+    float: left;
+    width: 30%;
+    margin: 0;
+    padding: 0;
+}
+
+.input {
+    float: left;
+    width: 70%;
+    margin: 0;
+    padding: 0;
+}
+
+.input input {
+    width: 100%;
+}
+
+.input select {
+    width: 95%;
+    margin: 7px 12px 5px 0;
+    float: right;
+}
+
+/**
+* Styles for progress section
+*/
+
+#progress {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.progress-section3 {
+    width: 33.3%;
+    height: auto;
+    float: left;
+}
+
+.progress-section2 {
+    width: 50%;
+    height: auto;
+    float: left;
+}
+
+#progress p {
+    height: auto;
+}
+
+.unfinished-bar {
+    background: #111;
+    width: 100%;
+    height: 5px;
+    float: left;
+}
+
+.finished-bar {
+    background: #76FF03;
+    width: 100%;
+    height: 5px;
+    float: left;
+}
+
+.inprogress-bar {
+    background: #fff;
+    width: 100%;
+    height: 5px;
+    float: left;
+}
+
+/**
 * Styles for gallery on main page
 */
 #gallery {

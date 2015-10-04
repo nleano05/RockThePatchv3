@@ -58,13 +58,13 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("DELETE FROM recent_updates WHERE id = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt->execute();
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -100,7 +100,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection IS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection IS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM annoyance_levels ORDER BY level ASC");
             $stmt->execute();
@@ -116,7 +116,7 @@ class lib_database {
                 array_push($annoyanceLevels, $annoyanceLevel);
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -155,7 +155,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro ORDER BY name ASC");
             $stmt->execute();
@@ -210,7 +210,7 @@ class lib_database {
             }
 
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -252,7 +252,7 @@ class lib_database {
 
         if(!empty($pdo)) {
             if(!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
             }
 
             $stmt = $pdo->prepare("SELECT * FROM encryption WHERE identifier = ?");
@@ -276,7 +276,7 @@ class lib_database {
 
         } else {
             if(!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
             }
         }
 
@@ -316,7 +316,7 @@ class lib_database {
         $errorReportCategories = [];
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM error_report_categories ORDER BY name ASC");
             $stmt->execute();
@@ -332,7 +332,7 @@ class lib_database {
                 array_push($errorReportCategories, $errorReportCategory);
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -371,7 +371,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM feature_request_categories ORDER BY name ASC");
             $stmt->execute();
@@ -387,7 +387,7 @@ class lib_database {
                 array_push($featureRequestCategories, $featureRequestCategory);
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -426,7 +426,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM recent_updates ORDER BY date DESC");
             $stmt->execute();
@@ -441,7 +441,7 @@ class lib_database {
                 $update->setDate($row['date']);
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -450,6 +450,43 @@ class lib_database {
         log_util::logDivider();
 
         return $update;
+    }
+
+    public static function getSecurityQuestions() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $securityQuestions = array();
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+            $stmt = $pdo->prepare("SELECT * FROM security_questions");
+            $stmt->execute();
+
+            while($row = $stmt->fetch()) {
+                $securityQuestion = new SecurityQuestion();
+                $securityQuestion->setId($row['id']);
+                $securityQuestion->setQuestion($row['question']);
+
+                array_push($securityQuestions, $securityQuestion);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "securityQuestions: ", $securityQuestions);
+        log_util::logDivider();
+
+        return $securityQuestions;
     }
 
     /**
@@ -480,7 +517,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM recent_updates WHERE id = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
@@ -496,7 +533,7 @@ class lib_database {
                 $update->setDate($row['date']);
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -535,7 +572,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM recent_updates ORDER BY date DESC");
             $stmt->execute();
@@ -551,7 +588,7 @@ class lib_database {
                 array_push($updates, $update);
             }
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -602,7 +639,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $db = $temp ? "users_temp" : "users";
 
@@ -684,7 +721,7 @@ class lib_database {
             }
         } else {
             if(!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
             }
         }
 
@@ -731,7 +768,7 @@ class lib_database {
 
         if(!empty($pdo)) {
             if (!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
             }
 
             $identifier = $encryptionData->getIdentifier();
@@ -750,7 +787,7 @@ class lib_database {
 
         } else {
             if(!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
             }
         }
 
@@ -854,7 +891,7 @@ class lib_database {
             $stmt->bindParam(6, $id, PDO::PARAM_INT);
             $stmt->execute();
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -887,7 +924,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if(!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("UPDATE recent_updates SET title=?, text=?, date=? WHERE id = ?");
             $title = $update->getTitle();
@@ -901,7 +938,7 @@ class lib_database {
             $stmt->bindParam(4, $id, PDO::PARAM_STR);
             $stmt->execute();
         } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;
@@ -942,7 +979,7 @@ class lib_database {
 
         if(!empty($pdo)) {
             if (!$noDebugModeOutput) {
-                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
             }
 
             $identifier = $encryptionData->getIdentifier();
@@ -969,7 +1006,7 @@ class lib_database {
 
         } else {
             if(!$noDebugModeOutput) {
-               log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+               log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
             }
         }
 
@@ -980,7 +1017,7 @@ class lib_database {
         }
     }
 
-    public static function writeLoginLogAndStatistics() {
+    public static function writeLoginLogAndStatistics($userId, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -990,177 +1027,63 @@ class lib_database {
         log_util::logFunctionStart($args);
 
         $pdo = lib_database::connect();
-//        global $debugMode, $debugFunctionColor, $debugDivider;
-//        if($debugMode)
-//        {
-//            echo("<p style='color:$debugFunctionColor;'>function dbWriteLoginStatisticsAndLog {userNameOrEmail: " . $userNameOrEmail . ", passed: " . $passed . "}</p>");
-//        }
-//
-//        if($debugMode)
-//        {
-//            echo("<p>userNameOrEmail: " . $userNameOrEmail . "</p>");
-//            echo("<p>passed: " . $passed . "</p>");
-//        }
-//
-//        $dbh = dbConnect();
-//
-//        if(!empty($dbh))
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>dbh IS NOT null</p>");
-//            }
-//
-//            $stmt = $dbh->prepare("SELECT * FROM users WHERE userName = ? OR email = ?");
-//            $stmt->bindParam(1, $userNameOrEmail, PDO::PARAM_STR);
-//            $stmt->bindParam(2, $userNameOrEmail, PDO::PARAM_STR);
-//            $stmt->execute();
-//            $row = $stmt->fetch();
-//        }
-//        else
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>dbh IS null</p>");
-//            }
-//        }
-//
-//        $user = $row['email'];
-//        if(empty($user))
-//        {
-//            $user = $userNameOrEmail;
-//        }
-//        if($debugMode)
-//        {
-//            echo("<p>user: " . $user . "</p>");
-//        }
-//
-//        if(!empty($dbh))
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>dbh IS NOT null</p>");
-//            }
-//
-//            $stmt = $dbh->prepare("SELECT * FROM login_statistics WHERE userName = ?");
-//            $stmt->bindParam(1, $user, PDO::PARAM_STR);
-//            $stmt->execute();
-//            $row = $stmt->fetch();
-//        }
-//        else
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>dbh IS null</p>");
-//            }
-//        }
-//
-//        if(!empty($row))
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>Entry for the user is already in the database, doing UPDATE</p>");
-//            }
-//
-//            $attempts = $row['attempts'] + 1; // Increment
-//            if($passed) // Increment
-//            {
-//                $succeeded = $row['succeeded'] + 1;
-//                $failed = $row['failed'];
-//            }
-//            else
-//            {
-//                $succeeded = $row['succeeded'];
-//                $failed = $row['failed'] + 1;
-//            }
-//
-//            if(!empty($dbh))
-//            {
-//                if($debugMode)
-//                {
-//                    echo("<p>dbh IS NOT null</p>");
-//                }
-//
-//                $stmt = $dbh->prepare("UPDATE login_statistics SET attempts=?, failed=?, succeeded=? WHERE user = ?");
-//                $stmt->bindParam(1, $attempts, PDO::PARAM_INT);
-//                $stmt->bindParam(2, $failed, PDO::PARAM_INT);
-//                $stmt->bindParam(3, $succeeded, PDO::PARAM_INT);
-//                $stmt->bindParam(4, $user, PDO::PARAM_STR);
-//                $stmt->execute();
-//            }
-//            else
-//            {
-//                if($debugMode)
-//                {
-//                    echo("<p>dbh IS null</p>");
-//                }
-//            }
-//        }
-//        else
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>Entry for the user IS NOT already in the database, doing INSERT</p>");
-//            }
-//
-//            $attempts = 1; // First attempt
-//            if($passed) // First attempt
-//            {
-//                $succeeded = 1;
-//                $failed = 0;
-//            }
-//            else
-//            {
-//                $succeeded = 0;
-//                $failed = 1;
-//            }
-//
-//            if(!empty($dbh))
-//            {
-//                if($debugMode)
-//                {
-//                    echo("<p>dbh IS NOT null</p>");
-//                }
-//
-//                $stmt = $dbh->prepare("INSERT INTO login_statistics (userName, attempts, failed, succeeded) VALUE (?, ?, ?, ?)");
-//                $stmt->bindParam(1, $user, PDO::PARAM_STR);
-//                $stmt->bindParam(2, $attempts, PDO::PARAM_INT);
-//                $stmt->bindParam(3, $failed, PDO::PARAM_INT);
-//                $stmt->bindParam(4, $succeeded, PDO::PARAM_INT);
-//                $stmt->execute();
-//            }
-//            else
-//            {
-//                if($debugMode)
-//                {
-//                    echo("<p>dbh IS null</p>");
-//                }
-//            }
-//        }
-//
-//        if(!empty($dbh))
-//        {
-//            if($debugMode)
-//            {
-//                echo("<p>dbh IS NOT null</p>");
-//            }
-//
-//            $timezone = date_default_timezone_get();
-//            date_default_timezone_set($timezone);
-//            $time = gmdate('Y/m/d H:i:s');
-//
-//            $stmt = $dbh->prepare("INSERT INTO login_log (userName, success, loginTime) VALUE (?, ?, ?)");
-//            $stmt->bindParam(1, $userNameOrEmail, PDO::PARAM_STR);
-//            $stmt->bindParam(2, $passed, PDO::PARAM_BOOL);
-//            $stmt->bindParam(3, $time, PDO::PARAM_STR);
-//            $stmt->execute();
-//        } else {
-//            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
-//            if($debugMode)
-//            {
-//                echo("<p>dbh IS null</p>");
-//            }
-//        }
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM login_statistics WHERE userId = ?");
+            $stmt->bindParam(1, $userId, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                $attempts = $row['attempts'] + 1;
+                if($passed) {
+                    $succeeded = $row['succeeded'] + 1;
+                    $failed = $row['failed'];
+                } else {
+                    $succeeded = $row['succeeded'];
+                    $failed = $row['failed'] + 1;
+                }
+
+                $stmt = $pdo->prepare("UPDATE login_statistics SET attempts=?, failed=?, succeeded=? WHERE userId = ?");
+                $stmt->bindParam(1, $attempts, PDO::PARAM_INT);
+                $stmt->bindParam(2, $failed, PDO::PARAM_INT);
+                $stmt->bindParam(3, $succeeded, PDO::PARAM_INT);
+                $stmt->bindParam(4, $userId, PDO::PARAM_STR);
+                $stmt->execute();
+            } else {
+                $attempts = 1;
+                if($passed) {
+                    $succeeded = 1;
+                    $failed = 0;
+                } else {
+                    $succeeded = 0;
+                    $failed = 1;
+                }
+
+                $stmt = $pdo->prepare("INSERT INTO login_statistics (userId, attempts, failed, succeeded) VALUE (?, ?, ?, ?)");
+                $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+                $stmt->bindParam(2, $attempts, PDO::PARAM_INT);
+                $stmt->bindParam(3, $failed, PDO::PARAM_INT);
+                $stmt->bindParam(4, $succeeded, PDO::PARAM_INT);
+                $stmt->execute();
+            }
+
+            $timezone = date_default_timezone_get();
+            date_default_timezone_set($timezone);
+            $time = gmdate('Y/m/d H:i:s');
+
+            $passed = (int) $passed;
+
+            $stmt = $pdo->prepare("INSERT INTO login_log (userId, success, loginTime) VALUE (?, ?, ?)");
+            $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $passed, PDO::PARAM_INT);
+            $stmt->bindParam(3, $time, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
+        }
 
         $pdo = NULL;
 
@@ -1194,7 +1117,7 @@ class lib_database {
         $pdo = lib_database::connect();
 
         if(!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT null");
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM recent_updates WHERE id = ?");
             $id = $update->getId();
@@ -1217,7 +1140,53 @@ class lib_database {
             }
 
         } else {
-           log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS null");
+           log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeUsersTemp($firstName, $lastName, $userName, $email, $password, $securityQuestion, $answer, $emailBlasts, $textBlasts, $cell, $role) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $dbh = lib_database::connect();
+
+        if(!empty($dbh)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $exists = lib_check::userInDb(NULL, $email, $userName, NuLL, TRUE);
+
+            if(!$exists) {
+                log_util::log(LOG_LEVEL_ERROR, "user DOES NOT exist");
+
+                $encryptedPassword = lib::encrypt($password, $email . "_pass");
+
+                $stmt = $dbh->prepare("INSERT INTO users_temp (firstName, lastName, userName, email, password, securityQuestion, securityQuestionAnswer, emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bindParam(1, $firstName, PDO::PARAM_STR);
+                $stmt->bindParam(2, $lastName, PDO::PARAM_STR);
+                $stmt->bindParam(3, $userName, PDO::PARAM_STR);
+                $stmt->bindParam(4, $email, PDO::PARAM_STR);
+                $stmt->bindParam(5, $encryptedPassword, PDO::PARAM_STR);
+                $stmt->bindParam(6, $securityQuestion, PDO::PARAM_INT);
+                $stmt->bindParam(7, $answer, PDO::PARAM_STR);
+                $stmt->bindParam(8, $emailBlasts, PDO::PARAM_INT);
+                $stmt->bindParam(9, $textBlasts, PDO::PARAM_INT);
+                $stmt->bindParam(10, $cell, PDO::PARAM_STR);
+                $stmt->bindParam(11, $role, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                log_util::log(LOG_LEVEL_ERROR, "user DOES exist");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;

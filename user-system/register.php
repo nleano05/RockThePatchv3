@@ -337,6 +337,82 @@ function displayOutputTextBlast() {
         echo("<p><input type='checkbox' name ='text-blasts' />Sign up for text blasts<em> (You'll recieve text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
     }
 }
+
+function register() {
+    $firstName = isset($_POST['first-name']) ? $_POST['first-name'] : "";
+    $lastName = isset($_POST['last-name']) ? $_POST['last-name'] : "";
+    $userName = isset($_POST['user-name']) ? $_POST['user-name'] : "";
+    $email = isset($_POST['email']) ? $_POST['email'] : "";
+    $password = isset($_POST['password']) ? $_POST['password'] : "";
+    $cellPhone = isset($_POST['cell-phone']) ? $_POST['cell-phone'] : "";
+    $securityQuestion = isset($_POST['security-question']) ? $_POST['security-question'] : "";
+    $answer = isset($_POST['answer']) ? $_POST['answer'] : "";
+
+    if(!empty($_POST['email-blasts'])) {
+        $emailBlasts = 1;
+    } else {
+        $emailBlasts = 0;
+    }
+
+    if(!empty($_POST['text-blasts'])) {
+        $textBlasts = 1;
+    } else {
+        $textBlasts = 0;
+    }
+
+    $role = ROLE_USER;
+
+    lib_database::writeUsersTemp($firstName, $lastName, $userName, $email, $password, $securityQuestion, $answer, $emailBlasts, $textBlasts, $cellPhone, $role);
+}
+
+function sendRegistrationEmail() {
+    $firstName = isset($_POST['first-name']) ? $_POST['first-name'] : "";
+    $lastName = isset($_POST['last-name']) ? $_POST['last-name'] : "";
+    $userName = isset($_POST['user-name']) ? $_POST['user-name'] : "";
+    $email = isset($_POST['email']) ? $_POST['email'] : "";
+    $cellPhone = isset($_POST['cell-phone']) ? $_POST['cell-phone'] : "";
+
+    if(!empty($_POST['email-blasts'])) {
+        $emailBlasts = "Yes";
+    } else {
+        $emailBlasts = "No";
+    }
+
+    if(!empty($_POST['text-blasts'])) {
+        $textBlasts = "Yes";
+    } else {
+        $textBlasts = "No";
+    }
+
+    $registrationUrl= lib::generateRegistrationURL($email, $userName, $firstName, $lastName);
+
+    $subject = "Rock the Patch! - New User Registration";
+    $body = "<h2 style='color:#e44d26;'>Rock the Patch! - New User Registration</h2>\r\n\r\n"
+        ."\r\n"
+        ."This email has been used to register a Rock the Patch! user account with exclusive access to downloads, special news, videos, and more."
+        ." Below is the information sent during registration:<br/><br/>\r\n"
+        ."\r\n"
+        ."<strong>First Name:</strong> $firstName<br/><br/>\r\n\r\n"
+        ."<strong>Last Name:</strong> $lastName<br/><br/>\r\n\r\n"
+        ."<strong>User Name:</strong> $userName<br/><br/>\r\n\r\n"
+        ."<strong>Email:</strong> $email<br/><br/>\r\n\r\n"
+        //."<strong>Answer to Security Question:</strong> $answerOut<br/><br/>\r\n\r\n"
+        ."<strong>Cell #:</strong> $cellPhone <br/><br/>\r\n\r\n"
+        ."<strong>Signed up for email blasts:</strong> $emailBlasts <br/><br/>\r\n\r\n"
+        ."<strong>Signed up for text blasts:</strong> $textBlasts <br/><br/>\r\n\r\n"
+        ." Before the account can be used to log in, this email needs to be confirmed.  Please click on the link below to do this: \r\n\r\n"
+        ."<br/>\r\n\r\n"
+        .$registrationUrl
+        ."<br/><br/>\r\n\r\n";
+
+    $success = lib::sendMail($email, $subject, $body);
+
+    if($success) {
+        echo("<p><strong><em>EMAIL SUCCESS -- Yay! A registration link was sent to the provided email.</em></strong></p>");
+    } else {
+        echo("<p><strong><em>EMAIL FAILURE -- Bummer, registration link <font class='error'>was not</font> sent although the provided information was valid.  Please try again later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+    }
+}
 ?>
 <!DOCTYPE html>
 <!-- ### Sets the class and language for IE 7,8, and 9 ### -->
@@ -459,10 +535,10 @@ function displayOutputTextBlast() {
             <!-- ### Start Register Form ### -->
             <form action="register.php" method="post" name="registration-form">
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>First Name:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" name="first-name" value="<?php if(isset($_POST['first-name'])){ echo($_POST['first-name']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -472,10 +548,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Last Name:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" name="last-name" value="<?php if(isset($_POST['last-name'])){ echo($_POST['last-name']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -485,10 +561,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Requested User Name:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" name="user-name" value="<?php if(isset($_POST['user-name'])){ echo($_POST['user-name']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -498,10 +574,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>User Email:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" name="email" value="<?php if(isset($_POST['email'])){ echo($_POST['email']); } ?>"/></p>
 
                     <?php
@@ -512,10 +588,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Confirm User Email:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" name="email-confirm" value="<?php if(isset($_POST['email-confirm'])){ echo($_POST['email-confirm']); }?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -525,10 +601,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Password:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="password" name="password" value="<?php if(isset($_POST['password'])){ echo($_POST['password']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -538,10 +614,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Confirm Password:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="password" name="password-confirm" value="<?php if(isset($_POST['password-confirm'])){ echo($_POST['password-confirm']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -551,10 +627,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
-                    <p><strong>Cell Phone Number:</strong> (<em>format: xxx-xxx-xxxx</em>)</p>
+                <div class="label">
+                    <p><strong>Cell Phone Number:</strong><br/> (<em>format: xxx-xxx-xxxx</em>)</p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" id="cell-phone" name="cell-phone" value="<?php if(isset($_POST['cell-phone'])){ echo($_POST['cell-phone']); } ?>" maxlength='12'/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -564,19 +640,19 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Security Question:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <!-- HACK - wanted to print this out in dbQuestionsPrintSelect but options weren't populated before sent to the validation service -->
                     <select name="security-question">
-                        <!-- A static option needed for the validation of the security question -->
+                         <!-- A static option needed for the validation of the security question -->
                         <option><?php echo(SELECT_SECURITY_QUESTION); ?></option>
                         <?php
-//                        $temp = dbQuestionsGather();
-//                        $randomizedQuestions = dbQuestionsRandomizeArray($temp);
-//                        $selectedQuestion = isset($_POST['security-question']) ? $_POST['security-question'] : "";
-//                        dbQuestionsPrintSelect($randomizedQuestions, $selectedQuestion);
+                            $securityQuestions = lib_database::getSecurityQuestions();
+                            $randomizedSecurityQuestions = lib::randomizeArray($securityQuestions, 10);
+                            $selectedQuestion = isset($_POST['security-question']) ? $_POST['security-question'] : "";
+                            lib::printSecurityQuestions($randomizedSecurityQuestions, $selectedQuestion);
                         ?>
                     </select>
                     <?php
@@ -585,10 +661,10 @@ function displayOutputTextBlast() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="register-label">
+                <div class="label">
                     <p><strong>Security Question Answer:</strong></p>
                 </div>
-                <div class="register-input">
+                <div class="input">
                     <p><input type="text" name="answer" value="<?php if(isset($_POST['answer'])){ echo($_POST['answer']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -632,9 +708,8 @@ function displayOutputTextBlast() {
                 confirmation link, you will be able to log in and have access to exclusive content
                 including downloads, music videos, and special news updates.</p>
             <?php
-            callSendMail();
-            dbWriteUsersTemp($fnameOut, $lnameOut, $userNameOut, $emailOut, $passwordOut, $questionIDOut, $answerOut, $mailingOut, $textOut, $cellOut, $roleOut);
-
+                register();
+                sendRegistrationEmail();
             ?>
             <br/>
 

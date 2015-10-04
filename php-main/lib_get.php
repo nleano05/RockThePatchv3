@@ -5,6 +5,31 @@
  */
 class lib_get {
 
+    public static function baseUrl() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $currentUrl = lib_get::currentUser();
+        if(strpos($currentUrl, "127.0.0.1") !== FALSE) {
+            $baseUrl = "http://127.0.0.1/";
+        } else if(strpos($currentUrl, "staging") !== FALSE) {
+            $baseUrl = "https://staging.rockthepatch.com/";
+        } else if(strpos($currentUrl, "integration") !== FALSE) {
+            $baseUrl = "https://integration.rockthepatch.com/";
+        } else if(strpos($currentUrl, "v3") !== FALSE) {
+            $baseUrl = "https://v3.rockthepatch.com/";
+        } else {
+            $baseUrl = "https://rockthepatch.com/";
+        }
+
+        return $baseUrl;
+    }
+    
     /**
      *  This function gets the callee of another function
      *

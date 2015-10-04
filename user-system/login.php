@@ -117,14 +117,14 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
             lib::cookieCreate(COOKIE_LOGIN_STATUS_KEY, base64_encode($gUser->getId() . "_login"), $sendHeaders, $noDebugModeOutput);
 
             lib_database::updateUserLockAttributes($gUser->getId(), TRUE);
-            lib_database::writeLoginLogAndStatistics($gUser->getUserName(), FALSE);
+            lib_database::writeLoginLogAndStatistics($gUser->getId(), TRUE);
         } else {
             if (!$noDebugModeOutput) {
                 log_util::log(LOG_LEVEL_DEBUG, "Login DID NOT succeed");
             }
 
             lib_database::updateUserLockAttributes($gUser->getId(), FALSE);
-            lib_database::writeLoginLogAndStatistics($gUser->getUserName(), FALSE);
+            lib_database::writeLoginLogAndStatistics($gUser->getId(), FALSE);
         }
     } else {
         log_util::log(LOG_LEVEL_WARNING, "User WAS null");

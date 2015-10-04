@@ -12,6 +12,7 @@ require_once("models/EmailDistro.php");
 require_once("models/EncryptionData.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");
+require_once("models/SecurityQuestion.php");
 require_once("models/Update.php");
 require_once("models/User.php");
 
@@ -48,25 +49,25 @@ class lib {
 
         global $gDebugMode;
 
-        if($gDebugMode && !$noDebugModeOutput) {
+        if ($gDebugMode && !$noDebugModeOutput) {
             log_util::logFunctionStart($args);
         }
 
         $_COOKIE[$cookie] = $value;
-        if($sendHeaders)  {
-            if($gDebugMode && !$noDebugModeOutput) {
+        if ($sendHeaders) {
+            if ($gDebugMode && !$noDebugModeOutput) {
                 log_util::log(LOG_LEVEL_DEBUG, "We ARE in debug mode, cannot send headers");
             } else {
-                setcookie($cookie, $value, time()+3600, '/', '.rockthepatch.com', TRUE);
+                setcookie($cookie, $value, time() + 3600, '/', '.rockthepatch.com', TRUE);
                 $referer = lib_get::referer();
                 // Added for EasyPHP
-                if(strpos($referer, 'http://127.0.0.1') !== FALSE ) {
-                    setcookie($cookie, $value, time()+3600, '/', '127.0.0.1', FALSE);
+                if (strpos($referer, 'http://127.0.0.1') !== FALSE) {
+                    setcookie($cookie, $value, time() + 3600, '/', '127.0.0.1', FALSE);
                 }
             }
         }
 
-        if($gDebugMode && !$noDebugModeOutput) {
+        if ($gDebugMode && !$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "Cookie: ", $_COOKIE);
             log_util::logDivider();
         }
@@ -83,20 +84,20 @@ class lib {
 
         global $gDebugMode;
 
-        if(isset($_COOKIE[$cookie])) {
+        if (isset($_COOKIE[$cookie])) {
             unset($_COOKIE[$cookie]);
         }
 
-        if($gDebugMode) {
+        if ($gDebugMode) {
             log_util::log(LOG_LEVEL_DEBUG, "We ARE in debug mode, cannot send headers");
         } else {
-            setcookie($cookie, "", time()-3600, '/', '.rockthepatch.com', TRUE);
-            setcookie($cookie, "", time()+1, '/', '.rockthepatch.com', TRUE);
+            setcookie($cookie, "", time() - 3600, '/', '.rockthepatch.com', TRUE);
+            setcookie($cookie, "", time() + 1, '/', '.rockthepatch.com', TRUE);
             $referer = lib_get::referer();
 
-            if(strpos($referer, 'http://127.0.0.1') !== FALSE) {
-                setcookie($cookie, "", time()-3600, '/', '127.0.0.1', FALSE);
-                setcookie($cookie, "", time()+1, '/', '127.0.0.1', FALSE);
+            if (strpos($referer, 'http://127.0.0.1') !== FALSE) {
+                setcookie($cookie, "", time() - 3600, '/', '127.0.0.1', FALSE);
+                setcookie($cookie, "", time() + 1, '/', '127.0.0.1', FALSE);
             }
         }
 
@@ -185,7 +186,7 @@ class lib {
         xml_set_element_handler($xmlParser, "lib::rssStartElement", "lib::rssEndElement");
         xml_set_character_data_handler($xmlParser, "lib::rssCharacterData");
 
-        $fp = fopen($rssLocation,"r") or die("Error reading RSS data.");
+        $fp = fopen($rssLocation, "r") or die("Error reading RSS data.");
 
         while ($data = fread($fp, 2048)) {
             xml_parse($xmlParser, $data, feof($fp));
@@ -194,7 +195,7 @@ class lib {
         fclose($fp);
         xml_parser_free($xmlParser);
 
-       log_util::logDivider();
+        log_util::logDivider();
     }
 
     /**
@@ -217,15 +218,14 @@ class lib {
      * @version - 1.0
      * @history - Created 07/05/2015
      */
-    public static function encrypt($data, $identifiers, $noDebugModeOutput = FALSE){
+    public static function encrypt($data, $identifiers, $noDebugModeOutput = FALSE) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
         foreach ($parameters as $parameter) {
             $args[$parameter->name] = ${$parameter->name};
         }
-
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::logFunctionStart($args);
         }
 
@@ -234,40 +234,40 @@ class lib {
         $salt = "!kQm*fF3pXe1Kbm%9";
         $key = hash('SHA256', $salt . $data, true);
 
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "salt: " . $salt);
             log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
         }
 
         $dataUTF8 = utf8_encode($data);
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "dataUTF8: " . $dataUTF8);
         }
 
         $ivSize = mcrypt_get_iv_size($encoding, $mode);
         $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
 
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "iv: " . $iv);
         }
 
         $cipher = mcrypt_encrypt($encoding, $key, $dataUTF8, $mode, $iv);
 
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "cipher: " . $cipher);
         }
 
         $cipher = $iv . $cipher;
 
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "cipher: " . $cipher);
         }
 
         $encryptedDataMCRYPT = base64_encode($cipher);
         $time = gmdate("F d, Y h:m:s");
 
-        if(is_array($identifiers)) {
-            foreach($identifiers as $identifier) {
+        if (is_array($identifiers)) {
+            foreach ($identifiers as $identifier) {
                 $encryptionData = new EncryptionData();
                 $encryptionData->setIdentifier($identifier);
                 $encryptionData->setKey($key);
@@ -287,12 +287,53 @@ class lib {
             lib_database::writeEncryptionData($encryptionData, $noDebugModeOutput);
         }
 
-        if(!$noDebugModeOutput) {
+        if (!$noDebugModeOutput) {
             log_util::log(LOG_LEVEL_DEBUG, "encryptedDataMCRYPT: ", $encryptedDataMCRYPT);
             log_util::logDivider();
         }
 
         return $encryptedDataMCRYPT;
+    }
+
+    public static function generateRegistrationUrl($email, $userName, $firstName, $lastName) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $registrationUrl = lib_get::baseUrl() . "user-system/registration-confirmation.php";
+
+        $base64Temp = base64_encode($email);
+        $base64Temp = str_replace("+", "-", $base64Temp); // Stripping +, /, and = for url friendly characters
+        $base64Temp = str_replace("/", "_", $base64Temp);
+        $email = str_replace("=", "*", $base64Temp);
+        $registrationUrl .= "?email=" . $email;
+
+        $base64Temp = base64_encode($userName);
+        $base64Temp = str_replace("+", "-", $base64Temp); // Stripping +, /, and = for url friendly characters
+        $base64Temp = str_replace("/", "_", $base64Temp);
+        $userName = str_replace("=", "*", $base64Temp);
+        $registrationUrl .= "&username=" . $userName;
+
+        $base64Temp = base64_encode($firstName);
+        $base64Temp = str_replace("+", "-", $base64Temp); // Stripping +, /, and = for url friendly characters
+        $base64Temp = str_replace("/", "_", $base64Temp);
+        $firstName = str_replace("=", "*", $base64Temp);
+        $registrationUrl .= "&fname=" . $firstName;
+
+        $base64Temp = base64_encode($lastName);
+        $base64Temp = str_replace("+", "-", $base64Temp);  // Stripping +, /, and = for url friendly characters
+        $base64Temp = str_replace("/", "_", $base64Temp);
+        $lastName = str_replace("=", "*", $base64Temp);
+        $registrationUrl .= "&lname=" . $lastName;
+
+        log_util::log(LOG_LEVEL_DEBUG, "registrationUrl: " . $registrationUrl);
+        log_util::logDivider();
+
+        return $registrationUrl;
     }
 
     /**
@@ -337,6 +378,58 @@ class lib {
         log_util::log(LOG_LEVEL_DEBUG, "round(timeMS): " . round($timeMS));
 
         return round($timeMS);
+    }
+
+    public static function printSecurityQuestions($securityQuestions, $selectedQuestion) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        foreach($securityQuestions as $securityQuestion) {
+            if($selectedQuestion == $securityQuestion->getId() || $selectedQuestion == $securityQuestion->getQuestion()) {
+                echo("<option value='" . $securityQuestion->getId() . "' selected='selected'>". $securityQuestion->getQuestion() . "</option>");
+            } else {
+                echo("<option value='" . $securityQuestion->getId() . "'>". $securityQuestion->getQuestion() . "</option>");
+            }
+        }
+
+       log_util::logDivider();
+    }
+
+    public static function randomizeArray($array, $randomizedEntryCount) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $randomizedArray = array();
+
+        while (count($randomizedArray) < $randomizedEntryCount) {
+            $randNum = rand(0, (count($array) - 1));
+
+            log_util::log(LOG_LEVEL_DEBUG, "randNum: " . $randNum);
+            log_util::log(LOG_LEVEL_DEBUG, "count(randomizedArray): " . count($randomizedArray));
+
+            if (in_array($array[$randNum], $randomizedArray)) {
+                log_util::log(LOG_LEVEL_DEBUG, "Item IS already in array: ", $array[$randNum]);
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "Item IS NOT already in array, adding: ", $array[$randNum]);
+                array_push($randomizedArray, $array[$randNum]);
+            }
+            //array_push($randomizedArray, $array[$randNum]);
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "randomizedArray: ", $randomizedArray);
+        log_util::logDivider();
+
+        return $randomizedArray;
     }
 
     /**
