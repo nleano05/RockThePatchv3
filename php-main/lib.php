@@ -316,19 +316,19 @@ class lib {
         $base64Temp = str_replace("+", "-", $base64Temp); // Stripping +, /, and = for url friendly characters
         $base64Temp = str_replace("/", "_", $base64Temp);
         $userName = str_replace("=", "*", $base64Temp);
-        $registrationUrl .= "&username=" . $userName;
+        $registrationUrl .= "&userName=" . $userName;
 
         $base64Temp = base64_encode($firstName);
         $base64Temp = str_replace("+", "-", $base64Temp); // Stripping +, /, and = for url friendly characters
         $base64Temp = str_replace("/", "_", $base64Temp);
         $firstName = str_replace("=", "*", $base64Temp);
-        $registrationUrl .= "&fname=" . $firstName;
+        $registrationUrl .= "&firstName=" . $firstName;
 
         $base64Temp = base64_encode($lastName);
         $base64Temp = str_replace("+", "-", $base64Temp);  // Stripping +, /, and = for url friendly characters
         $base64Temp = str_replace("/", "_", $base64Temp);
         $lastName = str_replace("=", "*", $base64Temp);
-        $registrationUrl .= "&lname=" . $lastName;
+        $registrationUrl .= "&lastName=" . $lastName;
 
         log_util::log(LOG_LEVEL_DEBUG, "registrationUrl: " . $registrationUrl);
         log_util::logDivider();
@@ -423,7 +423,6 @@ class lib {
                 log_util::log(LOG_LEVEL_DEBUG, "Item IS NOT already in array, adding: ", $array[$randNum]);
                 array_push($randomizedArray, $array[$randNum]);
             }
-            //array_push($randomizedArray, $array[$randNum]);
         }
 
         log_util::log(LOG_LEVEL_DEBUG, "randomizedArray: ", $randomizedArray);

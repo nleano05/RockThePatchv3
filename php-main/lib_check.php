@@ -288,7 +288,7 @@ class lib_check {
 
         $user = lib_database::getUser($id, $email, $userName, $password, $temp, $noDebugModeOutput);
 
-        if(!empty($user)) {
+        if($user != NULL) {
             log_util::log(LOG_LEVEL_DEBUG, "user WAS was in database");
             $userInDB = TRUE;
         } else {
@@ -299,7 +299,7 @@ class lib_check {
             log_util::log(LOG_LEVEL_DEBUG, "userInDB:" . $userInDB);
             log_util::logDivider();
         }
-
+		
         return $userInDB;
     }
 
@@ -356,7 +356,7 @@ class lib_check {
             log_util::logFunctionStart($args);
         }
 
-        $user = lib_database::getUser(NULL, $userName, $email, NULL, FALSE, $noDebugModeOutput);
+        $user = lib_database::getUser(NULL, $email, $userName, NULL, FALSE, $noDebugModeOutput);
 
         $accountLock = new AccountLock();
         $accountLock->setLocked(FALSE);

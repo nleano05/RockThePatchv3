@@ -18,7 +18,8 @@ function checkInput() {
     global $gBlackFirstName, $gBlackLastName, $gBlackUserName, $gBlackEmail, $gBlackEmailConfirm, $gBlackPassword, $gBlackPasswordConfirm, $gBlackCellPhone, $gBlackAnswer;
     global $gFirstNameTooLong, $gLastNameTooLong, $gUserNameTooLong;
     global $gEmailInUse, $gUserNameInUse;
-    global $gValidEmail, $gValidPassword, $gValidPhone;
+    global $gEmailInRegistration, $gUserNameInRegistration;
+    global $gValidEmail, $gValidPassword, $gValidCellPhone;
     global $gEmailsMatch, $gPasswordsMatch;
 
     $firstName = isset($_POST['first-name']) ? $_POST['first-name'] : "";
@@ -150,13 +151,23 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    $gEmailInUse = lib_check::userInDb(null, $email, null, null, false);
+    $gEmailInUse = lib_check::userInDb(NULL, $email, NULL, NULL, FALSE);
     if($gEmailInUse) {
         $validForm = FALSE;
     }
 
-    $gUserNameInUse = lib_check::userInDb(null, null, $userName, null, false);
+    $gUserNameInUse = lib_check::userInDb(NULL, NULL, $userName, NULL, FALSE);
     if($gUserNameInUse) {
+        $validForm = FALSE;
+    }
+
+    $gEmailInRegistration = lib_check::userInDb(NULL, $email, NULL, NULL, TRUE);
+    if($gEmailInRegistration) {
+        $validForm = FALSE;
+    }
+
+    $gUserNameInRegistration = lib_check::userInDb(NULL, NULL, $userName, NULL, TRUE);
+    if($gUserNameInRegistration) {
         $validForm = FALSE;
     }
 
@@ -175,8 +186,8 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    $gValidPhone = lib_check::validPhone($cellPhone);
-    if(!$gValidPhone) {
+    $gValidCellPhone = lib_check::validPhone($cellPhone);
+    if(!$gValidCellPhone) {
         $validForm = FALSE;
     }
 
@@ -218,32 +229,36 @@ function displayOutputLastName() {
 }
 
 function displayOutputUserName() {
-    global $gNoUserName, $gBlackUserName, $gUserNameInUser, $gUserNameTooLong;
+    global $gNoUserName, $gBlackUserName, $gUserNameInUse, $gUserNameInRegistration, $gUserNameTooLong;
 
     if($gNoUserName) {
         echo("<p class='error'>Please enter in a user name to continue.</p>");
     } else if($gBlackUserName) {
         echo("<p class='error'>User Name contained characters that are not allowed.</p>");
-    } else if($gUserNameInUser) {
+    } else if($gUserNameInUse) {
         echo("<p class='error'>That user name is already in use, please try another.</p>");
+    } else if($gUserNameInRegistration) {
+        echo("<p class='error'>That user name is already in the middle of the registration process, please try another.</p>");
     } else if($gUserNameTooLong) {
         echo("<p class='error'>Your first name may not have more than 40 chars.</p>");
     }
 }
 
 function displayOutputEmail() {
-    global $gNoEmail, $gBlackEmail, $gEmailInUse, $gEmailsMatch, $gValidEmail;
+    global $gNoEmail, $gBlackEmail, $gEmailInUse, $gEmailInRegistration, $gEmailsMatch, $gValidEmail;
 
     if($gNoEmail) {
         echo("<p class='error'>Please enter in an email to continue.</p>");
     } else if($gBlackEmail) {
-        echo("<p class='error'>User Email contained characters that are not allowed.</p>");
+        echo("<p class='error'>Email contained characters that are not allowed.</p>");
     } else if($gEmailInUse) {
-        echo("<p class='error'>That user email is already in use, please try another.</p>");
+        echo("<p class='error'>That email is already in use, please try another.</p>");
+    } else if($gEmailInRegistration) {
+        echo("<p class='error'>That email is already in the middle of the registration process, please try another.</p>");
     } else if(!$gEmailsMatch) {
-        echo("<p class='error'>The email addresses you have entered are not the same.</p>");
+        echo("<p class='error'>The emails you have entered are not the same.</p>");
     } else if(!$gValidEmail) {
-        echo("<p class='error'>The email addresses you have entered is not valid.  Please make sure it contains the @ symbol and is correct.</p>");
+        echo("<p class='error'>The email you have entered is not valid.  Please make sure it contains the @ symbol and is correct.</p>");
     }
 }
 
@@ -263,7 +278,7 @@ function displayOutputPassword() {
 
     if($gNoPassword) {
         echo("<p class='error'>Please enter in a password to continue.</p>");
-    } else if(!$gBlackPassword) {
+    } else if($gBlackPassword) {
         echo("<p class='error'>Password contained characters that are not allowed.</p>");
     } else if(!$gPasswordsMatch) {
         echo("<p class='error'>The passwords you have entered are not the same.</p>");

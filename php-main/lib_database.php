@@ -623,7 +623,7 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/03/2015
      */
-    public static function getUser($id = NULL, $userName = NULL, $email = NULL, $password = NULL, $temp = FALSE, $noDebugModeOutput = FALSE) {
+    public static function getUser($id = NULL, $email = NULL, $userName = NULL, $password = NULL, $temp = FALSE, $noDebugModeOutput = FALSE) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -640,13 +640,13 @@ class lib_database {
 
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
-
+			
             $db = $temp ? "users_temp" : "users";
-
+			
             $stmt = $pdo->prepare("SELECT * FROM " . $db . " WHERE id = ? OR email = ? OR userName = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
-            $stmt->bindParam(2, $userName, PDO::PARAM_INT);
-            $stmt->bindParam(3, $email, PDO::PARAM_INT);
+            $stmt->bindParam(2, $email, PDO::PARAM_INT);
+            $stmt->bindParam(3, $userName, PDO::PARAM_INT);
             $stmt->execute();
             $row = $stmt->fetch();
 
@@ -682,6 +682,7 @@ class lib_database {
                         $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
                         $user->setEmailBlasts((bool)$row['emailBlasts']);
                         $user->setTextBlasts((bool)$row['textBlasts']);
+						$user->setCell($row['cell']);
                         $user->setRole((int)$row['role']);
                         $user->setLocked((bool)$row['locked']);
                         $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
@@ -707,6 +708,7 @@ class lib_database {
                     $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
                     $user->setEmailBlasts((bool)$row['emailBlasts']);
                     $user->setTextBlasts((bool)$row['textBlasts']);
+					$user->setCell($row['cell']);
                     $user->setRole((int)$row['role']);
                     $user->setLocked((bool)$row['locked']);
                     $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
@@ -731,8 +733,83 @@ class lib_database {
             log_util::log(LOG_LEVEL_DEBUG, "user: ", $user);
             log_util::logDivider();
         }
-
+		
         return $user;
+    }
+
+
+    public static function migrateUser($email, $userName, $firstName, $lastName) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $user = lib_database::getUser(NULL, $email, $userName, NULL, TRUE);
+			
+            if($user != NULL) {
+                log_util::log(LOG_LEVEL_ERROR, "row WAS NOT empty");
+
+                $firstNameMigrate = $user->getFirstName();
+                $lastNameMigrate = $user->getLastName();
+                $userNameMigrate = $user->getUserName();
+                $emailMigrate = $user->getEmail();
+                $passwordMigrate = $user->getPassword();
+                $securityQuestionMigrate = $user->getSecurityQuestion();
+                $securityQuestionAnswerMigrate = $user->getSecurityQuestionAnswer();
+                $emailBlastsMigrate = $user->getEmailBlasts();
+                $textBlastsMigrate = $user->getTextBlasts();
+                $cellMigrate = $user->getCell();
+                $roleMigrate = $user->getRole();
+
+                $stmt = $pdo->prepare("INSERT INTO users (firstName, lastName, userName, email, password, securityQuestion, securityQuestionAnswer, emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bindParam(1, $firstNameMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(2, $lastNameMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(3, $userNameMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(4, $emailMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(5, $passwordMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(6, $securityQuestionMigrate, PDO::PARAM_INT);
+                $stmt->bindParam(7, $securityQuestionAnswerMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(8, $emailBlastsMigrate, PDO::PARAM_INT);
+                $stmt->bindParam(9, $textBlastsMigrate, PDO::PARAM_INT);
+                $stmt->bindParam(10, $cellMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(11, $roleMigrate, PDO::PARAM_INT);
+                $stmt->execute();
+
+				$stmt = $pdo->prepare("SELECT * FROM users ORDER BY id DESC LIMIT 1");
+                $stmt->execute();
+				$row = $stmt->fetch();
+			
+				$decryptedPassword = lib::decrypt($emailMigrate . "_registration");
+				$encryptedPassword = lib::decrypt($decryptedPassword, $row['id'] . "_pass");
+				
+				$stmt = $pdo->prepare("UPDATE users SET password=? WHERE id = ?");
+				$stmt->bindParam(1, $encryptedPassword, PDO::PARAM_STR);
+				$stmt->bindParam(2, $row['id'], PDO::PARAM_STR);
+				$stmt->execute();
+
+                $stmt = $pdo->prepare("DELETE FROM users_temp WHERE email = ? OR userName = ?");
+                $stmt->bindParam(1, $email, PDO::PARAM_STR);
+                $stmt->bindParam(2, $userName, PDO::PARAM_STR);
+                $stmt->execute();
+            } else {
+				
+                log_util::log(LOG_LEVEL_ERROR, "user WAS null");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
     }
 
     /**
@@ -1167,7 +1244,7 @@ class lib_database {
             if(!$exists) {
                 log_util::log(LOG_LEVEL_ERROR, "user DOES NOT exist");
 
-                $encryptedPassword = lib::encrypt($password, $email . "_pass");
+                $encryptedPassword = lib::encrypt($password, $email . "_registration");
 
                 $stmt = $dbh->prepare("INSERT INTO users_temp (firstName, lastName, userName, email, password, securityQuestion, securityQuestionAnswer, emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bindParam(1, $firstName, PDO::PARAM_STR);

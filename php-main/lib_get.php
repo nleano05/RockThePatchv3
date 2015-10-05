@@ -14,7 +14,7 @@ class lib_get {
         }
         log_util::logFunctionStart($args);
 
-        $currentUrl = lib_get::currentUser();
+        $currentUrl = lib_get::currentUrl();
         if(strpos($currentUrl, "127.0.0.1") !== FALSE) {
             $baseUrl = "http://127.0.0.1/";
         } else if(strpos($currentUrl, "staging") !== FALSE) {

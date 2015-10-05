@@ -92,7 +92,7 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
 
     $userName = $email = isset($_POST['login-user-name-or-email']) ? strtolower($_POST['login-user-name-or-email']) : "";
     $password = isset($_POST['login-password']) ? $_POST['login-password'] : NULL;
-    $gUser  = lib_database::getUser(NULL, $userName, $email, $password, false, $noDebugModeOutput);
+    $gUser  = lib_database::getUser(NULL, $email, $userName, $password, false, $noDebugModeOutput);
 
     if(!$noDebugModeOutput) {
         log_util::log(LOG_LEVEL_DEBUG, "userName: " . $userName);
