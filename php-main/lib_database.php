@@ -527,7 +527,7 @@ class lib_database {
             /** @noinspection PhpAssignmentInConditionInspection */
             if (!empty($row )) {
                 $update = new Update();
-                $update->setId($row['id']);
+                $update->setId((int)$row['id']);
                 $update->setTitle($row['title']);
                 $update->setText($row['text']);
                 $update->setDate($row['date']);
@@ -580,7 +580,7 @@ class lib_database {
             /** @noinspection PhpAssignmentInConditionInspection */
             while ($row = $stmt->fetch()) {
                 $update = new Update();
-                $update->setId($row['id']);
+                $update->setId((int)$row['id']);
                 $update->setTitle($row['title']);
                 $update->setText($row['text']);
                 $update->setDate($row['date']);
