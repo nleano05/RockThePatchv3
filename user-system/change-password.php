@@ -153,9 +153,6 @@ function displayOutputNewPasswordConfirm() {
 function sendConfirmationEmail() {
     global $gMasterAdminEmail, $gMasterAdminName;
 
-    $userNameOrEmail = isset($_POST['username-or-email']) ? $_POST['username-or-email'] : "";
-    $userNameOrEmail = strtolower(str_replace(" ", "", $userNameOrEmail));
-
     $newPassword = isset($_POST['new-password']) ? $_POST['new-password'] : "";
 
     $user = lib_get::currentUser();
@@ -308,10 +305,10 @@ function sendConfirmationEmail() {
                 <!-- ### START Change Password Form ### -->
                 <form action="change-password.php" method="post">
                     <!-- Email account / user name -->
-                    <div class="change-password-label">
+                    <div class="label30">
                         <p><strong>Email / User Name:</strong></p>
                     </div>
-                    <div class="change-password-input">
+                    <div class="input70">
                         <p><input type="text" name="username-or-email" value="<?php if(isset($_POST['username-or-email'])){ echo($_POST['username-or-email']); } ?>"/></p>
                         <?php
                             if(!$gValidForm && isset($_POST['change-password'])) {
@@ -322,10 +319,10 @@ function sendConfirmationEmail() {
                     <div class="clear"></div>
 
                     <!-- Old Password -->
-                    <div class="change-password-label">
+                    <div class="label30">
                         <p><strong>Old Password:</strong></p>
                     </div>
-                    <div class="change-password-input">
+                    <div class="input70">
                         <p><input type="password" name="old-password" value="<?php if(isset($_POST['old-password'])){ echo($_POST['old-password']); } ?>"/></p>
                         <?php
                             if(!$gValidForm && isset($_POST['change-password'])) {
@@ -336,10 +333,10 @@ function sendConfirmationEmail() {
                     <div class="clear"></div>
 
                     <!-- Confirm Password -->
-                    <div class="change-password-label">
+                    <div class="label30">
                         <p><strong>New Password:</strong></p>
                     </div>
-                    <div class="change-password-input">
+                    <div class="input70">
                         <p><input type="password" name="new-password" value="<?php if(isset($_POST['new-password'])){ echo($_POST['new-password']); } ?>"/></p>
 
                         <?php
@@ -351,10 +348,10 @@ function sendConfirmationEmail() {
                     <div class="clear"></div>
 
                     <!-- Confirm New Password -->
-                    <div class="change-password-label">
+                    <div class="label30">
                         <p><strong>Confirm Password:</strong></p>
                     </div>
-                    <div class="change-password-input">
+                    <div class="input70">
                         <p><input type="password" name="new-password-confirm" value="<?php if(isset($_POST['new-password-confirm'])){ echo($_POST['new-password-confirm']); } ?>"/></p>
                         <?php
                             if(!$gValidForm && isset($_POST['change-password'])) {

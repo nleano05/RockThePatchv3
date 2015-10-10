@@ -472,7 +472,7 @@ class lib_database {
 
             while($row = $stmt->fetch()) {
                 $securityQuestion = new SecurityQuestion();
-                $securityQuestion->setId($row['id']);
+                $securityQuestion->setId((int)$row['id']);
                 $securityQuestion->setQuestion($row['question']);
 
                 array_push($securityQuestions, $securityQuestion);
@@ -737,6 +737,45 @@ class lib_database {
         return $user;
     }
 
+    public static function getUsersSecurityQuestion($userNameOrEmail) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+        $securityQuestion = NULL;
+
+        if(!empty($pdo)) {
+            $stmt = $pdo->prepare("SELECT * FROM users INNER JOIN security_questions ON users.securityQuestion = security_questions.id WHERE email = ? OR userName = ?");
+            $stmt->bindParam(1, $userNameOrEmail, PDO::PARAM_STR);
+            $stmt->bindParam(2, $userNameOrEmail, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_ERROR, "row WAS NOT empty");
+
+                $securityQuestion = new SecurityQuestion();
+                $securityQuestion->setId((int)$row['id']);
+                $securityQuestion->setQuestion($row['question']);
+            } else {
+                log_util::log(LOG_LEVEL_ERROR, "row WAS empty");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "securityQuestion: ", $securityQuestion);
+        log_util::logDivider();
+
+        return $securityQuestion;
+    }
 
     public static function migrateUser($email, $userName, $firstName, $lastName) {
         $reflector = new ReflectionClass(__CLASS__);

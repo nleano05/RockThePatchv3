@@ -27,5 +27,6 @@ define("LOCK_TYPE_ADMIN", 2);
 define("COOKIE_DEBUG_MODE", "debug_mode");
 define("COOKIE_LOGIN_STATUS_KEY", "login_status_key");
 define("COOKIE_USER_ID", "user_id");
+define("COOKIE_USERNAME_OR_EMAIL", "username_or_email");
 
 define("SELECT_SECURITY_QUESTION", "- SELECT SECURITY QUESTION -");

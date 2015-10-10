@@ -552,10 +552,10 @@ function sendRegistrationEmail() {
             <!-- ### Start Register Form ### -->
             <form action="register.php" method="post" name="registration-form">
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>First Name:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" name="first-name" value="<?php if(isset($_POST['first-name'])){ echo($_POST['first-name']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -565,10 +565,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Last Name:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" name="last-name" value="<?php if(isset($_POST['last-name'])){ echo($_POST['last-name']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -578,10 +578,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Requested User Name:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" name="user-name" value="<?php if(isset($_POST['user-name'])){ echo($_POST['user-name']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -591,10 +591,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>User Email:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" name="email" value="<?php if(isset($_POST['email'])){ echo($_POST['email']); } ?>"/></p>
 
                     <?php
@@ -605,10 +605,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Confirm User Email:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" name="email-confirm" value="<?php if(isset($_POST['email-confirm'])){ echo($_POST['email-confirm']); }?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -618,10 +618,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Password:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="password" name="password" value="<?php if(isset($_POST['password'])){ echo($_POST['password']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -631,10 +631,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Confirm Password:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="password" name="password-confirm" value="<?php if(isset($_POST['password-confirm'])){ echo($_POST['password-confirm']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -644,10 +644,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Cell Phone Number:</strong><br/> (<em>format: xxx-xxx-xxxx</em>)</p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" id="cell-phone" name="cell-phone" value="<?php if(isset($_POST['cell-phone'])){ echo($_POST['cell-phone']); } ?>" maxlength='12'/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {
@@ -657,10 +657,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Security Question:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <!-- HACK - wanted to print this out in dbQuestionsPrintSelect but options weren't populated before sent to the validation service -->
                     <select name="security-question">
                          <!-- A static option needed for the validation of the security question -->
@@ -678,10 +678,10 @@ function sendRegistrationEmail() {
                 </div>
                 <div class="clear"></div>
 
-                <div class="label">
+                <div class="label30">
                     <p><strong>Security Question Answer:</strong></p>
                 </div>
-                <div class="input">
+                <div class="input70">
                     <p><input type="text" name="answer" value="<?php if(isset($_POST['answer'])){ echo($_POST['answer']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register']) && !$gValidForm) {

@@ -336,6 +336,29 @@ class lib {
         return $registrationUrl;
     }
 
+    public static function generateTempPassword() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $tempPassword = '';
+        $length = 10;
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+        for ($i=0;$i<$length;$i++) {
+            $tempPassword .= $chars[mt_rand(0, (strlen($chars)-1))];
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "tempPassword: " . $tempPassword);
+        log_util::logDivider();
+
+        return $tempPassword;
+    }
+
     /**
      *  This function uses curl to time how long it takes a page to load
      *

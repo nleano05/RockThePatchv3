@@ -18,25 +18,30 @@ function sendUserName() {
 
     $email = isset($_POST['email']) ? strtolower($_POST['email']) : "";
     $user = lib_database::getUser(NULL, $email);
-    $userName = $user->getUserName();
-    $email = $user->getEmail();
 
-    $subject = "Rock the Patch! - Forgot Username";
-    $body = "<h2 style='color:#e44d26;'>Rock the Patch! - Forgot Username</h2>\r\n\r\n"
-        ."\r\n"
-        ."The 'Rock the Patch!' user account associated with this email has gone through the forgot username process and has "
-        ."had information sent to this email address. If you have not requested this, please respond to $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a> and let her know.  Below "
-        ."is the information we have on file for you:<br/><br/>\r\n"
-        ."\r\n"
-        ."<strong>User Name:</strong> $userName<br/><br/>\r\n\r\n"
-        ."<strong>Email:</strong> $email<br/><br/>\r\n\r\n";
+    if($user != NULL) {
+        $userName = $user->getUserName();
+        $email = $user->getEmail();
 
-    $success = lib::sendMail($email, $subject, $body);
+        $subject = "Rock the Patch! - Forgot Username";
+        $body = "<h2 style='color:#e44d26;'>Rock the Patch! - Forgot Username</h2>\r\n\r\n"
+            . "\r\n"
+            . "The 'Rock the Patch!' user account associated with this email has gone through the forgot username process and has "
+            . "had information sent to this email address. If you have not requested this, please respond to $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a> and let her know.  Below "
+            . "is the information we have on file for you:<br/><br/>\r\n"
+            . "\r\n"
+            . "<strong>User Name:</strong> $userName<br/><br/>\r\n\r\n"
+            . "<strong>Email:</strong> $email<br/><br/>\r\n\r\n";
 
-    if($success) {
-        echo("<p><strong><em>EMAIL SUCCESS -- You have been emailed your account info, including your user name.  Please use this to help you log in.</em></strong></p>");
+        $success = lib::sendMail($email, $subject, $body);
+
+        if ($success) {
+            echo("<p><strong><em>EMAIL SUCCESS -- You have been emailed your account info, including your user name.  Please use this to help you log in.</em></strong></p>");
+        } else {
+            echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to email your account info to you even though your information was valid.  Please try later or contact $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a>.</em></strong></p>");
+        }
     } else {
-        echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to email your account info to you even though your information was valid.  Please try later or contact $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a>.</em></strong></p>");
+        log_util::log(LOG_LEVEL_ERROR, "No user to retrieve username for");
     }
 }
 
@@ -210,10 +215,10 @@ function displayOutputEmail() {
             <!-- ### START Forgot Username Validate Form ### -->
             <form action="forgot-username.php" method="post">
                 <!-- Email / User Name -->
-                <div class="forgot-password-label">
+                <div class="label30">
                     <p><strong>Email:</strong></p>
                 </div>
-                <div class="forgot-password-input">
+                <div class="input70">
                     <p><input type="text" name="email" value="<?php if(isset($_POST['email'])){ echo($_POST['email']); } ?>"/></p>
 
                     <?php

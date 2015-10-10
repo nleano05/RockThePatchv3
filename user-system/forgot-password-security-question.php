@@ -9,49 +9,84 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 global $gValidForm;
 $gValidForm = FALSE;
 
-if(isset($_POST['forgot-password'])) {
+if(isset($_POST['forgot-password-security-question'])) {
     $gValidForm = checkInput();
-    if($gValidForm) {
-        $userNameOrEmail = isset($_POST['username-or-email']) ? strtolower($_POST['username-or-email']) : "";
-        $userNameOrEmail64encode = base64_encode($userNameOrEmail);
-        lib::cookieCreate(COOKIE_USERNAME_OR_EMAIL, $userNameOrEmail64encode);
-    }
 }
 
 function checkInput() {
-    global $gNoUserNameOrEmail, $gBlackUserNameOrEmail, $gInUseUsernameOrEmail;
+    global $gNoAnswer, $gBlackAnswer, $gCorrectAnswer;
 
     $validForm = TRUE;
 
-    $userNameOrEmail = isset($_POST['username-or-email']) ? strtolower($_POST['username-or-email']) : "";
+    $userNameOrEmail = isset($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) ? base64_decode($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) : "";
+    $answer = isset($_POST['answer']) ? $_POST['answer'] : "";
+    $user = lib_database::getUser(NULL, $userNameOrEmail, $userNameOrEmail);
+    $answerFromDatabase = isset($user) ? $user->getSecurityQuestionAnswer() : "";
 
-    $gNoUserNameOrEmail = lib_check::isEmpty($userNameOrEmail);
-    if($gNoUserNameOrEmail) {
+    $gNoAnswer = lib_check::isEmpty($answer);
+    if($gNoAnswer) {
         $validForm = FALSE;
     }
 
-    $gBlackUserNameOrEmail = lib_check::againstWhiteList($userNameOrEmail);
-    if($gBlackUserNameOrEmail) {
+    $gBlackAnswer = lib_check::againstWhiteList($answer);
+    if($gBlackAnswer) {
         $validForm = FALSE;
     }
 
-    $gInUseUsernameOrEmail = lib_check::userInDb(NULL, strtolower($userNameOrEmail), strtolower($userNameOrEmail));
-    if(!$gInUseUsernameOrEmail) {
+    $gCorrectAnswer = lib_check::same(trim(strtolower($answer), " "), trim(strtolower($answerFromDatabase), " "));
+    if(!$gCorrectAnswer) {
         $validForm = FALSE;
     }
 
     return $validForm;
 }
 
-function displayOutputUsernameOrEmail() {
-    global $gNoUserNameOrEmail, $gBlackUserNameOrEmail, $gInUseUsernameOrEmail;
+function displayOutputForgotPasswordSecurityValidate() {
+    global $gNoAnswer, $gBlackAnswer, $gCorrectAnswer;
 
-    if($gNoUserNameOrEmail) {
-        echo("<p class='error'>Please enter a user name or email to continue.</p>");
-    } else if($gBlackUserNameOrEmail) {
-        echo("<p class='error'>The user name or email given contained characters that are not allowed.</p>");
-    } else if(!$gInUseUsernameOrEmail) {
-        echo("<p class='error'>This user name or email given was not found in the 'Rock the Patch!' system.</p>");
+    if($gNoAnswer) {
+        echo("<p class='error'>Please enter in an answer.</p>");
+    } else if($gBlackAnswer) {
+        echo("<p class='error'>The answer given contains characters that are not allowed.</p>");
+    } else if(!$gCorrectAnswer) {
+        echo("<p class='error'>The answer given was incorrect.</p>");
+    }
+}
+
+function sendTempPassword() {
+    global $gMasterAdminEmail, $gMasterAdminName;
+
+    $userNameOrEmail = isset($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) ? base64_decode($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) : "";
+
+    $user = lib_database::getUser(NULL, $userNameOrEmail, $userNameOrEmail);
+
+    if($user != NULL) {
+        $userName = $user->getUserName();
+        $email = $user->getEmail();
+        $tempPassword = lib::generateTempPassword();
+
+        lib_database::updateUserPassword($user->getId(), $tempPassword);
+
+        $subject = "Rock the Patch! - Forgot Password";
+        $body = "<h2 style='color:#e44d26;'>Rock the Patch! - Forgot Password</h2>\r\n\r\n"
+            . "\r\n"
+            . "The 'Rock the Patch!' user account associated with this email has gone through the forgot password process and has "
+            . "had a temporary password generated. If you have not requested this, please respond to $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a> and let her know.  Below "
+            . "is the information we have on file for you:<br/><br/>\r\n"
+            . "\r\n"
+            . "<strong>User Name:</strong> $userName<br/><br/>\r\n\r\n"
+            . "<strong>Email:</strong> $email<br/><br/>\r\n\r\n"
+            . "<strong>Temporary Password:</strong> $tempPassword<br/><br/>\r\n\r\n";
+
+        $success = lib::sendMail($email, $subject, $body);
+
+        if ($success) {
+            echo("<p><strong><em>EMAIL SUCCESS -- You have been emailed your temporary password. You can now use this to log in.</em></strong></p>");
+        } else {
+            echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to email your temporary password to you even though your information was valid.  Please try later or contact $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a>.</em></strong></p>");
+        }
+    } else {
+        log_util::log(LOG_LEVEL_ERROR, "No user to retrieve password for");
     }
 }
 
@@ -177,64 +212,30 @@ function displayOutputUsernameOrEmail() {
         <?php
             if(!$gValidForm) {
         ?>
-            <!-- ### START Forgot Password Validate Form ### -->
-            <form action="forgot-password.php" method="post">
-                <!-- Email / User Name -->
-                <div class="label30">
-                    <p><strong>Email / User Name:</strong></p>
-                </div>
-                <div class="input70">
-                    <p><input type="text" name="username-or-email" value="<?php if(isset($_POST['username-or-email'])){ echo($_POST['username-or-email']); } ?>"/></p>
-
-                    <?php
-                        if(!$gValidForm && isset($_POST['forgot-password'])) {
-                            displayOutputUsernameOrEmail();
-                        }
-                    ?>
-                </div>
-                <div class="clear"></div>
-
-                <p><input type="submit" name='forgot-password' value="Forgot Password" class="button" /></p>
-            </form>
-            <br/>
-            <!-- ### END Forgot Password Validate Form ### -->
-
-            <div id="progress">
-                <div class="progress-section3">
-                    <div class="inprogress-bar">&nbsp;</div>
-                    <p>Step 1: Account Info</p>
-                </div>
-                <div class="progress-section3">
-                    <div class="unfinished-bar">&nbsp;</div>
-                    <p>Step 2: Security Question</p>
-                </div>
-                <div class="progress-section3">
-                    <div class="unfinished-bar">&nbsp;</div>
-                    <p>Step 3: Confirmation</p>
-                </div>
-            </div>
-            <div id="clear"></div>
-    <?php
-        } else {
-    ?>
-            <form method="post" action="forgot-password-security-question.php" name="Security Question">
-                <div class="label100">
+            <!-- ### START Forgot Password Validate Security Form ### -->
+            <form action="forgot-password-security-question.php" method="post" name="Security Question">
+                <div class="forgot-password-question">
                     <p><strong> Security Question is:</strong>
                         <?php
-                            $userNameOrEmail = isset($_POST['username-or-email']) ? strtolower($_POST['username-or-email']) : "";
-                            $securityQuestion = lib_database::getUsersSecurityQuestion($userNameOrEmail);
+                            $userNameOrEmail = isset($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) ? $_COOKIE[COOKIE_USERNAME_OR_EMAIL] : "";
+                            $userNameOrEmailBase64decode = base64_decode($userNameOrEmail);
+                            $securityQuestion = lib_database::getUsersSecurityQuestion($userNameOrEmailBase64decode);
                             echo($securityQuestion->getQuestion());
                         ?>
                     </p>
                 </div>
-                <div class="input100">
-                    <p><strong>Answer: </strong> <input type="text" name="answer"/></p>
+                <div class="forgot-password-answer">
+                    <p><strong>Answer: </strong> <input type="text" name="answer" value="<?php $answer = isset($_POST['answer']) ? $_POST['answer'] : ""; echo($answer); ?>"/></p>
                 </div>
+                <?php
+                    displayOutputForgotPasswordSecurityValidate();
+                ?>
                 <p>
                     <input type="submit" name="forgot-password-security-question" value="Email Me A Temp Password" class="button" />
                 </p>
             </form>
             <br/>
+            <!-- ### END Forgot Password Validate Security Form ### -->
 
             <div id="progress">
                 <div class="progress-section3">
@@ -247,6 +248,27 @@ function displayOutputUsernameOrEmail() {
                 </div>
                 <div class="progress-section3">
                     <div class="unfinished-bar">&nbsp;</div>
+                    <p>Step 3: Confirmation</p>
+                </div>
+            </div>
+            <div id="clear"></div>
+        <?php
+            } else {
+                sendTempPassword();
+        ?>
+            <br/>
+
+            <div id="progress">
+                <div class="progress-section3">
+                    <div class="finished-bar">&nbsp;</div>
+                    <p>Step 1: Account Info</p>
+                </div>
+                <div class="progress-section3">
+                    <div class="finished-bar">&nbsp;</div>
+                    <p>Step 2: Security Question</p>
+                </div>
+                <div class="progress-section3">
+                    <div class="inprogress-bar">&nbsp;</div>
                     <p>Step 3: Confirmation</p>
                 </div>
             </div>

@@ -312,25 +312,41 @@ form {
     height: auto;
 }
 
-.label {
+.label30 {
     float: left;
     width: 30%;
     margin: 0;
     padding: 0;
 }
 
-.input {
+.input70 {
     float: left;
     width: 70%;
     margin: 0;
     padding: 0;
 }
 
-.input input {
+.label100 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.input100 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.input70 input {
     width: 100%;
 }
 
-.input select {
+.input100 input {
+    width: 100%;
+}
+
+.input70 select {
     width: 95%;
     margin: 7px 12px 5px 0;
     float: right;

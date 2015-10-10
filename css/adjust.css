@@ -67,6 +67,26 @@
         width: 0;
         height: 0;
     }
+
+    .label30 {
+        float: none;
+        width: 100%;
+    }
+
+    .input70 {
+        float: left;
+        width: 100%;
+    }
+
+    .input70 input {
+        float: none;
+        width: 100%;
+    }
+
+    .input70 select {
+        width:94%;
+        margin:auto 5px;
+    }
 }
 
 /**
