@@ -41,7 +41,7 @@ function checkInput() {
     return $validForm;
 }
 
-function displayOutputForgotPasswordSecurityValidate() {
+function displayOutputAnswer() {
     global $gNoAnswer, $gBlackAnswer, $gCorrectAnswer;
 
     if($gNoAnswer) {
@@ -214,21 +214,25 @@ function sendTempPassword() {
         ?>
             <!-- ### START Forgot Password Validate Security Form ### -->
             <form action="forgot-password-security-question.php" method="post" name="Security Question">
-                <div class="forgot-password-question">
+                <div class="label100">
                     <p><strong> Security Question is:</strong>
                         <?php
                             $userNameOrEmail = isset($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) ? $_COOKIE[COOKIE_USERNAME_OR_EMAIL] : "";
                             $userNameOrEmailBase64decode = base64_decode($userNameOrEmail);
                             $securityQuestion = lib_database::getUsersSecurityQuestion($userNameOrEmailBase64decode);
-                            echo($securityQuestion->getQuestion());
+							if($securityQuestion != null) {
+								echo($securityQuestion->getQuestion());
+							}
                         ?>
                     </p>
                 </div>
-                <div class="forgot-password-answer">
+                <div class="input100">
                     <p><strong>Answer: </strong> <input type="text" name="answer" value="<?php $answer = isset($_POST['answer']) ? $_POST['answer'] : ""; echo($answer); ?>"/></p>
                 </div>
                 <?php
-                    displayOutputForgotPasswordSecurityValidate();
+                    if(!$gValidForm && isset($_POST['forgot-password-security-question'])){
+                        displayOutputAnswer();
+                    }
                 ?>
                 <p>
                     <input type="submit" name="forgot-password-security-question" value="Email Me A Temp Password" class="button" />

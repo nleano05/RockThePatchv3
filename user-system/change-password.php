@@ -17,6 +17,7 @@ if(isset($_POST['change-password'])) {
 function checkInput() {
     global $gNoUsernameOrEmail, $gNoOldPassword, $gNoNewPassword, $gNoNewPasswordConfirm;
     global $gBlackUsernameOrEmail, $gBlackOldPassword, $gBlackNewPassword, $gBlackNewPasswordConfirm;
+	global $gCorrectOldPassword;
     global $gPasswordsMatch;
     global $gInUseUsernameOrEmail;
     global $gInvalidNewPassword;
@@ -70,23 +71,31 @@ function checkInput() {
 
     $gPasswordsMatch = lib_check::same($newPassword, $newPasswordConfirm);
     if(!$gPasswordsMatch) {
+		echo("<p>Passwords did not match</p>");
         $validForm = FALSE;
     }
 
-    $gInUseUsernameOrEmail = lib_check::userInDb(null, $userNameOrEmail, $userNameOrEmail);
+    $gInUseUsernameOrEmail = lib_check::userInDb(NULL, $userNameOrEmail, $userNameOrEmail);
     if(!$gInUseUsernameOrEmail) {
         $validForm = FALSE;
     }
 
-    $gInvalidNewPassword = lib_check::validPassword($newPassword);
-    if($gInvalidNewPassword) {
+    $gValidPassword = lib_check::validPassword($newPassword);
+    if(!$gValidPassword) {
         $validForm = FALSE;
     }
 
-    $gCorrectOldPassword = lib_check::userInDb(null, $userNameOrEmail, $userNameOrEmail, $oldPassword);
-    if(!$gCorrectOldPassword) {
-        $validForm = FALSE;
-    }
+    $user = lib_database::getUser(NULL, $userNameOrEmail, $userNameOrEmail, $oldPassword);
+	if($user != NULL) {
+		$oldPasswordFromDatabase = lib::decrypt($user->getId() . "_pass");
+		$gCorrectOldPassword = lib_check::same($oldPassword, $oldPasswordFromDatabase);
+		if(!$gCorrectOldPassword) {
+			$validForm = FALSE;
+		}
+	} else {
+		$gCorrectOldPassword = FALSE;
+		$validForm = FALSE;
+	}
 
     return $validForm;
 }
