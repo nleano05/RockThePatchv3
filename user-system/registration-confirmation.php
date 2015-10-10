@@ -121,14 +121,11 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 			displayRegistrationConfirmation();
 
             function displayRegistrationConfirmation() {
-                $currentUrl = $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-                $currentUrl = substr_replace($currentUrl, "https://www", 0,  3);
+                global $gMasterAdminEmail, $gMasterAdminName;
 
-                log_util::log(LOG_LEVEL_DEBUG, "currentUrl: " . lib_get::currentUrl());
-				
                 if(isset($_GET['email']) && isset($_GET['userName']) && isset($_GET['lastName']) && isset($_GET['firstName'])) {
                     echo("<p>Thank you for confirming your email!  You may now use your email or user name with the password you registered with to log in as an official Rock the Patch! user.</p>");
-                    $userInfo = urlParse($currentUrl); // urlParse will return an array with the user's info
+                    $userInfo = urlParse();
 
                     log_util::log(LOG_LEVEL_DEBUG, "userInfo: ", $userInfo);
 
@@ -154,7 +151,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                             if($success) {
                                 echo("<p><strong><em>EMAIL SUCCESS -- Yay! An email notification was sent that confirmation was successful</em></strong></p>");
                             } else {
-                                echo("<p><strong><em>EMAIL FAILURE -- Bummer, an email notification <font class='error'>was not</font> send although the information was valid.  Please try again later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+                                echo("<p><strong><em>EMAIL FAILURE -- Bummer, an email notification <font class='error'>was not</font> send although the information was valid.  Please try again later or contact $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a>.</em></strong></p>");
                             }
                         } else {
                             echo("<p class='error'><strong><em>The given email was not found to complete registration.</em></strong></p>");
@@ -167,7 +164,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 }
             }
 
-            function urlParse($currentURL) {
+            function urlParse() {
                 $userInfo = array();
                 
 				$userInfo['email'] = isset($_GET['email']) ? base64_decode($_GET['email']) : "";

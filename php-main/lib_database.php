@@ -1023,6 +1023,35 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function updateUserPassword($userId, $newPassword) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        $encryptedPassword = lib::encrypt($newPassword, $userId . "_pass");
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt->bindParam(1, $encryptedPassword, PDO::PARAM_STR);
+            $stmt->bindParam(2, $userId, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     /**
      *  This function writes encryption data out to the database
      *

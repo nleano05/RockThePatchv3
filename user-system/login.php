@@ -101,7 +101,7 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
         log_util::log(LOG_LEVEL_DEBUG, "gUser: ", $gUser);
     }
 
-    if($gUser != null) {
+    if($gUser != NULL) {
         $gAccountLock = lib_check::userIsLocked($email, $userName, $noDebugModeOutput);
         $gCredentialsOk = TRUE;
         $loginToken = lib::encrypt(STATUS_LOGGED_OUT, $gUser->getId() . "_login", $noDebugModeOutput);

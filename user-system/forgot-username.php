@@ -17,7 +17,7 @@ function sendUserName() {
     global $gMasterAdminEmail, $gMasterAdminName;
 
     $email = isset($_POST['email']) ? strtolower($_POST['email']) : "";
-    $user = lib_database::getUser(null, $email);
+    $user = lib_database::getUser(NULL, $email);
     $userName = $user->getUserName();
     $email = $user->getEmail();
 

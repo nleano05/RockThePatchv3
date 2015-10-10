@@ -193,7 +193,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     <li><a href="/user-bonuses/special-news.php" title="Special News">Special News</a></li>
                     <li><a href="/user-bonuses/video-blog.php" title="Video Blog">Video Blog</a></li>
                     <li><a href="/user-bonuses/downloads.php" title="Downloads">Downloads</a></li>
-                    <li><a href="/user-bonuses/streaming-audio.php" title="Streaming Audio">Streaming Audio</a></li>
+                    <li><a href="/user-bonuses/music.php" title="Streaming Audio">Streaming Audio</a></li>
                     <li><a href="/user-system/change-password.php" title="Change Password">Change Password</a></li>
                     <li><a href="/user-system/deactivate-account.php" title="Deactivate Account">Deactivate Account</a></li>
                     <li><a href="/user-system/account-info.php" title="Account Info">Account Info</a></li>
