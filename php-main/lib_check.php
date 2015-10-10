@@ -268,7 +268,7 @@ class lib_check {
         return $result;
     }
 
-    public static function userInDb($id, $email, $userName, $password, $temp, $noDebugModeOutput = FALSE) {
+    public static function userInDb($id, $email, $userName = NULL, $password = NULL, $temp = FALSE, $noDebugModeOutput = FALSE) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];

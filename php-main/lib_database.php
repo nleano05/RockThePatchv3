@@ -664,7 +664,7 @@ class lib_database {
                         log_util::log(LOG_LEVEL_DEBUG, "decryptedPassword: " . $decryptedPassword);
                     }
 
-//                    if(($decryptedPassword === $password) || ($decryptedPassword === $password)){
+                    if(($decryptedPassword === $password) || ($decryptedPassword === $password)){
                         if(!$noDebugModeOutput) {
                             if(!$noDebugModeOutput) {
                                 log_util::log(LOG_LEVEL_DEBUG, "Password DID match one of the decrypted passwords");
@@ -689,13 +689,13 @@ class lib_database {
                         $user->setTimeLocked($row['timeLocked']);
                         $user->setConsecutiveFailedLoginAttempts((int)$row['consecutiveFailedLoginAttempts']);
                         $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
-//                    } else {
-//                        if(!$noDebugModeOutput) {
-//                            if(!$noDebugModeOutput) {
-//                                log_util::log(LOG_LEVEL_DEBUG, "Password DID NOT match one of the decrypted passwords");
-//                            }
-//                        }
-//                    }
+                    } else {
+                        if(!$noDebugModeOutput) {
+                            if(!$noDebugModeOutput) {
+                                log_util::log(LOG_LEVEL_DEBUG, "Password DID NOT match one of the decrypted passwords");
+                            }
+                        }
+                    }
                 } else {
                     $user = new User();
                     $user->setId((int)$row['id']);

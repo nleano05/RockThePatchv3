@@ -381,6 +381,8 @@ function register() {
 }
 
 function sendRegistrationEmail() {
+    global $gMasterAdminEmail, $gMasterAdminName;
+
     $firstName = isset($_POST['first-name']) ? $_POST['first-name'] : "";
     $lastName = isset($_POST['last-name']) ? $_POST['last-name'] : "";
     $userName = isset($_POST['user-name']) ? $_POST['user-name'] : "";
@@ -425,7 +427,7 @@ function sendRegistrationEmail() {
     if($success) {
         echo("<p><strong><em>EMAIL SUCCESS -- Yay! A registration link was sent to the provided email.</em></strong></p>");
     } else {
-        echo("<p><strong><em>EMAIL FAILURE -- Bummer, registration link <font class='error'>was not</font> sent although the provided information was valid.  Please try again later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+        echo("<p><strong><em>EMAIL FAILURE -- Bummer, registration link <font class='error'>was not</font> sent although the provided information was valid.  Please try again later or contact $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a>.</em></strong></p>");
     }
 }
 ?>
