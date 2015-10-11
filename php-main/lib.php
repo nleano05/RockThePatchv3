@@ -1,5 +1,8 @@
 <?php
+
 require_once("db_props.php");
+require_once("token_props.php");
+
 require_once("lib_check.php");
 require_once("lib_const.php");
 require_once("lib_database.php");
@@ -102,6 +105,54 @@ class lib {
         }
 
         log_util::log(LOG_LEVEL_DEBUG, "Cookie: ", $_COOKIE);
+        log_util::logDivider();
+    }
+
+    public static function createGitHubIssue($title, $body, $assignee, $milestone, $labels){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+
+        $curlSession = curl_init();
+        $url = GITHUB_ISSUES_BASE_URL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "url: " . $url);
+
+        $postData = array(
+            'title' => $title,
+            'body' => $body,
+            'assignee' => $assignee,
+            'milestone' => $milestone,
+            'labels' => $labels
+        );
+
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_HEADER,0);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, false);
+        $headers = array(
+            "Content-Type':'application/json",
+            "Cache-Control: no-cache",
+            "User-Agent: isuPatches-RockThePatchv3",
+            "Authorization: token " . GITHUB_AUTH_TOKEN
+        );
+        curl_setopt($curlSession, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curlSession, CURLOPT_POSTFIELDS, json_encode($postData));
+        $response = curl_exec($curlSession);
+        if($response === false) {
+            log_util::log(LOG_LEVEL_DEBUG, "Curl error: ", curl_error($curlSession));
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Operation completed without any errors");
+        }
+
+        curl_close($curlSession);
+
         log_util::logDivider();
     }
 

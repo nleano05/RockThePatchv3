@@ -108,10 +108,10 @@ class lib_database {
             /** @noinspection PhpAssignmentInConditionInspection */
             while ($row = $stmt->fetch()) {
                 $annoyanceLevel = new AnnoyanceLevel();
-                $annoyanceLevel->setId($row['id']);
+                $annoyanceLevel->setId((int)$row['id']);
                 $annoyanceLevel->setName($row['name']);
-                $annoyanceLevel->setLevel($row['level']);
-                $annoyanceLevel->setIsDefault($row['isDefault']);
+                $annoyanceLevel->setLevel((int)$row['level']);
+                $annoyanceLevel->setIsDefault((bool)$row['isDefault']);
 
                 array_push($annoyanceLevels, $annoyanceLevel);
             }
@@ -141,7 +141,7 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/03/2015
      */
-    public static function getEmailDistros() {
+    public static function getEmailDistros($name = NULL) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -157,7 +157,12 @@ class lib_database {
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
-            $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro ORDER BY name ASC");
+            if($name != NULL) {
+                $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro WHERE name = ? ORDER BY name ASC");
+                $stmt->bindParam(1, $name, PDO::PARAM_STR);
+            } else {
+                $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro ORDER BY name ASC");
+            }
             $stmt->execute();
             $row = $stmt->fetch();
 
@@ -302,7 +307,7 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/03/2015
      */
-    public static function getErrorReportCategories() {
+    public static function getErrorReportCategories($name = NULL) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -318,15 +323,20 @@ class lib_database {
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
-            $stmt = $pdo->prepare("SELECT * FROM error_report_categories ORDER BY name ASC");
+            if($name != NULL) {
+                $stmt = $pdo->prepare("SELECT * FROM error_report_categories WHERE name = ? ORDER BY name ASC");
+                $stmt->bindParam(1, $name, PDO::PARAM_STR);
+            } else {
+                $stmt = $pdo->prepare("SELECT * FROM error_report_categories ORDER BY name ASC");
+            }
             $stmt->execute();
 
             /** @noinspection PhpAssignmentInConditionInspection */
             while ($row = $stmt->fetch()) {
                 $errorReportCategory = new ErrorReportCategory();
-                $errorReportCategory->setId($row['id']);
+                $errorReportCategory->setId((int)$row['id']);
                 $errorReportCategory->setName($row['name']);
-                $errorReportCategory->setDistro($row['distro']);
+                $errorReportCategory->setDistro((int)$row['distro']);
                 $errorReportCategory->setIsDefault((bool)$row['isDefault']);
 
                 array_push($errorReportCategories, $errorReportCategory);

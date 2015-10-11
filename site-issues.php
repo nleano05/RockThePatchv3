@@ -126,7 +126,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             to be reported, please email me at: <a href="mailto:<?php global $gMasterAdminEmail; echo($gMasterAdminEmail); ?>" title="Email <?php global $gMasterAdminName; echo($gMasterAdminName); ?>"><?php global $gMasterAdminEmail; echo($gMasterAdminEmail); ?></a>
             or file a report here or on GitHub so that I can get information about what issues you're experiencing.</p>
 
-        <p>For a full list of bug issues please check: <a href="https://github.com/isuPatches/RockThePatch/issues/" title="https://github.com/isuPatches/RockThePatch/issues/">https://github.com/isuPatches/RockThePatch/issues/</a> and filter on the 'Bug' label.</p>
+        <p>For a full list of bug issues please check out: <a href="https://github.com/isuPatches/RockThePatchv3/labels/Bug" title="https://github.com/isuPatches/RockThePatchv3/labels/Bug">https://github.com/isuPatches/RockThePatchv3/labels/Bug</a>.</p>
 
         <h2>Currently Opened Bug Issues</h2>
 

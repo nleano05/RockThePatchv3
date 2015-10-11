@@ -17,6 +17,8 @@ define("CLOSED", "closed");
 define("TODO", "TODO");
 define("BUG", "bug");
 define("PATCHES", "isuPatches");
+define("ERROR_REPORT_MILESTONE_NUMBER", 2);
+define("FEATURE_REQUEST_MILESTONE_NUMBER", 3);
 
 define("NOTICE_MUST_BE_ADMIN", "Only administrators will be able to view this page");
 define("NOTICE_MUST_BE_LOGGED_IN", "Only logged in users will be able to view this page");

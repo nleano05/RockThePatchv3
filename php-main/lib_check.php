@@ -47,6 +47,64 @@ class lib_check {
         return $black;
     }
 
+    public static function botOrSpider($agent) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $isBotOrSpider = FALSE;
+
+        $knownBotsAndSpiders = array("bingbot" => "/bingbot(.*)/i",
+            "YandexBot" => "/YandexBot(.*)/i",
+            "PECL::HTTP" => "/PECL::HTTP(.*)/i",
+            "Baiduspider" => "/Baiduspider(.*)/i",
+            "Googlebot" => "/Googlebot(.*)/i",
+            "PyCrawler" => "/PyCrawler(.*)/i",
+            "Python-urllib" => "/Python-urllib(.*)/i",
+            "ScreenerBot Crawler Beta" => "/ScreenerBot Crawler Beta(.*)/i",
+            "AhrefsBot" => "/AhrefsBot(.*)/i",
+            "MSNBot" => "/msnbot(.*)/i",
+            "Facebook Externalhit" => "/facebookexternalhit(.*)/i",
+            "MJ12bot" => "/MJ12bot(.*)/i",
+            "Wget" => "/Wget(.*)/i",
+            "Mail.RU_Bot" => "/Mail.RU_Bot(.*)/i",
+            "SeznamBot" => "/SeznamBot(.*)/i",
+            "Classbot" => "/classbot(.*)/i",
+            "aiHitBot" => "/aiHitBot(.*)/i",
+            "CATExplorador" => "/CATExplorador(.*)/i",
+            "EasouSpider" => "/EasouSpider(.*)/i",
+            "Twitterbot" => "/Twitterbot(.*)/i",
+            "sees.co bot" => "/sees.co bot(.*)/i",
+            "hrbot" => "/hrbot(.*)/i",
+            "NerdyBot" => "/NerdyBot(.*)/i",
+            "LSSRocketCrawler" => "/LSSRocketCrawler(.*)/i",
+            "Comodo-Webinspector-Crawler" => "/Comodo-Webinspector-Crawler(.*)/i",
+            "Xenu Link Sleuth" => "/Xenu Link Sleuth(.*)/i",
+            "DBot" => "/DBot(.*)/i",
+            "FeedValidator" => "/FeedValidator(.*)/i"
+        );
+
+        foreach($knownBotsAndSpiders as $key => $value) {
+            log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
+            log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
+
+            if(preg_match($value, $agent)) {
+                log_util::log(LOG_LEVEL_DEBUG, "Agent matched a known bot or spider");
+                $isBotOrSpider = TRUE;
+                break;
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "isBotOrSpider: " . $isBotOrSpider);
+        log_util::logDivider();
+
+        return $isBotOrSpider;
+    }
+
     /**
      *  This function checks if debug mode should be disabled or enabled
      *
@@ -266,6 +324,108 @@ class lib_check {
         log_util::logDivider();
 
         return $result;
+    }
+
+    public static function upload($folder, $displayOutput = TRUE){
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $invalidFile = FALSE;
+
+        if($displayOutput) {
+            echo("<p><strong>Upload Output</strong></p>");
+        }
+
+        $allowedExtensions = array("gif", "jpeg", "jpg", "png");
+
+        if(isset($_FILES["file"]["name"])) {
+            $temp = explode(".", $_FILES["file"]["name"]);
+            $extension = end($temp);
+        } else {
+            $extension = "";
+        }
+
+        $type = isset($_FILES["file"]["type"]) ? $_FILES["file"]["type"] : "";
+        $size = isset($_FILES["file"]["size"]) ? $_FILES["file"]["size"] : "";
+        $error = isset($_FILES["file"]["error"]) ? $_FILES["file"]["error"] : "";
+        $name = isset($_FILES["file"]["name"]) ? $_FILES["file"]["name"] : "";
+        $tmpName = isset($_FILES["file"]["tmp_name"]) ? $_FILES["file"]["tmp_name"] : "";
+
+        log_util::log(LOG_LEVEL_DEBUG, "type: " . $type);
+        log_util::log(LOG_LEVEL_DEBUG, "size: " . $size);
+        log_util::log(LOG_LEVEL_DEBUG, "error: " . $error);
+        log_util::log(LOG_LEVEL_DEBUG, "name: " . $name);
+        log_util::log(LOG_LEVEL_DEBUG, "tmpName: " . $tmpName);
+
+        $allowedExtension = FALSE;
+        foreach($allowedExtensions as $value) {
+            log_util::log(LOG_LEVEL_DEBUG, "type: " . $type);
+            log_util::log(LOG_LEVEL_DEBUG, "size: " . $size);
+
+            if($extension == $value) {
+                $allowedExtension = TRUE;
+                break;
+            }
+        }
+
+        if ((($type == "image/gif")
+                || ($type == "image/jpeg")
+                || ($type == "image/jpg")
+                || ($type == "image/png"))
+                && ($size / 1024 < 20000) // Set to 20MB or 20,000 KB for Yahoo Mail! who only allows attachments to be that size
+                && $allowedExtension) {
+
+            log_util::log(LOG_LEVEL_DEBUG, "The file WAS valid");
+
+            if($displayOutput) {
+
+                echo("<p>");
+                if($error > 0) {
+                    echo("Return Code: " . $error . "<br>");
+                } else {
+                    echo("Upload: " . $name . "<br>");
+                    echo("Type: " . $type . "<br>");
+                    echo("Size: " . ($size / 1024) . " kB<br>");
+                    echo("Temp file: " . $tmpName . "<br>");
+
+                    if(file_exists($folder . $name)) {
+                        echo($_FILES["file"]["name"] . " already exists. ");
+                        echo("Stored in: " . $folder . $name);
+                    } else {
+                        move_uploaded_file($tmpName, $folder . $name);
+                        echo("Stored in: " . $folder . $name);
+                    }
+                }
+                echo("</p>");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_WARNING, "The file WAS valid");
+
+            $invalidFile = TRUE;
+
+            if($displayOutput) {
+                echo("<p style='color:red'>");
+
+                if(!empty($_FILES["file"]["name"])) {
+                    echo("Invalid file was uploaded.<br/>");
+                    echo("Size: " . ($size / 1024) . " kB<br/>");
+                    echo("File Type: " . ($type));
+                } else {
+                    echo("No file was uploaded.<br/>");
+                }
+                echo("</p>");
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "invalidFile: " . $invalidFile);
+        log_util::logDivider();
+
+        return $invalidFile;
     }
 
     public static function userInDb($id, $email, $userName = NULL, $password = NULL, $temp = FALSE, $noDebugModeOutput = FALSE) {

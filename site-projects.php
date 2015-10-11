@@ -121,7 +121,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Site Projects</div>
         <h1>Site Projects</h1>
 
-        <p>For a full list of project issues please check: <a href="https://github.com/isuPatches/RockThePatch/issues/" title="https://github.com/isuPatches/RockThePatch/issues/">https://github.com/isuPatches/RockThePatch/issues/</a> and filter on the 'Project' label.</p>
+        <p>For a full list of project issues please check out: <a href="https://github.com/isuPatches/RockThePatchv3/labels/TODO" title="https://github.com/isuPatches/RockThePatchv3/labels/TODO">https://github.com/isuPatches/RockThePatchv3/labels/TODO</a>, and for a full list of milestones
+		please check out: <a href="https://github.com/isuPatches/RockThePatchv3/milestones" title="https://github.com/isuPatches/RockThePatchv3/milestones">https://github.com/isuPatches/RockThePatchv3/milestones</a>.</p>
 
         <h2>Opened Project Milestones</h2>
 
