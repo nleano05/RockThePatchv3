@@ -39,10 +39,34 @@ if (!isset($_COOKIE[COOKIE_DEBUG_MODE])) {
 
 /**
  * This class contains core function of the site that are not related to get, database, and other operations
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 06/27/2015
  */
 class lib {
 
-    public static function cookieCreate($cookie, $value, $sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
+
+    /**
+     *  This function creates a new cookie
+     *
+     * @param string $key - The key to reference the cookie
+     * @param string $value - The value to store in the cookie
+     * @param bool $sendHeaders (optional) - Whether or not to send the headers
+     * @param bool $noDebugModeOutput (optional) - Whether or not to display debug mode output (if enabled)
+     *
+     * @return void
+     * @throws - nothing
+     * @global - $gDebugMode
+     * @notes  - none
+     *
+     * @example - To create a new cookie with debug mode output (if enabled) - lib::cookieCreate(COOKIE_KEY, $value);
+     * @example - To create a new cookie with no debug mode output - lib::cookieCreate(COOKIE_KEY, $value, TRUE, TRUE);
+     *
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 09/26/2015
+     */
+    public static function cookieCreate($key, $value, $sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -56,16 +80,16 @@ class lib {
             log_util::logFunctionStart($args);
         }
 
-        $_COOKIE[$cookie] = $value;
+        $_COOKIE[$key] = $value;
         if ($sendHeaders) {
             if ($gDebugMode && !$noDebugModeOutput) {
                 log_util::log(LOG_LEVEL_DEBUG, "We ARE in debug mode, cannot send headers");
             } else {
-                setcookie($cookie, $value, time() + 3600, '/', '.rockthepatch.com', TRUE);
+                setcookie($key, $value, time() + 3600, '/', '.rockthepatch.com', TRUE);
                 $referer = lib_get::referer();
                 // Added for EasyPHP
                 if (strpos($referer, 'http://127.0.0.1') !== FALSE) {
-                    setcookie($cookie, $value, time() + 3600, '/', '127.0.0.1', FALSE);
+                    setcookie($key, $value, time() + 3600, '/', '127.0.0.1', FALSE);
                 }
             }
         }
@@ -76,7 +100,21 @@ class lib {
         }
     }
 
-    public static function cookieDestroy($cookie) {
+    /**
+     *  This function destroys a cookie if it exists
+     *
+     * @param string $key - The key of the cookie to be destroyed
+     *
+     * @return void
+     * @throws - nothing
+     * @global - $gDebugMode
+     * @notes  - none
+     * @example - lib::cookieDestroy(COOKIE_KEY);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 09/26/2015
+     */
+    public static function cookieDestroy($key) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -87,20 +125,20 @@ class lib {
 
         global $gDebugMode;
 
-        if (isset($_COOKIE[$cookie])) {
-            unset($_COOKIE[$cookie]);
+        if (isset($_COOKIE[$key])) {
+            unset($_COOKIE[$key]);
         }
 
         if ($gDebugMode) {
             log_util::log(LOG_LEVEL_DEBUG, "We ARE in debug mode, cannot send headers");
         } else {
-            setcookie($cookie, "", time() - 3600, '/', '.rockthepatch.com', TRUE);
-            setcookie($cookie, "", time() + 1, '/', '.rockthepatch.com', TRUE);
+            setcookie($key, "", time() - 3600, '/', '.rockthepatch.com', TRUE);
+            setcookie($key, "", time() + 1, '/', '.rockthepatch.com', TRUE);
             $referer = lib_get::referer();
 
             if (strpos($referer, 'http://127.0.0.1') !== FALSE) {
-                setcookie($cookie, "", time() - 3600, '/', '127.0.0.1', FALSE);
-                setcookie($cookie, "", time() + 1, '/', '127.0.0.1', FALSE);
+                setcookie($key, "", time() - 3600, '/', '127.0.0.1', FALSE);
+                setcookie($key, "", time() + 1, '/', '127.0.0.1', FALSE);
             }
         }
 
@@ -108,6 +146,24 @@ class lib {
         log_util::logDivider();
     }
 
+    /**
+     *  This function makes a new issue GitHub issue using their API and tags it with an assignee, labels, and milestone
+     *
+     * @param string $title - The title of the issue to create
+     * @param string $body - The text of the issue to create
+     * @param string $assignee - The name of the user to assign the GitHub issue to
+     * @param int $milestone - The number of the milestone to attach the GitHub issue to
+     * @param array $labels - A string array of labels to attach to the GitHub issue to
+     *
+     * @return void
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
+     * @example - lib::createGitHubIssue($titleOfIssue, $descriptionOfIssue, $assignee, $milestoneNumber, array("Bug", "Found By User"));
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/11/2015
+     */
     public static function createGitHubIssue($title, $body, $assignee, $milestone, $labels){
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -159,13 +215,13 @@ class lib {
     /**
      *  This function decrypts data given an identifier
      *
-     * @param string $identifier
-     * @param bool|NULL $noDebugModeOutput
+     * @param string $identifier - The unique key to decrypt the data
+     * @param bool $noDebugModeOutput (optional) - Whether or not to display debug mode output (if enabled)
      *
-     * @return string|NULL $decryptedDataMCRYPT String of decrypted data
-     * @throws - Nothing
-     * @global - None
-     * @notes  - None
+     * @return string|NULL $decryptedDataMCRYPT - The data after it's been decrypted
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
      *
      * @example - To decrypt data with debug mode output (if enabled): $decryptedData = lib::decrypt($identifier);
      * @example - To decrypt data with no debug mode output: $decryptedData = lib::decrypt($identifier, TRUE);
@@ -252,13 +308,13 @@ class lib {
     /**
      *  This function decrypts data and writes it to the database with the corresponding identifiers
      *
-     * @param string $data The data to be encrypted
-     * @param string|array $identifiers The identifiers the encrypted data is to be connected to
-     * @param bool|NULL $noDebugModeOutput Whether this displays output if debug mode is enabled
+     * @param string $data - The data to be encrypted
+     * @param string|array $identifiers - The identifiers that the encrypted data is to be connected to
+     * @param bool $noDebugModeOutput (optional) - Whether or not to display debug mode output (if enabled)
      *
      * @return string $encryptedDataMCRYPT The string of encrypted data
-     * @throws - Nothing
-     * @global - None
+     * @throws - nothing
+     * @global - none
      * @notes
      *      - If identifiers is passed in as an array of strings, it will write out the same encryption data for each identifier
      *
@@ -346,6 +402,23 @@ class lib {
         return $encryptedDataMCRYPT;
     }
 
+    /**
+     *  This function generates a registration confirmation URL for the user to complete sign up
+     *
+     * @param string $email - The email used for registration
+     * @param string $userName - The username used for registration
+     * @param string $firstName - The first name used for registration
+     * @param string $lastName - The last name used for registration
+     *
+     * @return string $registrationUrl - The url to send to the user fro them to complete the registration process
+     * @throws - nothing
+     * @global - none
+     * @notes - none
+     * @example - $registrationUrl= lib::generateRegistrationURL($email, $userName, $firstName, $lastName);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/04/2015
+     */
     public static function generateRegistrationUrl($email, $userName, $firstName, $lastName) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -387,6 +460,19 @@ class lib {
         return $registrationUrl;
     }
 
+    /**
+     *  This function generates a temporary password for a user so they can recover their account
+     *
+     * @param none
+     * @return string $tempPassword - The temporary password a user can log in with to recover their account
+     * @throws - nothing
+     * @global - none
+     * @notes - Generates a sequence of 10 random characters and numbers
+     * @example - $tempPassword = lib::generateTempPassword();
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/10/2015
+     */
     public static function generateTempPassword() {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -413,9 +499,9 @@ class lib {
     /**
      *  This function uses curl to time how long it takes a page to load
      *
-     * @param string $url The address of the page to ping
+     * @param string $url - The address of the page to ping
      *
-     * @return string $timeMS The time in MS of how long the curl took
+     * @return string $timeMS - The time in MS of how long the curl took
      * @throws - Nothing
      * @global - None
      * @notes - None
@@ -454,6 +540,21 @@ class lib {
         return round($timeMS);
     }
 
+    /**
+     *  This function prints out security questions as options
+     *
+     * @param array $securityQuestions - An array of security questions from the database
+     * @param int $selectedQuestion - The id of a selected security question
+     *
+     * @return void
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
+     * @example - lib::printSecurityQuestions($randomizedSecurityQuestions, $selectedQuestion);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/04/2015
+     */
     public static function printSecurityQuestions($securityQuestions, $selectedQuestion) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -474,6 +575,21 @@ class lib {
        log_util::logDivider();
     }
 
+    /**
+     *  This function given an array will generate a randomized array with a specified entry count
+     *
+     * @param array $array - An array of security questions from the database
+     * @param int $randomizedEntryCount - How many entries should be in the randomized array
+     *
+     * @return array $randomizedArray
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
+     * @example - $randomizedSecurityQuestions = lib::randomizeArray($securityQuestions, 10);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/04/2015
+     */
     public static function randomizeArray($array, $randomizedEntryCount) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -508,15 +624,15 @@ class lib {
     /**
      *  This function redirects the user to another page
      *
-     * @param bool|NULL $withDelay A flag that determines if the redirect is going to use delay or not
-     * @param int|NULL $delay The number of seconds to delay
-     * @param bool|NULL $toReferer If the
-     * @param string $urlForRedirect The url to redirect to
+     * @param bool $withDelay - A flag that determines if the redirect is going to use delay or not
+     * @param int $delay - The number of seconds to delay before the redirect
+     * @param bool $toReferer - If the user is going to be redirected to the referer
+     * @param string $urlForRedirect - The url to redirect to if not going to referer
      *
-     * @return None
-     * @throws - Nothing
-     * @global - None
-     * @notes  -
+     * @return void
+     * @throws - nothing
+     * @global - none
+     * @notes
      *      - urlForRedirect is optional if you're going to the referer
      *      - Ignores delay unless with delay is true
      *
@@ -529,7 +645,7 @@ class lib {
      * @version - 1.0
      * @history - Created 07/10/2015
      */
-    public static function redirect($withDelay = false, $delay = 5, $toReferer = true, $urlForRedirect) {
+    public static function redirect($withDelay = FALSE, $delay = 5, $toReferer = TRUE, $urlForRedirect) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -700,6 +816,31 @@ class lib {
         log_util::logDivider();
     }
 
+    /**
+     *  This function sends an email
+     *
+     * @param array|string $to - A comma delimited list or array of email addresses to send it to
+     * @param string $subject - The subject of the email
+     * @param string $body - The body of the email
+     * @param bool $ccAdmin (optional) - Whether the master admin should be copied or not
+     * @param object $attachment (optional) - An attachment to send with the email
+     * @param string $attachmentType (optional) - The type of attachment being sent
+     * @param string $encoding (optional) - The encoding to use for the email
+     * @param string $fromName (optional) - The name the email is from
+     * @param string $fromAddress (optional) - The address the email is from
+     *
+     * @return bool $success - Whether or not the email was sent successfully
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
+     *
+     * @example - To send a normal email: $success = lib::sendMail($email, $subject, $body);
+     * @example - To send an email with attachment: $success = lib::sendMail($recipients, $subject, $body, TRUE, TRUE, $file, $fileType);
+     *
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/04/2015
+     */
     public static function sendMail($to, $subject, $body, $ccAdmin = FALSE, $html = TRUE, $attachment = NULL, $attachmentType = NULL, $encoding = "utf-8", $fromName = "Patches", $fromAddress = "patches@rockthepatch.com") {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -833,12 +974,12 @@ class lib {
     /**
      *  This function checks if the file calling it is connected to the library by writing a simple echo statement
      *
-     * @param None
+     * @param none
      *
-     * @return None
-     * @throws - Nothing
-     * @global - None
-     * @notes  - None
+     * @return void
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
      * @example - lib::testConnection();
      * @author - Patches
      * @version - 1.0

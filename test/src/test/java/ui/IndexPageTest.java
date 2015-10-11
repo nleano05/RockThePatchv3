@@ -58,9 +58,9 @@ public class IndexPageTest extends BasePageTest implements BasePageTest.Callback
         gDriver.get(UrlUtil.URL_MAIN_PAGE);
         gDriver.manage().window().maximize();
 
-        ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div[5]/div[4]/p/a[2]/img"));
-        ExpectedConditions.visibilityOf(gDriver.findElement(By.xpath("/html/body/div/div[5]/div[4]/p/a[2]/img")));
-        gDriver.findElement(By.xpath("/html/body/div/div[5]/div[4]/p/a[2]/img")).click();
+        ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div/div[4]/div[4]/p/a[3]/img"));
+        ExpectedConditions.visibilityOf(gDriver.findElement(By.xpath("/html/body/div/div[4]/div[4]/p/a[3]/img")));
+        gDriver.findElement(By.xpath("/html/body/div/div[4]/div[4]/p/a[3]/img")).click();
 
         ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/div[2]/blockquote[1]/p"));
         ExpectedConditions.visibilityOf(gDriver.findElement(By.xpath("/html/body/div[2]/blockquote[1]/p")));

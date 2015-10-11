@@ -2,6 +2,9 @@
 
 /**
  * Class ErrorReportCategory
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/04/2015
  */
 class ErrorReportCategory {
     private $id;
@@ -10,10 +13,10 @@ class ErrorReportCategory {
     private $isDefault;
 
     /**
-     * @param int|NULL $id The id of the error report category
-     * @param string|NULL $name The name of the error report category
-     * @param int|NULL $distro The id of the email distro the error report category is attached to
-     * @param bool|NULL $isDefault If the error report category is selected by default in the UI
+     * @param int|NULL $id - The id of the error report category
+     * @param string|NULL $name - The name of the error report category
+     * @param int|NULL $distro - The id of the email distro the error report category is attached to
+     * @param bool|NULL $isDefault - If the error report category is selected by default in the UI
      */
     public function __construct($id = NULL, $name = NULL, $distro = NULL, $isDefault = NULL) {
         if (is_int($id) || $id == NULL) {
@@ -39,7 +42,7 @@ class ErrorReportCategory {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $id
      */
     public function getId() {
         return $this->id;
@@ -57,7 +60,7 @@ class ErrorReportCategory {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $name
      */
     public function getName() {
         return $this->name;
@@ -76,7 +79,7 @@ class ErrorReportCategory {
 
 
     /**
-     * @return int|NULL
+     * @return int|NULL $distro
      */
     public function getDistro() {
         return $this->distro;
@@ -94,7 +97,7 @@ class ErrorReportCategory {
     }
 
     /**
-     * @return bool|NULL
+     * @return bool|NULL $isDefault
      */
     public function isDefault() {
         return $this->isDefault;

@@ -2,6 +2,9 @@
 
 /**
  * Class AnnoyanceLevel
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/04/2015
  */
 class AnnoyanceLevel {
     private $id;
@@ -10,10 +13,10 @@ class AnnoyanceLevel {
     private $isDefault;
 
     /**
-     * @param int|NULL $id The id of the annoyance level
-     * @param string|NULL $name The name of the annoyance level
-     * @param int|NULL $level The integer value of the severity/annoyance level
-     * @param bool|NULL $isDefault If the annoyance level is the default one selected in the UI
+     * @param int|NULL $id - The id of the annoyance level
+     * @param string|NULL $name - The name of the annoyance level (what is displayed to the user)
+     * @param int|NULL $level - An int value between 0-9
+     * @param bool|NULL $isDefault - If the annoyance level is the default one to be used for display
      */
     public function __construct($id = NULL, $name = NULL, $level = NULL, $isDefault = NULL) {
         if (is_int($id) || $id == NULL) {
@@ -39,7 +42,7 @@ class AnnoyanceLevel {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $id
      */
     public function getId() {
         return $this->id;
@@ -57,7 +60,7 @@ class AnnoyanceLevel {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $name
      */
     public function getName() {
         return $this->name;
@@ -75,7 +78,7 @@ class AnnoyanceLevel {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $level
      */
     public function getLevel() {
         return $this->level;
@@ -93,7 +96,7 @@ class AnnoyanceLevel {
     }
 
     /**
-     * @return bool|NULL
+     * @return bool|NULL $isDefault
      */
     public function isDefault() {
         return $this->isDefault;

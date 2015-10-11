@@ -2,6 +2,9 @@
 
 /**
  * Class User
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/03/2015
  */
 class User {
     private $id;
@@ -23,24 +26,24 @@ class User {
     private $friendStatus;
 
     /**
-     * @param int|NULL $id
-     * @param string|NULL $firstName
-     * @param string|NULL $lastName
-     * @param string|NULL $userName
-     * @param string|NULL $email
-     * @param string|NULL $password
-     * @param int|NULL $securityQuestion
-     * @param string|NULL $securityQuestionAnswer
-     * @param bool|NULL $emailBlasts
-     * @param bool|NULL $textBlasts
-     * @param string|NULL $cell
-     * @param int|NULL $role
-     * @param bool|NULL $locked
-     * @param bool|NULL $lockedByAdmin
-     * @param int|NULL $timeLocked
-     * @param int|NULL $consecutiveFailedLoginAttempts
-     * @param string|NULL $lastLoginAttemptTime
-     * @param int|NULL $friendStatus
+     * @param int|NULL $id - The id of the user
+     * @param string|NULL $firstName - The first name of the user
+     * @param string|NULL $lastName - The last name of the user
+     * @param string|NULL $userName - The username for the user
+     * @param string|NULL $email - The email for the user
+     * @param string|NULL $password - An encrypted version of the users password
+     * @param int|NULL $securityQuestion - The id of the security question for the user
+     * @param string|NULL $securityQuestionAnswer - The answer to the security question the user chose
+     * @param bool|NULL $emailBlasts - If the user is signed up to receive email blasts
+     * @param bool|NULL $textBlasts - If the user is signed up to receive text blasts
+     * @param string|NULL $cell - The user's cell phone number
+     * @param int|NULL $role - If the user is a regular user, admin, etc
+     * @param bool|NULL $locked - If the user's account is locked or not
+     * @param bool|NULL $lockedByAdmin = If the account was locked by an administrator
+     * @param int|NULL $timeLocked - The time the account was locked
+     * @param int|NULL $consecutiveFailedLoginAttempts - The number of failed login attempts in a row
+     * @param string|NULL $lastLoginAttemptTime - The last time in UTC of when the user logged in
+     * @param int|NULL $friendStatus - How the current user is connected to another user
      */
     public function __construct(
         $id = NULL,

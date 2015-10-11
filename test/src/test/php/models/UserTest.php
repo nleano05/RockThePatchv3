@@ -33,13 +33,21 @@ class UserTest extends PHPUnit_Framework_TestCase {
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertTrue($user->getRole() == NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($user->getLastLoginAttempt() == NULL);
+        $this->assertTrue($user->getLocked() == NULL);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getLockedByAdmin() == NULL);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getTimeLocked() == NULL);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getConsecutiveFailedLoginAttempts() == NULL);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getLastLoginAttemptTime() == NULL);
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertTrue($user->getFriendStatus() == NULL);
     }
 
     public function testConstructorWithValues() {
-        $user = new User(1, "first", "last", "userName", "email@domain.com", "password", 2, "answer", TRUE, FALSE, "317-555-1234", ROLE_ADMIN, "some date", 3);
+        $user = new User(1, "first", "last", "userName", "email@domain.com", "password", 2, "answer", TRUE, FALSE, "317-555-1234", ROLE_ADMIN, FALSE, FALSE, "time locked", 3, "last login attempt time", 4);
 
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertTrue($user->getId() == 1);
@@ -66,9 +74,17 @@ class UserTest extends PHPUnit_Framework_TestCase {
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertTrue($user->getRole() == ROLE_ADMIN);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($user->getLastLoginAttempt() == "some date");
+        $this->assertTrue($user->getLocked() == FALSE);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($user->getFriendStatus() == 3);
+        $this->assertTrue($user->getLockedByAdmin() == FALSE);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getTimeLocked() == "time locked");
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getConsecutiveFailedLoginAttempts() == 3);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getLastLoginAttemptTime() == "last login attempt time");
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getFriendStatus() == 4);
     }
 
     public function testGettersAndSetters() {
@@ -86,8 +102,12 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $user->setTextBlasts(FALSE);
         $user->setCell("317-555-1234");
         $user->setRole(ROLE_ADMIN);
-        $user->setLastLoginAttempt("some date");
-        $user->setFriendStatus(3);
+        $user->setLocked(FALSE);
+        $user->setLockedByAdmin(FALSE);
+        $user->setTimeLocked("time locked");
+        $user->setConsecutiveFailedLoginAttempts(3);
+        $user->setLastLoginAttemptTime("last login attempt time");
+        $user->setFriendStatus(4);
 
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertTrue($user->getId() == 1);
@@ -114,8 +134,16 @@ class UserTest extends PHPUnit_Framework_TestCase {
         /** @noinspection PhpUndefinedMethodInspection */
         $this->assertTrue($user->getRole() == ROLE_ADMIN);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($user->getLastLoginAttempt() == "some date");
+        $this->assertTrue($user->getLocked() == FALSE);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($user->getFriendStatus() == 3);
+        $this->assertTrue($user->getLockedByAdmin() == FALSE);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getTimeLocked() == "time locked");
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getConsecutiveFailedLoginAttempts() == 3);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getLastLoginAttemptTime() == "last login attempt time");
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->assertTrue($user->getFriendStatus() == 4);
     }
 }

@@ -2,6 +2,9 @@
 
 /**
  * Class EncryptionData
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/05/2015
  */
 class EncryptionData {
     private $id;
@@ -12,13 +15,12 @@ class EncryptionData {
     private $time;
 
     /**
-     * EncryptionData constructor.
-     * @param int|NULL $id
-     * @param string|array|NULL $identifier
-     * @param string|NULL $cipher
-     * @param string|NULL $key
-     * @param string|NULL $iv
-     * @param string|NULL $time
+     * @param int|NULL $id - The id of the encryption data
+     * @param string|array|NULL $identifier - The unique identifier for encryption/decryption purposes
+     * @param string|NULL $cipher - The algorithm used for encryption
+     * @param string|NULL $key - The secret key used for encryption
+     * @param string|NULL $iv - The initialization vector used for encryption
+     * @param string|NULL $time - The time the data was encrypted in UTC
      */
     public function __construct($id = NULL, $identifier = NULL, $cipher = NULL, $key = NULL, $iv = NULL, $time = NULL) {
         if ((is_int($id)) || $id == NULL) {
@@ -54,7 +56,7 @@ class EncryptionData {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $id
      */
     public function getId() {
         return $this->id;
@@ -72,7 +74,7 @@ class EncryptionData {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $identifier
      */
     public function getIdentifier() {
         return $this->identifier;
@@ -90,7 +92,7 @@ class EncryptionData {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $cipher
      */
     public function getCipher() {
         return $this->cipher;
@@ -108,7 +110,7 @@ class EncryptionData {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $key
      */
     public function getKey() {
         return $this->key;
@@ -126,7 +128,7 @@ class EncryptionData {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $iv
      */
     public function getIv() {
         return $this->iv;
@@ -144,7 +146,7 @@ class EncryptionData {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $time
      */
     public function getTime() {
         return $this->time;

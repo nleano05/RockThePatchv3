@@ -2,3 +2,5 @@
 test/.gradle
 test/build
 test/gradle
+test/src/test/test.iml
+test/test.iml

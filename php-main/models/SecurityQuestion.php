@@ -1,12 +1,18 @@
 <?php
+
+/**
+ * Class SecurityQuestion
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/13/2015
+ */
 class SecurityQuestion {
-    private $id = "";
-    private $question = "";
+    private $id;
+    private $question;
 
     /**
-     * SecurityQuestion constructor.
-     * @param string|NULL $id
-     * @param string|NULL $question
+     * @param string|NULL $id - The id of the security question
+     * @param string|NULL $question - The security question
      */
     public function __construct($id = NULL, $question = NULL) {
         if (is_int($id) || $id == NULL) {

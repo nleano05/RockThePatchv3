@@ -2,6 +2,9 @@
 
 /**
  * Class EmailDistro
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/03/2015
  */
 class EmailDistro {
     private $id;
@@ -9,9 +12,9 @@ class EmailDistro {
     private $emails;
 
     /**
-     * @param int|NULL $id The id of the email distro
-     * @param string|NULL $name The name of the email distro
-     * @param array|NULL $emails An array of email strings attached to the email distro
+     * @param int|NULL $id - The id of the email distro
+     * @param string|NULL $name - The name of the email distro
+     * @param array|NULL $emails - A string array of emails attached to the email distro
      */
     public function __construct($id = NULL, $name = NULL, $emails = NULL) {
         if (is_int($id) || $id == NULL) {
@@ -32,7 +35,7 @@ class EmailDistro {
     }
 
     /**
-     * @return int|NULL
+     * @return int|NULL $id
      */
     public function getId() {
         return $this->id;
@@ -50,14 +53,14 @@ class EmailDistro {
     }
 
     /**
-     * @return string|NULL
+     * @return string|NULL $name
      */
     public function getName() {
         return $this->name;
     }
 
     /**
-     * @param string|NULL
+     * @param string|NULL $name
      */
     public function setName($name) {
         if (is_string($name) || $name == NULL) {
@@ -68,7 +71,7 @@ class EmailDistro {
     }
 
     /**
-     * @return array|NULL
+     * @return array|NULL $emails
      */
     public function getEmails() {
         return $this->emails;

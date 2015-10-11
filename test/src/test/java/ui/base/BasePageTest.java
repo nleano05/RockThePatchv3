@@ -19,7 +19,7 @@ public class BasePageTest {
     public static void testTitle(WebDriver driver, String url, String expectedTitle) {
         driver.get(url);
         driver.manage().window().maximize();
-        assertEquals("Title matches expected title", driver.getTitle(), expectedTitle);
+        assertEquals("Title matches expected title", expectedTitle, driver.getTitle());
     }
 
     public static void testHTML5Validation(WebDriver driver, String url) {
@@ -47,8 +47,8 @@ public class BasePageTest {
         ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"validate-by-input\"]/form/p[2]/a/span"));
         driver.findElement(By.xpath("//*[@id=\"validate-by-input\"]/form/p[2]/a/span")).click();
 
-        wait.until(ExpectedConditions.titleContains("[Valid] Markup Validation"));
-        assertTrue("Valid markup found", driver.getTitle().startsWith("[Valid] Markup Validation"));
+        ExpectedConditions.presenceOfElementLocated(By.cssSelector("html body div#results p.success"));
+        ExpectedConditions.visibilityOfElementLocated(By.cssSelector("html body div#results p.success"));
     }
 
     public static void testXHTMLValidation(WebDriver driver, String url) {

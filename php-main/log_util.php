@@ -16,9 +16,9 @@ class log_util {
      * @param $message string (required) The message to log
      * @param $resource object (optional) A resource to be printed along with the message
      *
-     * @return NULL
-     * @throws - Nothing
-     * @global - None
+     * @return void
+     * @throws - nothing
+     * @global - none
      * @notes
      *    - Currently only logs if gDebugMode is enabled
      *    - Currently does not take into account log level
@@ -60,10 +60,10 @@ class log_util {
     /**
      *  This function outputs the debug divider
      *
-     * @param - None
+     * @param - none
      *
-     * @return NULL
-     * @throws - Nothing
+     * @return void
+     * @throws - nothing
      * @global - $gDebugMode and $gDebugDivider
      * @notes
      *    - Used at the end of methods
@@ -87,8 +87,8 @@ class log_util {
      *
      * @param $args array (required) The arguments for the function as a key/value pair
      *
-     * @return NULL
-     * @throws - Nothing
+     * @return void
+     * @throws - nothing
      * @global - $gDebugMode and $gDebugFunctionColor
      * @notes
      *    - Used at the start of methods

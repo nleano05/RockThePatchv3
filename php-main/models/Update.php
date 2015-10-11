@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Update
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 08/02/2015
+ */
 class Update {
     private $id;
     private $title;
@@ -7,10 +13,10 @@ class Update {
     private $date;
 
     /**
-     * @param int|NULL $id
-     * @param string|NULL $title
-     * @param string|NULL $text
-     * @param string|NULL $date
+     * @param int|NULL $id - The id of the update
+     * @param string|NULL $title - The title of the update
+     * @param string|NULL $text - The string/html body of the update
+     * @param string|NULL $date - The date of publication for the update
      */
     public function __construct($id = NULL, $title = NULL, $text = NULL, $date = NULL) {
         if (is_int($id) || $id == NULL) {
@@ -36,14 +42,14 @@ class Update {
     }
 
     /**
-     * @return int
+     * @return int|NULL $id
      */
     public function getId() {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|NULL $id
      */
     public function setId($id) {
         if (is_int($id) || $id == NULL) {
@@ -54,14 +60,14 @@ class Update {
     }
 
     /**
-     * @return string
+     * @return string|NULL $title
      */
     public function getTitle() {
         return $this->title;
     }
 
     /**
-     * @param string $title
+     * @param string|NULL $title
      */
     public function setTitle($title) {
         if (is_string($title) || $title == NULL) {
@@ -72,14 +78,14 @@ class Update {
     }
 
     /**
-     * @return string
+     * @return string|NULL $text
      */
     public function getText() {
         return $this->text;
     }
 
     /**
-     * @param string $text
+     * @param string|NULL $text
      */
     public function setText($text) {
         if (is_string($text) || $text == NULL) {
@@ -90,14 +96,14 @@ class Update {
     }
 
     /**
-     * @return NULL|string
+     * @return string|NULL $date
      */
     public function getDate() {
         return $this->date;
     }
 
     /**
-     * @param NULL|string $date
+     * @param string|NULL $date
      */
     public function setDate($date) {
         if (is_string($date) || $date == NULL) {

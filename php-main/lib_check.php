@@ -1,19 +1,22 @@
 <?php
 
 /**
- *  This class houses functions that check input and return true/false values
+ * This class houses functions that check input and return true/false values
+ * @author - Patches
+ * @version - 1.0
+ * @history - Created 07/03/2015
  */
 class lib_check {
 
     /**
      *  This function uses preg_match to check if the given input matches a white list of characters
      *
-     * @param string $input the string to check if it matches the white list
+     * @param string $input - The string to check if it matches the white list
      *
-     * @return bool
-     * @throws - Nothing
-     * @global - None
-     * @notes  - None
+     * @return bool $black
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
      * @example - $black = lib_check::againstWhiteList($input);
      * @author - Patches
      * @version - 1.0
@@ -47,6 +50,20 @@ class lib_check {
         return $black;
     }
 
+    /**
+     *  This function checks if a connecting agent is a known bot or spider
+     *
+     * @param string $agent - The agent to see if it matches a list of known bots and spiders
+     *
+     * @return bool $isBotOrSpider
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
+     * @example - $botOrSpider = lib_check::botOrSpider($connectingAgent)
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/10/2015
+     */
     public static function botOrSpider($agent) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -108,12 +125,12 @@ class lib_check {
     /**
      *  This function checks if debug mode should be disabled or enabled
      *
-     * @param $enable boolean (optional) If debug mode is enabled or disabled
-     * @param $careAboutAdmin boolean (optional) If we're only enabling debug mode for admin users
+     * @param $enable boolean (optional) - If debug mode is enabled or disabled
+     * @param $careAboutAdmin boolean (optional) - If we're only enabling debug mode for admin users
      *
-     * @return boolean
-     * @throws - Nothing
-     * @global - None
+     * @return bool $debugModeEnabled
+     * @throws - nothing
+     * @global - none
      * @notes
      *    - To enable debug mode for all users $enable should be true and $careAboutAdmin false
      *    - To enable debug mode for ONLY admin users $enable should be set to true and $careAboutAdmin set to true
@@ -146,13 +163,13 @@ class lib_check {
     /**
      *  This function checks if a string ends with another string
      *
-     * @param string $needle The string to search for
-     * @param string $haystack The string to search in
+     * @param string $needle - The string to search for
+     * @param string $haystack - The string to search in
      *
      * @return bool
-     * @throws - Nothing
-     * @global - None
-     * @notes  - None
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
      * @example - $startsWith = lib_check::startsWith($needle, $haystack);
      * @author - Patches
      * @version - 1.0
@@ -180,12 +197,12 @@ class lib_check {
     /**
      *  This function checks if the given input is empty
      *
-     * @param string $input The string to check if empty
+     * @param string $input - The string to check if empty
      *
-     * @return bool
-     * @throws - Nothing
-     * @global - None
-     * @notes  - None
+     * @return bool $empty
+     * @throws - nothing
+     * @global - none
+     * @notes  - none
      * @example - $empty = lib_check::isEmpty($input);
      * @author - Patches
      * @version - 1.0
@@ -215,6 +232,23 @@ class lib_check {
         return $empty;
     }
 
+    /**
+     *  This function checks if two inputs are the same
+     *
+     * @param string $input1
+     * @param string $input2
+     *
+     * @return bool $same
+     * @throws - nothing
+     * @global - none
+     * @notes
+     *      - Primarily used for string comparisons
+     *      - Does an == comparison
+     * @example - $gPasswordsMatch = lib_check::same($newPassword, $newPasswordConfirm);
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/04/2015
+     */
     public static function same($input1, $input2) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -268,6 +302,22 @@ class lib_check {
         return (substr($haystack, 0, $length) === $needle);
     }
 
+    /**
+     *  This function does compares the string length using a given operator
+     *
+     * @param string $input - The string to compare the length of
+     * @param string $length - The length to compare the inputs length to
+     * @param string $operator - The operator to use when comparing
+     *
+     * @return bool $result
+     * @throws - nothing
+     * @global - none
+     * @notes - none
+     * @example - $gFirstNameTooLong = lib_check::stringLength($firstName, 40, ">");
+     * @author - Patches
+     * @version - 1.0
+     * @history - Created 10/04/2015
+     */
     public static function stringLength($input, $length, $operator) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
