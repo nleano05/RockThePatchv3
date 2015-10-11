@@ -9,26 +9,26 @@ class AccountLockTest extends PHPUnit_Framework_TestCase {
         $accountLock = new AccountLock();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getLocked() == NULL);
+        $this->assertEquals($accountLock->getLocked(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getType() == NULL);
+        $this->assertEquals($accountLock->getType(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getTimeLocked() == NULL);
+        $this->assertEquals($accountLock->getTimeLocked(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getTimeDifference() == NULL);
+        $this->assertEquals($accountLock->getTimeDifference(), NULL);
     }
 
     public function testConstructorWithValues() {
         $accountLock = new AccountLock(TRUE, 2, "time locked", "time difference");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getLocked() == TRUE);
+        $this->assertEquals($accountLock->getLocked(), TRUE);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getType() == 2);
+        $this->assertEquals($accountLock->getType(), 2);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getTimeLocked() == "time locked");
+        $this->assertEquals($accountLock->getTimeLocked(), "time locked");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getTimeDifference() == "time difference");
+        $this->assertEquals($accountLock->getTimeDifference(), "time difference");
     }
 
     public function testGettersAndSetters() {
@@ -40,12 +40,12 @@ class AccountLockTest extends PHPUnit_Framework_TestCase {
         $accountLock->setTimeDifference("time difference");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getLocked() == TRUE);
+        $this->assertEquals($accountLock->getLocked(), TRUE);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getType() == 2);
+        $this->assertEquals($accountLock->getType(), 2);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getTimeLocked() == "time locked");
+        $this->assertEquals($accountLock->getTimeLocked(), "time locked");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($accountLock->getTimeDifference() == "time difference");
+        $this->assertEquals($accountLock->getTimeDifference(), "time difference");
     }
 }

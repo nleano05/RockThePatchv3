@@ -9,34 +9,34 @@ class EncryptionDataTest extends PHPUnit_Framework_TestCase {
         $encryptionData = new EncryptionData();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getId() == NULL);
+        $this->assertEquals($encryptionData->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getIdentifier() == NULL);
+        $this->assertEquals($encryptionData->getIdentifier(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getCipher() == NULL);
+        $this->assertEquals($encryptionData->getCipher(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getIv() == NULL);
+        $this->assertEquals($encryptionData->getIv(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getKey() == NULL);
+        $this->assertEquals($encryptionData->getKey(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getTime() == NULL);
+        $this->assertEquals($encryptionData->getTime(), NULL);
     }
 
     public function testConstructorWithValues() {
         $encryptionData = new EncryptionData(1, "identifier", "cipher", "key", "iv", "time");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getId() == 1);
+        $this->assertEquals($encryptionData->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getIdentifier() == "identifier");
+        $this->assertEquals($encryptionData->getIdentifier(), "identifier");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getCipher() == "cipher");
+        $this->assertEquals($encryptionData->getCipher(), "cipher");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getIv() == "iv");
+        $this->assertEquals($encryptionData->getIv(), "iv");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getKey() == "key");
+        $this->assertEquals($encryptionData->getKey(), "key");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getTime() == "time");
+        $this->assertEquals($encryptionData->getTime(), "time");
     }
 
     public function testGettersAndSetters() {
@@ -50,16 +50,16 @@ class EncryptionDataTest extends PHPUnit_Framework_TestCase {
         $encryptionData->setTime("time");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getId() == 1);
+        $this->assertEquals($encryptionData->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getIdentifier() == "identifier");
+        $this->assertEquals($encryptionData->getIdentifier(), "identifier");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getCipher() == "cipher");
+        $this->assertEquals($encryptionData->getCipher(), "cipher");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getIv() == "iv");
+        $this->assertEquals($encryptionData->getIv(), "iv");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getKey() == "key");
+        $this->assertEquals($encryptionData->getKey(), "key");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($encryptionData->getTime() == "time");
+        $this->assertEquals($encryptionData->getTime(), "time");
     }
 }

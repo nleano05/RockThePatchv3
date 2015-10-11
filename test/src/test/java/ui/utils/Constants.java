@@ -13,4 +13,6 @@ public class Constants {
 
     public static final String BASE_TITLE = "Rock the Patch! v3 - ";
     public static final String TITLE_MAIN_PAGE = BASE_TITLE +  "Home";
+    public static final String TITLE_ABOUT_PATCHES = BASE_TITLE +  "About Patches";
+    public static final String TITLE_ABOUT_THE_REVAMP = BASE_TITLE +  "About The Revamp";
 }

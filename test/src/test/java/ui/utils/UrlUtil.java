@@ -18,6 +18,8 @@ public class UrlUtil {
     public static final String SHORT_PRODUCTION_URL = "rockthepatch.com";
 
     public static final String URL_MAIN_PAGE = getBaseUrl() + "index.php";
+    public static final String URL_ABOUT_PATCHES = getBaseUrl() + "about-patches.php";
+    public static final String URL_ABOUT_THE_REVAMP = getBaseUrl() + "about-the-revamp.php";
 
     public static String getBaseUrl() {
         String baseUrl;

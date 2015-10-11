@@ -9,26 +9,26 @@ class UpdateTest extends PHPUnit_Framework_TestCase {
         $update = new Update();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getId() == NULL);
+        $this->assertEquals($update->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getTitle() == NULL);
+        $this->assertEquals($update->getTitle(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getText() == NULL);
+        $this->assertEquals($update->getText(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getDate() == NULL);
+        $this->assertEquals($update->getDate(), NULL);
     }
 
     public function testConstructorWithValues() {
         $update = new Update(1, "title", "update text", "date");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getId() == 1);
+        $this->assertEquals($update->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getTitle() == "title");
+        $this->assertEquals($update->getTitle(), "title");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getText() == "update text");
+        $this->assertEquals($update->getText(), "update text");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getDate() == "date");
+        $this->assertEquals($update->getDate(), "date");
     }
 
     public function testGettersAndSetters() {
@@ -40,12 +40,12 @@ class UpdateTest extends PHPUnit_Framework_TestCase {
         $update->setDate("date");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getId() == 1);
+        $this->assertEquals($update->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getTitle() == "title");
+        $this->assertEquals($update->getTitle(), "title");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getText() == "update text");
+        $this->assertEquals($update->getText(), "update text");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($update->getDate() == "date");
+        $this->assertEquals($update->getDate(), "date");
     }
 }

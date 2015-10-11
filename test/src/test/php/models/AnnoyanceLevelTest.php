@@ -9,26 +9,26 @@ class AnnoyanceLevelTest extends PHPUnit_Framework_TestCase {
         $annoyanceLevel = new AnnoyanceLevel();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getId() == NULL);
+        $this->assertEquals($annoyanceLevel->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getName() == NULL);
+        $this->assertEquals($annoyanceLevel->getName(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getLevel() == NULL);
+        $this->assertEquals($annoyanceLevel->getLevel(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->isDefault() == NULL);
+        $this->assertEquals($annoyanceLevel->isDefault(), NULL);
     }
 
     public function testConstructorWithValues() {
         $annoyanceLevel = new AnnoyanceLevel(1, "name", 5, TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getId() == 1);
+        $this->assertEquals($annoyanceLevel->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getName() == "name");
+        $this->assertEquals($annoyanceLevel->getName(), "name");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getLevel() == 5);
+        $this->assertEquals($annoyanceLevel->getLevel(), 5);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->isDefault() == TRUE);
+        $this->assertEquals($annoyanceLevel->isDefault(), TRUE);
     }
 
     public function testGettersAndSetters() {
@@ -40,12 +40,12 @@ class AnnoyanceLevelTest extends PHPUnit_Framework_TestCase {
         $annoyanceLevel->setIsDefault(TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getId() == 1);
+        $this->assertEquals($annoyanceLevel->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getName() == "name");
+        $this->assertEquals($annoyanceLevel->getName(), "name");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->getLevel() == 5);
+        $this->assertEquals($annoyanceLevel->getLevel(), 5);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($annoyanceLevel->isDefault() == TRUE);
+        $this->assertEquals($annoyanceLevel->isDefault(), TRUE);
     }
 }

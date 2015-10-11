@@ -9,18 +9,18 @@ class SecurityQuestionTest extends PHPUnit_Framework_TestCase {
         $securityQuestion = new SecurityQuestion();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($securityQuestion->getId() == NULL);
+        $this->assertEquals($securityQuestion->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($securityQuestion->getQuestion() == NULL);
+        $this->assertEquals($securityQuestion->getQuestion(), NULL);
     }
 
     public function testConstructorWithValues() {
         $securityQuestion = new SecurityQuestion(1, "security question");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($securityQuestion->getId() == 1);
+        $this->assertEquals($securityQuestion->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($securityQuestion->getQuestion() == "security question");
+        $this->assertEquals($securityQuestion->getQuestion(), "security question");
     }
 
     public function testGettersAndSetters() {
@@ -30,8 +30,8 @@ class SecurityQuestionTest extends PHPUnit_Framework_TestCase {
         $securityQuestion->setQuestion("security question");
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($securityQuestion->getId() == 1);
+        $this->assertEquals($securityQuestion->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($securityQuestion->getQuestion() == "security question");
+        $this->assertEquals($securityQuestion->getQuestion(), "security question");
     }
 }

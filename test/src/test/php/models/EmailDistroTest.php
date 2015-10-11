@@ -9,22 +9,22 @@ class EmailDistroTest extends PHPUnit_Framework_TestCase {
         $emailDistro = new EmailDistro();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getId() == NULL);
+        $this->assertEquals($emailDistro->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getName() == NULL);
+        $this->assertEquals($emailDistro->getName(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getEmails() == NULL);
+        $this->assertEquals($emailDistro->getEmails(), NULL);
     }
 
     public function testConstructorWithValues() {
         $emailDistro = new EmailDistro(1, "distro", ["email-one@domain.com", "email-two@domain.com"]);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getId() == 1);
+        $this->assertEquals($emailDistro->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getName() == "distro");
+        $this->assertEquals($emailDistro->getName(), "distro");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getEmails() ==  ["email-one@domain.com", "email-two@domain.com"]);
+        $this->assertEquals($emailDistro->getEmails(),  ["email-one@domain.com", "email-two@domain.com"]);
     }
 
     public function testGettersAndSetters() {
@@ -35,10 +35,10 @@ class EmailDistroTest extends PHPUnit_Framework_TestCase {
         $emailDistro->setEmails(["email-one@domain.com", "email-two@domain.com"]);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getId() == 1);
+        $this->assertEquals($emailDistro->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getName() == "distro");
+        $this->assertEquals($emailDistro->getName(), "distro");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($emailDistro->getEmails() ==  ["email-one@domain.com", "email-two@domain.com"]);
+        $this->assertEquals($emailDistro->getEmails(),  ["email-one@domain.com", "email-two@domain.com"]);
     }
 }

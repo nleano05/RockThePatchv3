@@ -9,26 +9,26 @@ class ErrorReportCategoryTest extends PHPUnit_Framework_TestCase {
         $errorReportCategory = new ErrorReportCategory();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getId() == NULL);
+        $this->assertEquals($errorReportCategory->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getName() == NULL);
+        $this->assertEquals($errorReportCategory->getName(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getDistro() == NULL);
+        $this->assertEquals($errorReportCategory->getDistro(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->isDefault() == NULL);
+        $this->assertEquals($errorReportCategory->isDefault(), NULL);
     }
 
     public function testConstructorWithValues() {
         $errorReportCategory = new ErrorReportCategory(1, "name", 2, TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getId() == 1);
+        $this->assertEquals($errorReportCategory->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getName() == "name");
+        $this->assertEquals($errorReportCategory->getName(), "name");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getDistro() == 2);
+        $this->assertEquals($errorReportCategory->getDistro(), 2);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->isDefault() == TRUE);
+        $this->assertEquals($errorReportCategory->isDefault(), TRUE);
     }
 
     public function testGettersAndSetters() {
@@ -40,12 +40,12 @@ class ErrorReportCategoryTest extends PHPUnit_Framework_TestCase {
         $errorReportCategory->setIsDefault(TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getId() == 1);
+        $this->assertEquals($errorReportCategory->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getName() == "name");
+        $this->assertEquals($errorReportCategory->getName(), "name");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->getDistro() == 2);
+        $this->assertEquals($errorReportCategory->getDistro(), 2);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($errorReportCategory->isDefault() == TRUE);
+        $this->assertEquals($errorReportCategory->isDefault(), TRUE);
     }
 }

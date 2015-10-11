@@ -9,26 +9,26 @@ class FeatureRequestCategoryTest extends PHPUnit_Framework_TestCase {
         $featureRequestCategory = new FeatureRequestCategory();
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getId() == NULL);
+        $this->assertEquals($featureRequestCategory->getId(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getName() == NULL);
+        $this->assertEquals($featureRequestCategory->getName(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getDistro() == NULL);
+        $this->assertEquals($featureRequestCategory->getDistro(), NULL);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->isDefault() == NULL);
+        $this->assertEquals($featureRequestCategory->isDefault(), NULL);
     }
 
     public function testConstructorWithValues() {
         $featureRequestCategory = new FeatureRequestCategory(1, "name", 2, TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getId() == 1);
+        $this->assertEquals($featureRequestCategory->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getName() == "name");
+        $this->assertEquals($featureRequestCategory->getName(), "name");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getDistro() == 2);
+        $this->assertEquals($featureRequestCategory->getDistro(), 2);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->isDefault() == TRUE);
+        $this->assertEquals($featureRequestCategory->isDefault(), TRUE);
     }
 
     public function testGettersAndSetters() {
@@ -40,12 +40,12 @@ class FeatureRequestCategoryTest extends PHPUnit_Framework_TestCase {
         $featureRequestCategory->setIsDefault(TRUE);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getId() == 1);
+        $this->assertEquals($featureRequestCategory->getId(), 1);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getName() == "name");
+        $this->assertEquals($featureRequestCategory->getName(), "name");
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->getDistro() == 2);
+        $this->assertEquals($featureRequestCategory->getDistro(), 2);
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->assertTrue($featureRequestCategory->isDefault() == TRUE);
+        $this->assertEquals($featureRequestCategory->isDefault(), TRUE);
     }
 }
