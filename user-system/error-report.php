@@ -66,7 +66,7 @@ function displayOutputName() {
     global $gNoName, $gBlackName;
 
     if($gNoName) {
-        echo("<p class='error'>No name was entered, not sending email.</p>");
+        echo("<p class='error'>Please enter a name to continue.</p>");
     } else if($gBlackName) {
         echo("<p class='error'>The name entered contained characters that are not allowed, not sending email.</p>");
     }
@@ -76,7 +76,7 @@ function displayOutputEmail() {
     global $gNoEmail, $gBlackEmail, $gValidEmail;
 
     if($gNoEmail) {
-        echo("<p class='error'>No email was entered, not sending email.</p>");
+        echo("<p class='error'>Please enter an email to continue.</p>");
     } else if($gBlackEmail) {
         echo("<p class='error'>The email entered contained characters that are not allowed, not sending email.</p>");
     } else if(!$gValidEmail) {
@@ -85,10 +85,10 @@ function displayOutputEmail() {
 }
 
 function displayOutputIssue() {
-    global $gNoIssues, $gBlackIssue;
+    global $gNoIssue, $gBlackIssue;
 
-    if($gNoIssues) {
-        echo("<p class='error'>No issue was entered, not sending email.</p>");
+    if($gNoIssue) {
+        echo("<p class='error'>Please enter in an issue to continue.</p>");
     } else if($gBlackIssue) {
         echo("<p class='error'>The issue entered contained characters that are not allowed, not sending email.</p>");
     }
@@ -146,6 +146,7 @@ function sendErrorReport() {
         ."<strong>Agent Version:</strong> " . $agent['Version'] . "<br/>\n\n"
         ."<strong>Full Agent:</strong> $fullAgent<br/><br/>\n\n";
 
+	$success = FALSE;
     if(!empty($_FILES["file"]["name"])) {
         if($invalidFile) {
             if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->emailMembers)) {
@@ -153,7 +154,7 @@ function sendErrorReport() {
             } else{
                 $recipients = $gMasterAdminEmail;
             }
-            lib::sendMail($recipients, $subject, $body, TRUE);
+            $success = lib::sendMail($recipients, $subject, $body, TRUE);
         } else {
             $file = "../error-reports/" . $_FILES["file"]["name"];
             $fileType = $_FILES["file"]["type"];
@@ -162,7 +163,7 @@ function sendErrorReport() {
             } else{
                 $recipients = $gMasterAdminEmail;
             }
-            lib::sendMail($recipients, $subject, $body, TRUE, TRUE, $file, $fileType);
+            $success = lib::sendMail($recipients, $subject, $body, TRUE, TRUE, $file, $fileType);
         }
     } else {
         if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->emailMembers)) {
@@ -170,7 +171,13 @@ function sendErrorReport() {
         } else{
             $recipients = $gMasterAdminEmail;
         }
-        lib::sendMail($recipients, $subject, $body, TRUE);
+        $success = lib::sendMail($recipients, $subject, $body, TRUE);
+    }
+	
+	if($success) {
+        echo("<p><strong><em>EMAIL SUCCESS -- Yay! An error report email and confirmation has been sent successfully.</em></strong></p>");
+    } else {
+        echo("<p><strong><em>EMAIL FAILURE -- Bummer, an error report email and confirmation <font class='error'>was not</font> sent although the provided information was valid.  Please try again later or contact $gMasterAdminName at: <a href='mailto:$gMasterAdminEmail' title='Email $gMasterAdminName'>$gMasterAdminEmail</a>.</em></strong></p>");
     }
 
     // TODO - maybe make this more dynamic

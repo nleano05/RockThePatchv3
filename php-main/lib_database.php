@@ -367,7 +367,7 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/04/2015
      */
-    public static function getFeatureRequestCategories() {
+    public static function getFeatureRequestCategories($name = NULL) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -383,15 +383,20 @@ class lib_database {
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
-            $stmt = $pdo->prepare("SELECT * FROM feature_request_categories ORDER BY name ASC");
+			if($name != NULL) {
+                $stmt = $pdo->prepare("SELECT * FROM feature_request_categories WHERE name = ? ORDER BY name ASC");
+                $stmt->bindParam(1, $name, PDO::PARAM_STR);
+            } else {
+                $stmt = $pdo->prepare("SELECT * FROM feature_request_categories ORDER BY name ASC");
+            }
             $stmt->execute();
 
             /** @noinspection PhpAssignmentInConditionInspection */
             while ($row = $stmt->fetch()) {
                 $featureRequestCategory = new FeatureRequestCategory();
-                $featureRequestCategory->setId($row['id']);
+                $featureRequestCategory->setId((int)$row['id']);
                 $featureRequestCategory->setName($row['name']);
-                $featureRequestCategory->setDistro($row['distro']);
+                $featureRequestCategory->setDistro((int)$row['distro']);
                 $featureRequestCategory->setIsDefault((bool)$row['isDefault']);
 
                 array_push($featureRequestCategories, $featureRequestCategory);
