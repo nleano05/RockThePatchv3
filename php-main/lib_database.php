@@ -842,7 +842,7 @@ class lib_database {
 				$row = $stmt->fetch();
 			
 				$decryptedPassword = lib::decrypt($emailMigrate . "_registration");
-				$encryptedPassword = lib::decrypt($decryptedPassword, $row['id'] . "_pass");
+				$encryptedPassword = lib::encrypt($decryptedPassword, $row['id'] . "_pass");
 				
 				$stmt = $pdo->prepare("UPDATE users SET password=? WHERE id = ?");
 				$stmt->bindParam(1, $encryptedPassword, PDO::PARAM_STR);
