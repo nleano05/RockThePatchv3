@@ -1,2 +1,2 @@
 <?php
-	define("GITHUB_AUTH_TOKEN", "fakeToken");
+define("GITHUB_AUTH_TOKEN", "fakeToken");

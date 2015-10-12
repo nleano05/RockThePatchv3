@@ -22,6 +22,7 @@ define("FEATURE_REQUEST_MILESTONE_NUMBER", 3);
 
 define("NOTICE_MUST_BE_ADMIN", "Only administrators will be able to view this page");
 define("NOTICE_MUST_BE_LOGGED_IN", "Only logged in users will be able to view this page");
+define("NOTICE_YOU_ARE_ALREADY_AN_ADMIN", "You are already an administrator");
 
 define("LOCK_TYPE_NORMAL", 1);
 define("LOCK_TYPE_ADMIN", 2);
