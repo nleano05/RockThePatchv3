@@ -422,20 +422,36 @@ function displayOutputAnswerConfirm() {
 function displayOutputEmailBlasts() {
     global $gUser;
 
-    if(!empty($_POST['text'])) {
-        echo("<p><input type='checkbox' name ='email-blasts' checked='checked' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
+    if(isset($_POST['account-info-edit'])) {
+        if (!empty($_POST['text'])) {
+            echo("<p><input type='checkbox' name ='email-blasts' checked='checked' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
+        } else {
+            echo("<p><input type='checkbox' name ='email-blasts' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
+        }
     } else {
-        echo("<p><input type='checkbox' name ='email-blasts' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
+        if($gUser != NULL && $gUser->getEmailBlasts()) {
+            echo("<p><input type='checkbox' name ='email-blasts' checked='checked' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
+        } else {
+            echo("<p><input type='checkbox' name ='email-blasts' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
+        }
     }
 }
 
 function displayOutputTextBlasts() {
     global $gUser;
 
-    if(!empty($_POST['text'])) {
-        echo("<p><input type='checkbox' name ='text-blasts' checked='checked' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
+    if(isset($_POST['account-info-edit'])) {
+        if (!empty($_POST['text'])) {
+            echo("<p><input type='checkbox' name ='text-blasts' checked='checked' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
+        } else {
+            echo("<p><input type='checkbox' name ='text-blasts' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
+        }
     } else {
-        echo("<p><input type='checkbox' name ='text-blasts' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
+        if ($gUser != NULL && $gUser->getTextBlasts()) {
+            echo("<p><input type='checkbox' name ='text-blasts' checked='checked' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
+        } else {
+            echo("<p><input type='checkbox' name ='text-blasts' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
+        }
     }
 }
 
