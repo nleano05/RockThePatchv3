@@ -20,7 +20,6 @@ function checkInput() {
 	global $gCorrectOldPassword;
     global $gPasswordsMatch;
     global $gInUseUsernameOrEmail;
-    global $gInvalidNewPassword;
 
     $validForm = TRUE;
 
@@ -271,7 +270,17 @@ function sendConfirmationEmail() {
             <!-- ### END nav-bar ### -->
             <!-- ### START user-nav ### -->
             <div id="user-nav">
-                <?php require_once("../inc/user-nav.php"); ?>
+                <?php
+                    require_once("../inc/user-nav.php");
+                    if($gLoginStatus ==  STATUS_LOGGED_IN) {
+                        ?>
+                        <!-- Script to display the current page in the navigation -->
+                        <script type="text/javascript">
+                            document.getElementById("change-password").className  = "current";
+                        </script>
+                        <?php
+                    }
+                ?>
             </div>
             <!-- ### END user-nav ### -->
         </div>
@@ -320,7 +329,7 @@ function sendConfirmationEmail() {
                     <div class="input70">
                         <p><input type="text" name="username-or-email" value="<?php if(isset($_POST['username-or-email'])){ echo($_POST['username-or-email']); } ?>"/></p>
                         <?php
-                            if(!$gValidForm && isset($_POST['change-password'])) {
+                            if(isset($_POST['change-password'])) {
                                 displayOutputUsernameOrEmail();
                             }
                         ?>
@@ -334,7 +343,7 @@ function sendConfirmationEmail() {
                     <div class="input70">
                         <p><input type="password" name="old-password" value="<?php if(isset($_POST['old-password'])){ echo($_POST['old-password']); } ?>"/></p>
                         <?php
-                            if(!$gValidForm && isset($_POST['change-password'])) {
+                            if(isset($_POST['change-password'])) {
                                 displayOutputOldPassword();
                             }
                         ?>
@@ -349,7 +358,7 @@ function sendConfirmationEmail() {
                         <p><input type="password" name="new-password" value="<?php if(isset($_POST['new-password'])){ echo($_POST['new-password']); } ?>"/></p>
 
                         <?php
-                            if(!$gValidForm && isset($_POST['change-password'])) {
+                            if(isset($_POST['change-password'])) {
                                 displayOutputNewPassword();
                             }
                         ?>
@@ -363,7 +372,7 @@ function sendConfirmationEmail() {
                     <div class="input70">
                         <p><input type="password" name="new-password-confirm" value="<?php if(isset($_POST['new-password-confirm'])){ echo($_POST['new-password-confirm']); } ?>"/></p>
                         <?php
-                            if(!$gValidForm && isset($_POST['change-password'])) {
+                            if(isset($_POST['change-password'])) {
                                 displayOutputNewPasswordConfirm();
                             }
                         ?>

@@ -258,7 +258,7 @@ function sendFeatureRequest() {
                     <input type="text" name="name" style="width:100%;" value="<?php if(isset($_POST['name'])){ echo($_POST['name']); } ?>"/>
                 </p>
                 <?php
-                if (!$gValidForm && isset($_POST['feature-request'])) {
+                if (isset($_POST['feature-request'])) {
                     displayOutputName();
                 }
                 ?>
@@ -267,7 +267,7 @@ function sendFeatureRequest() {
                     <input type="text" name="email" style="width:100%;" value="<?php if(isset($_POST['email'])){ echo($_POST['email']); } ?>"/>
                 </p>
                 <?php
-                if (!$gValidForm && isset($_POST['feature-request'])) {
+                if (isset($_POST['feature-request'])) {
                     displayOutputEmail();
                 }
                 ?>
@@ -278,7 +278,7 @@ function sendFeatureRequest() {
 					</textarea>
                 </p>
                 <?php
-                    if (!$gValidForm && isset($_POST['feature-request'])) {
+                    if (isset($_POST['feature-request'])) {
                         displayOutputRequest();
                     }
 

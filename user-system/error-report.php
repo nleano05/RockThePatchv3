@@ -305,7 +305,7 @@ function sendErrorReport() {
                     <input type="text" name="name" style="width:100%;" value="<?php if(isset($_POST['name'])){ echo($_POST['name']); } ?>"/>
                 </p>
                 <?php
-                    if (!$gValidForm && isset($_POST['error-report'])) {
+                    if (isset($_POST['error-report'])) {
                         displayOutputName();
                     }
                 ?>
@@ -314,7 +314,7 @@ function sendErrorReport() {
                     <input type="text" name="email" style="width:100%;" value="<?php if(isset($_POST['email'])){ echo($_POST['email']); } ?>"/>
                 </p>
                 <?php
-                    if (!$gValidForm && isset($_POST['error-report'])) {
+                    if (isset($_POST['error-report'])) {
                         displayOutputEmail();
                     }
                 ?>
@@ -325,7 +325,7 @@ function sendErrorReport() {
 					</textarea>
                 </p>
                 <?php
-                    if (!$gValidForm && isset($_POST['error-report'])) {
+                    if (isset($_POST['error-report'])) {
                         displayOutputIssue();
                     }
 

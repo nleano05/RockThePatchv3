@@ -187,7 +187,7 @@ function displayOutputUsernameOrEmail() {
                     <p><input type="text" name="username-or-email" value="<?php if(isset($_POST['username-or-email'])){ echo($_POST['username-or-email']); } ?>"/></p>
 
                     <?php
-                        if(!$gValidForm && isset($_POST['forgot-password'])) {
+                        if(isset($_POST['forgot-password'])) {
                             displayOutputUsernameOrEmail();
                         }
                     ?>

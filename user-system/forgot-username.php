@@ -222,7 +222,7 @@ function displayOutputEmail() {
                     <p><input type="text" name="email" value="<?php if(isset($_POST['email'])){ echo($_POST['email']); } ?>"/></p>
 
                     <?php
-                        if(!$gValidForm && isset($_POST['forgot-username'])) {
+                        if(isset($_POST['forgot-username'])) {
                             displayOutputEmail();
                         }
                     ?>

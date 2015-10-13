@@ -230,7 +230,7 @@ function sendTempPassword() {
                     <p><strong>Answer: </strong> <input type="text" name="answer" value="<?php $answer = isset($_POST['answer']) ? $_POST['answer'] : ""; echo($answer); ?>"/></p>
                 </div>
                 <?php
-                    if(!$gValidForm && isset($_POST['forgot-password-security-question'])){
+                    if(isset($_POST['forgot-password-security-question'])){
                         displayOutputAnswer();
                     }
                 ?>

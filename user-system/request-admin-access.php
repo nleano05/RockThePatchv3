@@ -213,7 +213,7 @@ function displayOutputReason() {
                                     } ?></textarea>
                             </p>
                             <?php
-                            if (!$gValidForm && isset($_POST['request-admin-access'])) {
+                            if (isset($_POST['request-admin-access'])) {
                                 displayOutputReason();
                             }
                             ?>
@@ -236,15 +236,13 @@ function displayOutputReason() {
                         </div>
                         <div class="clear"></div>
 
-                        <?php
+                <?php
                     } else {
                         sendRequestForAdminAccess();
-                        ?>
+                ?>
                         <p>Your request has been sent.</p>
 
-                        <p style='word-break:break-all;'><strong>Reason:</strong> <?php if (isset($_POST['reason'])) {
-                                echo($_POST['reason']);
-                            } ?></p>
+                        <p style='word-break:break-all;'><strong>Reason:</strong> <?php if (isset($_POST['reason'])) { echo($_POST['reason']); } ?></p>
 
                         <div id="progress">
                             <div class="progress-section2">
