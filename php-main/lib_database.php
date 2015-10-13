@@ -53,14 +53,38 @@ class lib_database {
         }
         log_util::logFunctionStart($args);
 
-        $update = NULL;
-
         $pdo = lib_database::connect();
 
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("DELETE FROM recent_updates WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function deleteUser($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt->execute();
         } else {
@@ -1214,7 +1238,7 @@ class lib_database {
         log_util::logDivider();
     }
 
-    public static function updateUser($userId, $firstName, $lastName, $userName, $email, $password, $securityQuestion, $securityQuestionAnswer, $emailBlasts, $textBlasts, $cellPhone) {
+    public static function updateUser($id, $firstName, $lastName, $userName, $email, $password, $securityQuestion, $securityQuestionAnswer, $emailBlasts, $textBlasts, $cellPhone) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -1239,7 +1263,7 @@ class lib_database {
             $stmt->bindParam(8, $emailBlasts, PDO::PARAM_INT);
             $stmt->bindParam(9, $textBlasts, PDO::PARAM_INT);
             $stmt->bindParam(10, $cellPhone, PDO::PARAM_STR);
-            $stmt->bindParam(11, $userId, PDO::PARAM_STR);
+            $stmt->bindParam(11, $id, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
@@ -1250,7 +1274,7 @@ class lib_database {
         log_util::logDivider();
     }
 
-    public static function updateUserPassword($userId, $newPassword) {
+    public static function updateUserPassword($id, $newPassword) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -1261,14 +1285,14 @@ class lib_database {
 
         $pdo = lib_database::connect();
 
-        $encryptedPassword = lib::encrypt($newPassword, $userId . "_pass");
+        $encryptedPassword = lib::encrypt($newPassword, $id . "_pass");
 
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
             $stmt->bindParam(1, $encryptedPassword, PDO::PARAM_STR);
-            $stmt->bindParam(2, $userId, PDO::PARAM_STR);
+            $stmt->bindParam(2, $id, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
@@ -1350,7 +1374,7 @@ class lib_database {
         }
     }
 
-    public static function writeLoginLogAndStatistics($userId, $passed) {
+    public static function writeLoginLogAndStatistics($id, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -1365,7 +1389,7 @@ class lib_database {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             $stmt = $pdo->prepare("SELECT * FROM login_statistics WHERE userId = ?");
-            $stmt->bindParam(1, $userId, PDO::PARAM_STR);
+            $stmt->bindParam(1, $id, PDO::PARAM_STR);
             $stmt->execute();
             $row = $stmt->fetch();
 
@@ -1383,7 +1407,7 @@ class lib_database {
                 $stmt->bindParam(1, $attempts, PDO::PARAM_INT);
                 $stmt->bindParam(2, $failed, PDO::PARAM_INT);
                 $stmt->bindParam(3, $succeeded, PDO::PARAM_INT);
-                $stmt->bindParam(4, $userId, PDO::PARAM_STR);
+                $stmt->bindParam(4, $id, PDO::PARAM_STR);
                 $stmt->execute();
             } else {
                 $attempts = 1;
@@ -1396,7 +1420,7 @@ class lib_database {
                 }
 
                 $stmt = $pdo->prepare("INSERT INTO login_statistics (userId, attempts, failed, succeeded) VALUE (?, ?, ?, ?)");
-                $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+                $stmt->bindParam(1, $id, PDO::PARAM_INT);
                 $stmt->bindParam(2, $attempts, PDO::PARAM_INT);
                 $stmt->bindParam(3, $failed, PDO::PARAM_INT);
                 $stmt->bindParam(4, $succeeded, PDO::PARAM_INT);
@@ -1410,7 +1434,7 @@ class lib_database {
             $passed = (int) $passed;
 
             $stmt = $pdo->prepare("INSERT INTO login_log (userId, success, loginTime) VALUE (?, ?, ?)");
-            $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt->bindParam(2, $passed, PDO::PARAM_INT);
             $stmt->bindParam(3, $time, PDO::PARAM_STR);
             $stmt->execute();
