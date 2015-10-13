@@ -13,6 +13,11 @@ global $gUser;
 $gValidForm = FALSE;
 $gUser = lib_get::currentUser();
 
+if($gUser != NULL) {
+    $oldSecurityAnswer = base64_encode($gUser->getSecurityQuestionAnswer());
+    lib::cookieCreate("securityAnswer", $oldSecurityAnswer);
+}
+
 if(isset($_POST['account-info-edit'])) {
     $gValidForm = checkInput();
 }

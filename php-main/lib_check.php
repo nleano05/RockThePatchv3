@@ -8,6 +8,50 @@
  */
 class lib_check {
 
+    public static function accessToken($token) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $validToken = FALSE;
+
+        $accessToken = lib_database::getAccessToken($token, null);
+        if(isset($accessToken)) {
+            log_util::log(LOG_LEVEL_DEBUG, "Access token DOES exist");
+
+            $scope = explode(" ", $accessToken->getScope());
+
+            log_util::log(LOG_LEVEL_DEBUG, "Scope: ", $scope);
+
+            if(in_array("GET", $scope)) {
+                log_util::log(LOG_LEVEL_DEBUG, "GET was in scope");
+
+                $timeDifference = strtotime(gmdate('Y/m/d H:i:s')) - strtotime($accessToken->getTimeStamp());
+
+                log_util::log(LOG_LEVEL_DEBUG, "timeDifference: " . $timeDifference);
+
+                if($timeDifference >= (30 * 60)) {
+                    log_util::log(LOG_LEVEL_DEBUG, "Token IS expired");
+                } else {
+                    log_util::log(LOG_LEVEL_DEBUG, "Token IS NOT expired");
+                    $validToken = TRUE;
+                }
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "GET was NOT in scope");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Access token DOES CNOT exist");
+        }
+
+        log_util::logDivider();
+
+        return $validToken;
+    }
+
     /**
      *  This function uses preg_match to check if the given input matches a white list of characters
      *

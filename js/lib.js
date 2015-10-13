@@ -1,3 +1,38 @@
+window.onload = function() {
+    document.getElementsByName('file').size = '2';
+
+    autoformatPhoneNumberWatcher();
+
+    syncLoginForms();
+
+    toggleAccountInfoEditConfirmEmail();
+    toggleAccountInfoEditConfirmSecurityAnswer();
+    toggleAccountInfoEditNewPassword();
+};
+
+function createAccessToken(callback) {
+    sendHTTPRequest("GET", getBaseURL() + "api/v1/token.php", callback, "Clientsecret", "fakeClientSecret");
+}
+
+function getBaseURL() {
+    var baseUrl;
+    if(document.URL.indexOf("https://www.rockthepatch.com") != -1){
+        baseUrl = "https://www.rockthepatch.com/";
+    } else if(document.URL.indexOf("https://rockthepatch.com") != -1){
+        baseUrl = "https://rockthepatch.com/";
+    } else if(document.URL.indexOf("https://staging.rockthepatch.com") != -1){
+        baseUrl = "https://staging.rockthepatch.com/";
+    } else if(document.URL.indexOf("https://integration.rockthepatch.com") != -1){
+        baseUrl = "https://integration.rockthepatch.com/";
+    } else if(document.URL.indexOf("https://v3.rockthepatch.com") != -1){
+        baseUrl = "https://v3.rockthepatch.com/";
+    } else if(document.URL.indexOf("127.0.0.1") != -1) {
+        baseUrl = "http://127.0.0.1/";
+    }
+
+    return baseUrl;
+}
+
 /**
  *  This function hides an element/object on the screen
  *
@@ -130,6 +165,20 @@ function rotateImages(whichHolder, startIndex) {
     }
     rotatingImageHolder.src = rotatingImageArray[startIndex];
     window.setTimeout("rotateImages(" + whichHolder + "," + (startIndex + 1) + ")", 3000);
+}
+
+function sendHTTPRequest(method, url, callback, header, value) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open(method, url, true);
+    if(header !== undefined && value !== undefined) {
+        xmlHttp.setRequestHeader(header, value);
+    }
+    xmlHttp.onload = function (e) {
+        if(xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+            callback(xmlHttp.responseText);
+        }
+    };
+    xmlHttp.send(null);
 }
 
 /**

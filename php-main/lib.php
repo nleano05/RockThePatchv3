@@ -9,6 +9,7 @@ require_once("lib_database.php");
 require_once("lib_get.php");
 require_once("log_util.php");
 
+require_once("models/AccessToken.php");
 require_once("models/AccountLock.php");
 require_once("models/AnnoyanceLevel.php");
 require_once("models/EmailDistro.php");
@@ -496,6 +497,28 @@ class lib {
         return $tempPassword;
     }
 
+    public static function generateToken() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $token = '';
+        $length = 40;
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+        for ($i=0;$i<$length;$i++) {
+            $token .= $chars[mt_rand(0, (strlen($chars)-1))];
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "token: " . $token);
+        log_util::logDivider();
+
+        return $token;
+    }
     /**
      *  This function uses curl to time how long it takes a page to load
      *

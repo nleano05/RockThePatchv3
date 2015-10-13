@@ -72,6 +72,64 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function getAccessToken($token, $clientSecret) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if(isset($token)){
+                log_util::log(LOG_LEVEL_DEBUG, "Getting token by token");
+
+                $stmt = $pdo->prepare("SELECT * FROM oauth WHERE accessToken = ?");
+                $stmt->bindParam(1, $token, PDO::PARAM_STR);
+                $stmt->execute();
+                $row = $stmt->fetch();
+            } else if(isset($clientSecret)){
+                log_util::log(LOG_LEVEL_DEBUG, "Getting token by client secret");
+
+                $stmt = $pdo->prepare("SELECT * FROM oauth WHERE clientSecret = ?");
+                $stmt->bindParam(1, $clientSecret, PDO::PARAM_STR);
+                $stmt->execute();
+                $row = $stmt->fetch();
+            }
+
+            if(!empty($row)){
+                log_util::log(LOG_LEVEL_WARNING, "row WAS NOT empty");
+
+                $accessToken = new AccessToken();
+
+                $accessToken->setId((int)$row['id']);
+                $accessToken->setClientId($row['clientId']);
+                $accessToken->setClientSecret($row['clientSecret']);
+                $accessToken->setAccessToken($row['accessToken']);
+                $accessToken->setTimeStamp($row['timeStamp']);
+                $accessToken->setScope($row['scope']);
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "accessToken: ", $accessToken);
+        log_util::logDivider();
+
+        if(isset($accessToken)) {
+            return $accessToken;
+        }
+    }
+
     /**
      *  This function gets all of the annoyance levels
      *
@@ -901,6 +959,48 @@ class lib_database {
         $pdo = NULL;
 
         log_util::logDivider();
+    }
+
+    public static function updateAccessToken($clientSecret) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $token = lib::generateToken();
+
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set($timezone);
+        $timeStamp = gmdate("Y/m/d H:i:s");
+        log_util::log(LOG_LEVEL_DEBUG, "timeStamp: " . $timeStamp);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("UPDATE oauth SET accessToken=?, timeStamp=? WHERE clientSecret=?");
+            $stmt->bindParam(1, $token, PDO::PARAM_INT);
+            $stmt->bindParam(2, $timeStamp, PDO::PARAM_INT);
+            $stmt->bindParam(3, $clientSecret, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $accessToken = lib_database::getAccessToken($token, null);
+
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+
+        if(isset($accessToken)) {
+            return $accessToken;
+        }
     }
 
     /**
