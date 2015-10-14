@@ -39,18 +39,17 @@
             <li id="excerpts-and-lyrics"><a href="/excerpts-and-lyrics.php" title="Excerpts &amp; Lyrics">Excerpts &amp; Lyrics</a></li>
             <li id="art-gallery"><a href="/art-gallery.php" title="Art Gallery">Art Gallery</a></li>
         </ul>
+    </li><li id="bonus">
+        <a href="#" title="Bonus">Bonus</a>
+        <ul>
+            <li id="binary-tree-creator"><a href="/binary-tree-creator.php" title="Binary Tree Creator">Binary Tree Creator</a></li>
+            <li id="bzip2"><a href="/bzip2.php" title="BZIP2">BZIP2</a></li>
+            <li id="ducks"><a href="/ducks.php" title="Ducks">Ducks</a></li>
+            <li id="palindrome-checker"><a href="/palindrome-checker.php" title="Palindrome Checker">Palindrome Checker</a></li>
+            <li id="rock-paper-scissors"><a href="/rock-paper-scissors.php" title="Rock, Paper, Scissors">Rock, Paper, Scissors</a></li>
+            <li id="subnet-calculator"><a href="/subnet-calculator.php" title="Subnet Calculator">Subnet Calculator</a></li>
+        </ul>
     </li><li id="martial-arts">
         <a href="/martial-arts.php" title="Martial Arts">Martial Arts</a>
     </li>
-            <!--<li id="bonus">
-                <a href="#" title="Bonus">Bonus</a>
-                <ul>
-                    <li id="binary-tree-creator"><a href="/binary-tree-creator.php" title="Binary Tree Creator">Binary Tree Creator</a></li>
-                    <li id="bzip2"><a href="/bzip2.php" title="BZIP2">BZIP2</a></li>
-                    <li id="ducks"><a href="/ducks.php" title="Ducks">Ducks</a></li>
-                    <li id="palindrome-checker"><a href="/palindrome-checker.php" title="Palindrome Checker">Palindrome Checker</a></li>
-                    <li id="rock-paper-scissors"><a href="/rock-paper-scissors.php" title="Rock, Paper, Scissors">Rock, Paper, Scissors</a></li>
-                    <li id="subnet-calculator"><a href="/subnet-calculator.php" title="Subnet Calculator">Subnet Calculator</a></li>
-                </ul>
-            </li>-->
 </ul>

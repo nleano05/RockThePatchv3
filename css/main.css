@@ -797,3 +797,39 @@ form {
     padding: 10px;
     color: #ffffff;
 }
+
+/**
+* Styles for Rock, Paper, Scissors, Chuck Norris
+*/
+#rock-paper-scissors-choices input {
+    width: 150px;
+    height: auto;
+}
+
+#rock-paper-scissors-result .win {
+    width: auto;
+    height: 150px;
+    border: 4px solid green;
+    border-radius: 10px;
+}
+
+#rock-paper-scissors-result .loss {
+    width: auto;
+    height: 150px;
+    border: 4px solid red;
+    border-radius: 10px;
+}
+
+#rock-paper-scissors-result .draw {
+    width: auto;
+    height: 150px;
+    border: 4px solid gray;
+    border-radius: 10px;
+}
+
+#rock-paper-scissors-result .chuck {
+    width: auto;
+    height: 250px;
+    border: 4px solid gold;
+    border-radius: 10px;
+}

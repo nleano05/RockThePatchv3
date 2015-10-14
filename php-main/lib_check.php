@@ -276,6 +276,52 @@ class lib_check {
         return $empty;
     }
 
+    public static function palindrome($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $inputStripped = str_replace(" ", "", $input);
+
+        $intPointer1 = 0;
+        $intPointer2 = strlen($inputStripped) - 1;
+
+        log_util::log(LOG_LEVEL_DEBUG, "inputStripped: " . $inputStripped);
+        log_util::log(LOG_LEVEL_DEBUG, "intPointer1: " . $intPointer1);
+        log_util::log(LOG_LEVEL_DEBUG, "intPointer2: " . $intPointer2);
+
+        $isPalindrome = TRUE;
+        do {
+            $temp1 = substr($inputStripped, $intPointer1, 1);
+            $temp2 = substr($inputStripped, $intPointer2, 1);
+
+            log_util::log(LOG_LEVEL_DEBUG, "temp1: " . $temp1);
+            log_util::log(LOG_LEVEL_DEBUG, "temp2: " . $temp2);
+
+            if($temp1 == $temp2) {
+                $intPointer1++;
+                $intPointer2--;
+
+                log_util::log(LOG_LEVEL_DEBUG, "temp1: '" . $temp1 . "' DOES equal temp2: '" . $temp2 . "', incrementing intPointer1 and decrementing intPointer2");
+                log_util::log(LOG_LEVEL_DEBUG, "intPointer1: " . $intPointer1);
+                log_util::log(LOG_LEVEL_DEBUG, "intPointer2: " . $intPointer2);
+
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "temp1: '" . $temp1 . "' DOES NOT equal temp2: '" . $temp2 . "', this is not a Palindrome");
+                $isPalindrome = FALSE;
+            }
+        }while(($intPointer1 <= $intPointer2) && ($intPointer2 >= $intPointer1) && $isPalindrome);
+
+        log_util::log(LOG_LEVEL_DEBUG, "isPalindrome: " . $isPalindrome);
+        log_util::logDivider();
+
+        return $isPalindrome;
+    }
+
     /**
      *  This function checks if two inputs are the same
      *
