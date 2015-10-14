@@ -1,6 +1,7 @@
 # RockThePatchV3
 
-> *Developed by Patches 06/27/2015 - present*
+> *Developed by Patches 06/27/2015 - present* <br/><br/>
+> For more details, please refer to the wiki: https://github.com/isuPatches/RockThePatchv3/wiki
 
 ##Reason 
 
@@ -12,7 +13,7 @@ reboot.  This time I intend to write automated tests as I'm building as well.
 
 ##Technical
 
-###Planned languages:
+###Languages:
 
 - XHTML 1.1
 - HTML 5
@@ -25,7 +26,7 @@ reboot.  This time I intend to write automated tests as I'm building as well.
 - XML 1.0
 - PowerShell 1.0
 
-###Planned tools:
+###Tools:
 
 - EasyPHP
 - Jenkins
@@ -33,7 +34,7 @@ reboot.  This time I intend to write automated tests as I'm building as well.
 - Intellij
 - Notepad++ with a crap ton of plugins
 
-###Planned Supported Browsers:
+###Supported Browsers:
 
  - IE>7
  - Chrome
@@ -41,13 +42,13 @@ reboot.  This time I intend to write automated tests as I'm building as well.
  - Firefox
  - Opera
 
-###Planned Supported OS's:
+###Supported OS's:
 
 - Windows
 - Mac
 - Linux/Unix
 
-###Planned Supported Mobile Devices:
+###Supported Mobile Devices:
 
 - Android
 - iOS
