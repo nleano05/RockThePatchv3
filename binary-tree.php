@@ -5,57 +5,6 @@ include("php-main/lib.php");
 include("php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
-
-global $gValidForm;
-$gValidForm = FALSE;
-
-if(isset($_POST['create-tree'])) {
-    $validForm = checkInputBinaryTreeCreator();
-    if($validForm) {
-        lib::cookieCreate("binary-tree-num-entries", $_POST['number-of-entries']);
-        lib::redirect(FALSE, NULL, FALSE, "/binary-tree.php");
-    }
-}
-
-function checkInputBinaryTreeCreator() {
-    global $gNoNumberOfEntries, $gBlackNoNumberOfEntries, $gNotNumericNumberOfEntries;
-
-    $validForm = TRUE;
-
-    $numberOfEntries = isset($_POST['number-of-entries']) ? $_POST['number-of-entries'] : "";
-
-    $gNoNumberOfEntries = lib_check::isEmpty($numberOfEntries);
-    if($gNoNumberOfEntries) {
-        $validForm = FALSE;
-    }
-
-    $gBlackNoNumberOfEntries = lib_check::againstWhiteList($numberOfEntries);
-    if($gBlackNoNumberOfEntries) {
-        $validForm = FALSE;
-    }
-
-    if(is_numeric($numberOfEntries)) {
-        $gNotNumericNumberOfEntries = FALSE;
-    } else {
-        $gNotNumericNumberOfEntries = TRUE;
-        $validForm = FALSE;
-    }
-
-    return $validForm;
-}
-
-
-function displayOutputNumberOfEntries() {
-    global $gNoNumberOfEntries, $gBlackNoNumberOfEntries, $gNotNumericNumberOfEntries;
-
-    if($gNoNumberOfEntries) {
-        echo("<p class='error'>Please enter in number of entries.</p>");
-    } else if($gBlackNoNumberOfEntries) {
-        echo("<p class='error'>The number of entries entered contains characters that are not allowed.</p>");
-    } else if(!$gNotNumericNumberOfEntries) {
-        echo("<p class='error'>The number of entries entered was not numeric</p>");
-    }
-}
 ?>
 <!DOCTYPE html>
 <!-- ### Sets the class and language for IE 7,8, and 9 ### -->
@@ -171,23 +120,135 @@ function displayOutputNumberOfEntries() {
         <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Binary Tree</div>
         <h1>Binary Tree</h1>
 
-        <form method="post" action="binary-tree-creator.php">
-            <h2>Step 1: Total Number of Entries</h2>
+        <?php
+            if(!isset($_POST['create-tree'])) {
+        ?>
 
-            <p><strong>Please enter in the total number of entries in the list:</strong></p>
-
-            <p>
-                <input type="text" name="number-of-entries" value="<?php if(isset($_POST['number-of-entries'])) { echo($_POST['number-of-entries']); }?>"/>
-            </p>
+        <form method="post" action="binary-tree.php">
+            <h2>Step 2: Entering in the Entries</h2>
             <?php
-                if(!$gValidForm && isset($_POST['create-tree'])) {
-                    displayOutputNumberOfEntries();
+                $total = isset($_COOKIE['binary-tree-num-entries']) ? $_COOKIE['binary-tree-num-entries'] : 0;
+                for($i=0;$i<$total;$i++) {
+                    echo("<p><strong>Number ".$i.": </strong> <input type='text' name='number".$i."'/></p>");
                 }
             ?>
-            <p>
-                <input type="submit" name="create-tree" value="Proceed to Step 2: Entering in the Entries" class="button" />
-            </p>
+            <p><input type="submit" name="create-tree" value="Final Step: Create Binary Tree" class="button" /></p>
         </form>
+
+        <?php
+            } else {
+                $numbers = $binaryTree = $inOrder = $preOrder = $postOrder = array ();
+                $numbersIndex = $inOrderIndex = $postOrderIndex = $preOrderIndex = 0;
+                $temp;
+                $allNumbers = TRUE;
+                $total = isset($_COOKIE['binary-tree-num-entries']) ? $_COOKIE['binary-tree-num-entries'] : 0;
+
+                $allNumbers = TRUE;
+                for($i=0;$i<$total;$i++) {
+                    if(is_numeric($_POST['number'.$i])) {
+                        //All the entries are numeric
+                    } else {
+                        $allNumbers = FALSE;
+                    }
+                }
+
+                if(!$allNumbers) {
+                    echo '<form method="post" action="binary-tree.php"><h1>Step 2: Entering in the Entries</h1>';
+                    for($i=0;$i<$total;$i++) {
+                        if($_POST['number'.$i] != '') {
+                            if(is_numeric($_POST['number'.$i])) {
+                                $value = $_POST['number'.$i.''];
+                                echo("<p><strong>Number ".$i.": </strong> <input type='text' name='number".$i."' value='$value' /></p>");
+                            } else {
+                                $value = $_POST['number'.$i.''];
+                                echo("<p><strong>Number ".$i.": </strong> <input type='text' name='number".$i."' value='$value' /></p>");
+                                echo '<p style="color:red">This is not numeric</p>';
+                            }
+                        } else {
+                            echo("<p><strong>Number ".$i.": </strong> <input type='text' name='number".$i."' /></p>");
+                            echo '<p style="color:red">This field was left blank</p>';
+                        }
+                    }
+                    echo '<p><input type="submit" name="create-tree" value="Final Step: Create Binary Tree" class="button" /></p></form>';
+                } else {
+                    echo '<h2>Final Step: Create the Binary Tree</h2>';
+                    for($i=0;$i<$total;$i++) {
+                        $numbers[$numbersIndex++] = $_POST['number'.$i];
+                    }
+                    $i=0;
+                    while(count($numbers)>1) {
+                        for($i=0;$i<count($numbers);$i++) {
+                            for($j=0;$j<count($numbers);$j++) {
+                                if($numbers[$i] < $numbers[$j]) {
+                                    $temp = $numbers[$j];
+                                    $numbers[$j] = $numbers[$i];
+                                    $numbers[$i] = $temp;
+                                }
+                            }
+                        }
+                        $leftChild[0]= $numbers[0];
+                        $rightChild[0] = $numbers[1];
+                        $parent["P".$i] = $rightChild[0] + $leftChild[0];
+                        $node['Parent'] = $rightChild[0] + $leftChild[0];
+                        $node['Left Child'] = $leftChild[0];
+                        $node['Right Child'] = $rightChild[0];
+                        $binaryTree[count($binaryTree)] = $node;
+                        array_shift($numbers);
+                        array_shift($numbers);
+                        $numbers[count($numbers)] = $rightChild[0] + $leftChild[0];
+                        $i++;
+                    }
+                    for($i=0;$i<count($binaryTree);$i++) {
+                        print_r("<p><strong> Node at Parent " .$i." is: </strong>");
+                        print_r($binaryTree[$i]);
+                        print_r("</p>");
+                    }
+
+                    for($i=(count($binaryTree)-1);$i>=0;$i--) {
+                        $inOrder[$inOrderIndex++] = $binaryTree[$i]['Left Child'];
+                        $inOrder[$inOrderIndex++] = $binaryTree[$i]['Parent'];
+                        $inOrder[$inOrderIndex++] = $binaryTree[$i]['Right Child'];
+                    }
+
+                    print_r("<br/><p><strong>In-Order Traversal of this tree is:</strong>");
+                    for($i=0;$i<count($inOrder);$i++) {
+                        print_r(" ");
+                        print_r($inOrder[$i]);
+                        print_r(" : ");
+                    }
+                    print_r("</p>");
+
+
+                    for($i=(count($binaryTree)-1);$i>=0;$i--) {
+                        $preOrder[$preOrderIndex++] = $binaryTree[$i]['Parent'];
+                        $preOrder[$preOrderIndex++] = $binaryTree[$i]['Left Child'];
+                        $preOrder[$preOrderIndex++] = $binaryTree[$i]['Right Child'];
+                    }
+
+                    print_r("<br/><p><strong>Pre-Order Traversal of this tree is:</strong>");
+                    for($i=0;$i<count($preOrder);$i++) {
+                        print_r(" ");
+                        print_r($preOrder[$i]);
+                        print_r(" : ");
+                    }
+                    print_r("</p>");
+
+                    for($i=(count($binaryTree)-1);$i>=0;$i--) {
+                        $postOrder[$postOrderIndex++] = $binaryTree[$i]['Left Child'];
+                        $postOrder[$postOrderIndex++] = $binaryTree[$i]['Right Child'];
+                        $postOrder[$postOrderIndex++] = $binaryTree[$i]['Parent'];
+                    }
+
+                    print_r("<br/><p><strong>Post-Order Traversal of this tree is:</strong>");
+                    for($i=0;$i<count($postOrder);$i++) {
+                        print_r(" ");
+                        print_r($postOrder[$i]);
+                        print_r(" : ");
+                    }
+                    print_r("</p>");
+                }
+            }
+        ?>
     </div>
     <!-- ### END content-area ### -->
     <!-- ### START content-area-right ### -->
