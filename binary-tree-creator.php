@@ -52,7 +52,7 @@ function displayOutputNumberOfEntries() {
         echo("<p class='error'>Please enter in number of entries.</p>");
     } else if($gBlackNoNumberOfEntries) {
         echo("<p class='error'>The number of entries entered contains characters that are not allowed.</p>");
-    } else if(!$gNotNumericNumberOfEntries) {
+    } else if($gNotNumericNumberOfEntries) {
         echo("<p class='error'>The number of entries entered was not numeric</p>");
     }
 }

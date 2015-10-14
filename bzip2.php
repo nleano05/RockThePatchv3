@@ -342,7 +342,7 @@ function displayOutputCharsToZip() {
         echo("<p class='error'>Please enter in chars to zip.</p>");
     } else if($gBlackCharsToZip) {
         echo("<p class='error'>The chars entered contain characters that are not allowed.</p>");
-    } else if(!$gNotLowerCharsToZip) {
+    } else if($gNotLowerCharsToZip) {
         echo("<p class='error'>The char entered were not all lower case</p>");
     }
 }
