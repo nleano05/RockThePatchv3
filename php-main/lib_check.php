@@ -44,7 +44,7 @@ class lib_check {
                 log_util::log(LOG_LEVEL_DEBUG, "GET was NOT in scope");
             }
         } else {
-            log_util::log(LOG_LEVEL_DEBUG, "Access token DOES CNOT exist");
+            log_util::log(LOG_LEVEL_DEBUG, "Access token DOES NOT exist");
         }
 
         log_util::logDivider();
@@ -729,6 +729,30 @@ class lib_check {
         return $validEmail;
     }
 
+    public static function validIP($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $validIP = FALSE;
+
+        if(filter_var($input, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $validIP = TRUE;
+            log_util::log(LOG_LEVEL_DEBUG, "input IS a valid IP");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input IS NOT a valid IP");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "validIP: " . $validIP);
+        log_util::logDivider();
+
+        return $validIP;
+    }
+
     public static function validPassword($input) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -818,6 +842,61 @@ class lib_check {
         log_util::logDivider();
 
         return $validPhone;
+    }
+
+    public static function validSubnet($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $validSubnet = FALSE;
+
+        if(filter_var($input, FILTER_VALIDATE_IP)) {
+            log_util::log(LOG_LEVEL_DEBUG, "input IS a valid ip");
+
+            $subnetSplit = explode(".", $input);
+
+            log_util::log(LOG_LEVEL_DEBUG, "subnetSplit: ", $subnetSplit);
+
+            $binSubnet = "";
+            foreach($subnetSplit as $value) {
+                $binTemp = decbin($value);
+                $binSubnet .= substr("00000000", 0, 8 - strlen($binTemp)) . $binTemp . ".";
+            }
+            $binSubnet = trim($binSubnet, ".");
+
+            $temp = str_replace(".", "", $binSubnet);
+
+            log_util::log(LOG_LEVEL_DEBUG, "binSubnet: " . $binSubnet);
+            log_util::log(LOG_LEVEL_DEBUG, "temp: " . $temp);
+
+            if(preg_match("/^(1+)(0*)$/", $temp)) {
+                log_util::log(LOG_LEVEL_DEBUG, "Binary Subnet WAS consecutive 1's and zeros");
+                $validSubnet = TRUE;
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "Binary Subnet WAS NOT consecutive 1's and zeros");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "input IS NOT a valid IP");
+
+            // If it's not a valid IP then we need to check to see if it's cidr notation
+            //	*NOTE* the / is optional because I'm nice like that
+            if(preg_match("/^([0-9]|[1-2][0-9]|[3][0-2])$/", str_replace("/", "", $input))) {
+                $validSubnet = TRUE;
+                log_util::log(LOG_LEVEL_DEBUG, "input IS valid cidr notation");
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "input IS NOT valid cidr notation");
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "validSubnet: " . $validSubnet);
+        log_util::logDivider();
+
+        return $validSubnet;
     }
 
     /**

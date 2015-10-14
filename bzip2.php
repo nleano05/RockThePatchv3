@@ -6,11 +6,10 @@ include("php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['zip-chars'])) {
-    $gValidForm = checkInputBZIP2();
+    $validForm = checkInputBZIP2();
 }
 
 function BZIP2Compression($input) {
@@ -466,7 +465,7 @@ function displayOutputCharsToZip() {
 
             <p><input type="text" name="chars-to-zip" value="<?php if(isset($_POST['chars-to-zip'])) { echo($_POST['chars-to-zip']); }?>"/></p>
             <?php
-                if(!$gValidForm && isset($_POST['zip-chars'])) {
+                if(!$validForm && isset($_POST['zip-chars'])) {
                     displayOutputCharsToZip();
                 }
             ?>
@@ -475,7 +474,7 @@ function displayOutputCharsToZip() {
         </form>
 
         <?php
-            if($gValidForm && isset($_POST['zip-chars'])) {
+            if($validForm && isset($_POST['zip-chars'])) {
                 BZIP2Compression($_POST['chars-to-zip']);
             }
         ?>

@@ -6,11 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['request-admin-access'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function sendRequestForAdminAccess() {
@@ -200,7 +199,7 @@ function displayOutputReason() {
             if($gLoginStatus == STATUS_LOGGED_IN) {
                 $isAdmin = lib_check::userIsAdmin();
                 if (!$isAdmin) {
-                    if (!$gValidForm) {
+                    if (!$validForm) {
                         ?>
                         <!-- ### START Request Admin Access Form ### -->
                         <form action="request-admin-access.php" method="post">

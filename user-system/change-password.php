@@ -6,12 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gLoginStatus;
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['change-password'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -318,7 +316,7 @@ function sendConfirmationEmail() {
             <p>Please enter in your existing user name and password and then enter in a password you'd like to replace it with.</p>
 
             <?php
-                if(!$gValidForm) {
+                if(!$validForm) {
             ?>
                 <!-- ### START Change Password Form ### -->
                 <form action="change-password.php" method="post">

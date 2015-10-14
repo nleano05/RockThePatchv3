@@ -6,11 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['forgot-username'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function sendUserName() {
@@ -210,7 +209,7 @@ function displayOutputEmail() {
         </p>
 
         <?php
-            if(!$gValidForm) {
+            if(!$validForm) {
         ?>
             <!-- ### START Forgot Username Validate Form ### -->
             <form action="forgot-username.php" method="post">

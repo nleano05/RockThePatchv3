@@ -6,11 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['forgot-password-security-question'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -210,7 +209,7 @@ function sendTempPassword() {
         </p>
 
         <?php
-            if(!$gValidForm) {
+            if(!$validForm) {
         ?>
             <!-- ### START Forgot Password Validate Security Form ### -->
             <form action="forgot-password-security-question.php" method="post" name="Security Question">

@@ -23,7 +23,7 @@ class SecurityQuestion {
         if (is_string($question) || $question == NULL) {
             $this->question = $question;
         } else {
-            trigger_error('Expected an string or null for $question.', E_USER_WARNING);
+            trigger_error('Expected a string or null for $question.', E_USER_WARNING);
         }
     }
 

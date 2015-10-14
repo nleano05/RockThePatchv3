@@ -6,12 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gLoginStatus;
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['deactivate-account-confirm'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -212,15 +210,15 @@ function sendDeactivationEmail() {
             <!-- ### START user-nav ### -->
             <div id="user-nav">
                 <?php
-                require_once("../inc/user-nav.php");
-                if($gLoginStatus ==  STATUS_LOGGED_IN) {
-                    ?>
+                    require_once("../inc/user-nav.php");
+                    if($gLoginStatus ==  STATUS_LOGGED_IN) {
+                ?>
                     <!-- Script to display the current page in the navigation -->
                     <script type="text/javascript">
                         document.getElementById("deactivate-account").className  = "current";
                     </script>
-                    <?php
-                }
+                <?php
+                    }
                 ?>
             </div>
             <!-- ### END user-nav ### -->
@@ -255,7 +253,7 @@ function sendDeactivationEmail() {
 
         <?php
             if($gLoginStatus == STATUS_LOGGED_IN) {
-                if(!$gValidForm) {
+                if(!$validForm) {
         ?>
                     <p>Are you really sure you want to deactivate your 'Rock the Patch!' account.  You'll no longer have access to the special news, videos, downloads,
                         and other cool features that are exclusive to members?</p>

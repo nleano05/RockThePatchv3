@@ -6,11 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if (isset($_POST['feature-request'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -251,7 +250,7 @@ function sendFeatureRequest() {
         <h1>Feature Request</h1>
 
         <?php
-        if (!$gValidForm) {
+        if (!$validForm) {
             ?>
             <form method="post" name="feature-request-form" action="/user-system/feature-request.php">
                 <p><strong>Name:</strong>

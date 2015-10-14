@@ -6,11 +6,9 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gLoginStatus;
-global $gValidForm;
 global $gUser;
 
-$gValidForm = FALSE;
+$validForm = FALSE;
 $gUser = lib_get::currentUser();
 
 if($gUser != NULL) {
@@ -428,7 +426,7 @@ function displayOutputEmailBlasts() {
     global $gUser;
 
     if(isset($_POST['account-info-edit'])) {
-        if (!empty($_POST['text'])) {
+        if (!empty($_POST['email-blasts'])) {
             echo("<p><input type='checkbox' name ='email-blasts' checked='checked' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
         } else {
             echo("<p><input type='checkbox' name ='email-blasts' />Be part of the electronic mailing list<em> (You'll receive emails whenever the site is updated or there is a special event.</em>)</p>");
@@ -446,7 +444,7 @@ function displayOutputTextBlasts() {
     global $gUser;
 
     if(isset($_POST['account-info-edit'])) {
-        if (!empty($_POST['text'])) {
+        if (!empty($_POST['text-blasts'])) {
             echo("<p><input type='checkbox' name ='text-blasts' checked='checked' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
         } else {
             echo("<p><input type='checkbox' name ='text-blasts' />Sign up for text blasts<em> (You'll receive text messages whenever the site is updated or there is a special event.  The text rates of your carrier will apply.</em>)</p>");
@@ -651,7 +649,7 @@ function updateUserInDb() {
                     $securityQuestion = lib_database::getSecurityQuestionById($gUser->getSecurityQuestion());
                 }
 
-                if (!$gValidForm) {
+                if (!$validForm) {
         ?>
                     <p>Below is where you can see your account information and make edits.</p>
 

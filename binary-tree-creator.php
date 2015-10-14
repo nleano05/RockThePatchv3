@@ -6,8 +6,7 @@ include("php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['create-tree'])) {
     $validForm = checkInputBinaryTreeCreator();
@@ -180,7 +179,7 @@ function displayOutputNumberOfEntries() {
                 <input type="text" name="number-of-entries" value="<?php if(isset($_POST['number-of-entries'])) { echo($_POST['number-of-entries']); }?>"/>
             </p>
             <?php
-                if(!$gValidForm && isset($_POST['create-tree'])) {
+                if(!$validForm && isset($_POST['create-tree'])) {
                     displayOutputNumberOfEntries();
                 }
             ?>

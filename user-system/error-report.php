@@ -6,11 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if (isset($_POST['error-report'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -298,7 +297,7 @@ function sendErrorReport() {
         <h1>Error Report</h1>
 
         <?php
-            if (!$gValidForm) {
+            if (!$validForm) {
         ?>
             <form method="post" name="error-report-form" action="/user-system/error-report.php" enctype="multipart/form-data">
                 <p><strong>Name:</strong>

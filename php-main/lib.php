@@ -16,6 +16,7 @@ require_once("models/EmailDistro.php");
 require_once("models/EncryptionData.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");
+require_once("models/NetworkInfo.php");
 require_once("models/SecurityQuestion.php");
 require_once("models/Update.php");
 require_once("models/User.php");
@@ -992,6 +993,257 @@ class lib {
         log_util::logDivider();
 
         return $success;
+    }
+
+    public static function subySubnet($ip, $subnet) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $networkInfo = new NetworkInfo();
+
+        $ipSplit = explode(".", $ip);
+        $subnetSplit = explode(".", $subnet);
+
+        log_util::log(LOG_LEVEL_DEBUG, "ipSplit: ", $ipSplit);
+        log_util::log(LOG_LEVEL_DEBUG, "subnetSplit: ", $subnetSplit);
+
+        $binIP = "";
+        foreach($ipSplit as $value) {
+            $binTemp = decbin($value);
+            $binIP .= substr("00000000", 0, 8 - strlen($binTemp)) . $binTemp . ".";
+        }
+        $binIP = trim($binIP, ".");
+
+        $cidr = 0;
+        $binSubnet = "";
+        if(preg_match("/^([0-9]|[1-2][0-9]|[3][0-2])$/", str_replace("/", "", $subnet))) {
+            log_util::log(LOG_LEVEL_DEBUG, "subnet IS cider notation");
+
+            $cidr = str_replace("/", "", $subnet);
+
+            for($x = 0; $x < str_replace("/", "", $subnet); $x++) {
+                $binSubnet .= "1";
+            }
+            if(strlen($binSubnet) < 32) {
+                do {
+                    $binSubnet .= "0";
+                }while(strlen($binSubnet) < 32);
+            }
+            $binSubnet = chunk_split($binSubnet, 8,  ".");
+            $binSubnet = trim($binSubnet, ".");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "subnet IS NOT cidr notation");
+
+            $longSubnetMask = ip2long($subnet);
+            $base = ip2long('255.255.255.255');
+            $cidr = floor(32-log(($longSubnetMask ^ $base)+1,2));
+
+            foreach($subnetSplit as $value) {
+                $binTemp = decbin($value);
+                $binSubnet .= substr("00000000", 0, 8 - strlen($binTemp)) . $binTemp . ".";
+            }
+            $binSubnet = trim($binSubnet, ".");
+
+            $temp = str_replace(".", "", $binSubnet);
+            $temp = bin2hex($temp);
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "cidr: " . $cidr);
+        log_util::log(LOG_LEVEL_DEBUG, "binIP: " . $binIP);
+        log_util::log(LOG_LEVEL_DEBUG, "binSubnet: " . $binSubnet);
+
+        $networkInfo->setCidr($cidr);
+
+        if($ipSplit[0] >= 1 && $ipSplit[0] <= 127) {
+            $class = "A";
+        } else if($ipSplit[0] >= 128 && $ipSplit[0] <= 191) {
+            $class = "B";
+        } else if($ipSplit[0] >= 192 && $ipSplit[0] <= 223) {
+            $class = "C";
+        } else if($ipSplit[0] >= 224 && $ipSplit[0] <= 239) {
+            $class = "D";
+        } else if($ipSplit[0] >= 240 && $ipSplit[0] <= 255) {
+            $class = "E";
+        } else {
+            $class = "Unknown Network Class";
+        }
+
+        $networkPortion = $cidr;
+        $hostPortion = 32 - $networkPortion;
+
+        $start = $networkPortion;
+
+        $numZerosHostPortion = 0;
+        $numOnesHostPortion = 0;
+        for($x = $start; $x < strlen($binSubnet); $x++) {
+            if(substr($binSubnet, $x, 1) == "1") {
+                $numOnesHostPortion++;
+            } else if(substr($binSubnet, $x, 1) == "0") {
+                $numZerosHostPortion++;
+            }
+        }
+
+        $numberOfSubnets = pow(2, $numOnesHostPortion);
+        $numberOfUsableSubnets = pow(2, $numOnesHostPortion) - 2;
+        $numberOfHosts = pow(2, $numZerosHostPortion);
+        if($cidr != 32) {
+            $numberOfUsableHosts = pow(2, $numZerosHostPortion) - 2;
+        } else {
+            $numberOfUsableHosts = 1;
+        }
+
+
+        log_util::log(LOG_LEVEL_DEBUG, "Network class: " . $class);
+        log_util::log(LOG_LEVEL_DEBUG, "Network portion: " . $networkPortion);
+        log_util::log(LOG_LEVEL_DEBUG, "Host portion: " . $hostPortion);
+        log_util::log(LOG_LEVEL_DEBUG, "Number of subnets: " . $numberOfSubnets);
+        log_util::log(LOG_LEVEL_DEBUG, "Number of usable subnets: " . $numberOfUsableSubnets);
+        log_util::log(LOG_LEVEL_DEBUG, "Number of hosts: " . $numberOfUsableHosts);
+        log_util::log(LOG_LEVEL_DEBUG, "Number of usable hosts: " . $numberOfUsableHosts);
+
+        $networkInfo->setNetworkClass($class);
+        $networkInfo->setNetworkPortion($networkPortion);
+        $networkInfo->setHostPortion($hostPortion);
+        $networkInfo->setNumberOfSubnets($numberOfSubnets);
+        $networkInfo->setNumberOfUsableSubnets($numberOfUsableSubnets);
+        $networkInfo->setNumberOfHosts($numberOfHosts);
+        $networkInfo->setNumberOfUsableHosts($numberOfUsableHosts);
+
+        $networkPortionInBinary = "";
+        for($x = 0; $x < strlen($binIP); $x++) {
+            if($x < $start) {
+                $networkPortionInBinary .= substr($binIP, $x, 1);
+            } else {
+                if(substr($binIP, $x, 1) == "1") {
+                    $networkPortionInBinary .= "0";
+                } else {
+                    $networkPortionInBinary .= substr($binIP, $x, 1);
+                }
+            }
+        }
+
+        $binSubnetFlip = "";
+        $arrBinSubnet = str_split($binSubnet);
+        foreach($arrBinSubnet as $value) {
+            switch($value) {
+                case "0":
+                    $binSubnetFlip .= "1";
+                    break;
+                case "1":
+                    $binSubnetFlip .= "0";
+                    break;
+                default:
+                    $binSubnetFlip .= $value;
+                    break;
+            }
+        }
+
+        $binSubnetFlipSplit = explode(".",  $binSubnetFlip);
+        $wildcard ="";
+        foreach($binSubnetFlipSplit as $value) {
+            $decTemp = bindec($value);
+            $wildcard .= $decTemp . ".";
+        }
+        $wildcard = trim($wildcard, ".");
+
+        $networkInfo->setWildcard($wildcard);
+
+        log_util::log(LOG_LEVEL_DEBUG, "networkPortionInBinary: " . $networkPortionInBinary);
+        log_util::log(LOG_LEVEL_DEBUG, "binSubnetFlip: " . $binSubnetFlip);
+        log_util::log(LOG_LEVEL_DEBUG, "wildcard: " . $wildcard);
+
+        $binaryOR = "";
+        for($x = 0; $x < strlen($networkPortionInBinary); $x++) {
+            if(substr($networkPortionInBinary, $x, 1) == "1" || substr($binSubnetFlip, $x, 1) == "1") {
+                $binaryOR .= "1";
+            } else if(substr($networkPortionInBinary, $x, 1) == "." & substr($binSubnetFlip, $x, 1) == ".") {
+                $binaryOR .= ".";
+            } else {
+                $binaryOR .= "0";
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "binaryOR: " . $binaryOR);
+
+        $broadcastID ="";
+        $binaryORSplit = explode(".",  $binaryOR);
+        foreach($binaryORSplit as $value) {
+            $decTemp = bindec($value);
+            $broadcastID .= $decTemp . ".";
+        }
+        $broadcastID = trim($broadcastID, ".");
+        $networkInfo->setBroadcastID($broadcastID);
+
+        $binaryAND = "";
+        for($x = 0; $x < strlen($binIP); $x++) {
+            if(substr($binIP, $x, 1) == "1" && substr($binSubnet, $x, 1) == "1") {
+                $binaryAND .= "1";
+            } else if(substr($binIP, $x, 1) == "." & substr($binSubnet, $x, 1) == ".") {
+                $binaryAND .= ".";
+            } else {
+                $binaryAND .= "0";
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "binaryAND: " . $binaryAND);
+
+        $binaryANDSplit = explode(".",  $binaryAND);
+        $networkID ="";
+        foreach($binaryANDSplit as $value) {
+            $decTemp = bindec($value);
+            $networkID .= $decTemp . ".";
+        }
+        $networkID = trim($networkID, ".");
+
+        $networkInfo->setNetworkID($networkID);
+
+        $firstHostIP = "";
+        if($cidr != 32) {
+            $networkIDSplit = explode(".", $networkID);
+            for($x = 0; $x < count($networkIDSplit); $x++) {
+                if($x < 3) {
+                    $firstHostIP .= $networkIDSplit[$x] . ".";
+                } else {
+                    $firstHostIP .= ((float)$networkIDSplit[$x] + 1);
+                }
+            }
+        } else {
+            $firstHostIP = $ip;
+        }
+
+        $lastHostIP = "";
+        if($cidr != 32) {
+            $broadcastIDSplit = explode(".", $broadcastID);
+            for($x = 0; $x < count($broadcastIDSplit); $x++) {
+                if($x < 3) {
+                    $lastHostIP .= $broadcastIDSplit[$x] . ".";
+                } else {
+                    $lastHostIP .= ((float)$broadcastIDSplit[$x] - 1);
+                }
+            }
+        } else {
+            $lastHostIP = $ip;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "firstHostIP: " . $firstHostIP);
+        log_util::log(LOG_LEVEL_DEBUG, "lastHostIP: " . $lastHostIP);
+
+        $networkInfo->setFirstHostIP($firstHostIP);
+        $networkInfo->setLastHostIP($lastHostIP);
+
+        if($cidr == 32) {
+            $networkInfo->setBroadcastID($ip);
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "networkInfo: ", $networkInfo);
+        log_util::logDivider();
+
+        return $networkInfo;
     }
 
     /**

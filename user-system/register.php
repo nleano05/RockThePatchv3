@@ -6,11 +6,10 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['register'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -543,7 +542,7 @@ function sendRegistrationEmail() {
         <h1>Register</h1>
 
         <?php
-            if(!$gValidForm) {
+            if(!$validForm) {
         ?>
                 <p>Great!  You want to register to be a 'Rock the Patch!' user!  This will give you access to
                 some pages that other people won't get to see and exclusive bonus content.  I just need a little

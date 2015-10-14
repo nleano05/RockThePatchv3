@@ -6,12 +6,11 @@ include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
-global $gValidForm;
-$gValidForm = FALSE;
+$validForm = FALSE;
 
 if(isset($_POST['forgot-password'])) {
-    $gValidForm = checkInput();
-    if($gValidForm) {
+    $validForm = checkInput();
+    if($validForm) {
         $userNameOrEmail = isset($_POST['username-or-email']) ? strtolower($_POST['username-or-email']) : "";
         $userNameOrEmail64encode = base64_encode($userNameOrEmail);
         lib::cookieCreate(COOKIE_USERNAME_OR_EMAIL, $userNameOrEmail64encode);
@@ -175,7 +174,7 @@ function displayOutputUsernameOrEmail() {
         </p>
 
         <?php
-            if(!$gValidForm) {
+            if(!$validForm) {
         ?>
             <!-- ### START Forgot Password Validate Form ### -->
             <form action="forgot-password.php" method="post">
