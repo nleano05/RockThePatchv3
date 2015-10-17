@@ -1,8 +1,8 @@
 <?php
 session_save_path('/tmp');
 
-include("php-main/lib.php");
-include("php-main/cookie.php");
+include("../php-main/lib.php");
+include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
@@ -190,12 +190,12 @@ function displayOutputDate() {
         <div id="site-nav">
             <!-- ### START nav-bar ### -->
             <div id="nav-bar">
-                <?php require_once("inc/nav-bar.php"); ?>
+                <?php require_once("../inc/nav-bar.php"); ?>
             </div>
             <!-- ### END nav-bar ### -->
             <!-- ### START user-nav ### -->
             <div id="user-nav">
-                <?php require_once("inc/user-nav.php"); ?>
+                <?php require_once("../inc/user-nav.php"); ?>
             </div>
             <!-- ### END user-nav ### -->
         </div>
@@ -206,17 +206,17 @@ function displayOutputDate() {
     <div id="content-area-left">
         <!-- ### START login-mobile ### -->
         <div id="login-mobile">
-            <?php require("inc/login.php"); ?>
+            <?php require("../inc/login.php"); ?>
         </div>
         <!-- ### END login ### -->
         <!-- ### START recent-updates ### -->
         <div id="recent-updates">
-            <?php require_once("inc/recent-updates.php"); ?>
+            <?php require_once("../inc/recent-updates.php"); ?>
         </div>
         <!-- ### END recent-updates ### -->
         <!-- ### START contact-info ### -->
         <div id="interactions">
-            <?php require("inc/interactions.php"); ?>
+            <?php require("../inc/interactions.php"); ?>
         </div>
         <!-- ### END contact-info ### -->
     </div>
@@ -294,29 +294,29 @@ function displayOutputDate() {
     <div id="content-area-right">
         <!-- ### START login ### -->
         <div id="login">
-            <?php require("inc/login.php"); ?>
+            <?php require("../inc/login.php"); ?>
         </div>
         <!-- ### END login ### -->
         <!-- ### START contact-info ### -->
         <div id="interactions-mobile">
-            <?php require("inc/interactions.php"); ?>
+            <?php require("../inc/interactions.php"); ?>
         </div>
         <!-- ### END contact-info ### -->
         <!-- ### START RSS feed ### -->
         <div id="rss">
-            <?php require_once('inc/rss.php'); ?>
+            <?php require_once('../inc/rss.php'); ?>
         </div>
         <!-- ### END RSS feed ### -->
         <!-- ### START validation ### -->
         <div id="validation">
-            <?php require_once("inc/validation.php"); ?>
+            <?php require_once("../inc/validation.php"); ?>
         </div>
         <!-- ### END validation ### -->
     </div>
     <!-- ### END content-area-right ### -->
     <!-- ### START Footer ### -->
     <div id="footer">
-        <?php require_once('inc/footer.php'); ?>
+        <?php require_once('../inc/footer.php'); ?>
         <div id="footer-background"></div>
         <script type="text/javascript">
             var _gaq = _gaq || [];

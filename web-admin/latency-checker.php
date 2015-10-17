@@ -5,6 +5,104 @@ include("../php-main/lib.php");
 include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
+
+function displayLatency() {
+    $urlBASE = $urlUSERS = $urlADMIN = array();
+
+    array_push($urlBASE, lib_get::baseUrl() . "index.php");
+    array_push($urlBASE, lib_get::baseUrl() . "about-patches.php");
+    array_push($urlBASE, lib_get::baseUrl() . "about-the-revamp.php");
+    array_push($urlBASE, lib_get::baseUrl() . "site-map.php");
+    array_push($urlBASE, lib_get::baseUrl() . "site-testing.php");
+    array_push($urlBASE, lib_get::baseUrl() . "site-projects.php");
+    array_push($urlBASE, lib_get::baseUrl() . "site-features.php");
+    array_push($urlBASE, lib_get::baseUrl() . "site-issues.php");
+    array_push($urlBASE, lib_get::baseUrl() . "kudos.php");
+    array_push($urlBASE, lib_get::baseUrl() . "templates.php");
+    array_push($urlBASE, lib_get::baseUrl() . "resources.php");
+    array_push($urlBASE, lib_get::baseUrl() . "programming.php");
+    array_push($urlBASE, lib_get::baseUrl() . "web-development.php");
+    array_push($urlBASE, lib_get::baseUrl() . "bands-and-projects.php");
+    array_push($urlBASE, lib_get::baseUrl() . "equipment.php");
+    array_push($urlBASE, lib_get::baseUrl() . "influences.php");
+    array_push($urlBASE, lib_get::baseUrl() . "brand-preferences.php");
+    array_push($urlBASE, lib_get::baseUrl() . "wish-list.php");
+    array_push($urlBASE, lib_get::baseUrl() . "excerpts-and-lyrics.php");
+    array_push($urlBASE, lib_get::baseUrl() . "art-gallery.php");
+    array_push($urlBASE, lib_get::baseUrl() . "martial-arts.php");
+    array_push($urlBASE, lib_get::baseUrl() . "recent-updates-log.php");
+    array_push($urlBASE, lib_get::baseUrl() . "binary-tree-creator.php");
+    array_push($urlBASE, lib_get::baseUrl() . "bzip2.php");
+    array_push($urlBASE, lib_get::baseUrl() . "ducks.php");
+    array_push($urlBASE, lib_get::baseUrl() . "palindrome-checker.php");
+    array_push($urlBASE, lib_get::baseUrl() . "rock-paper-scissors.php");
+    array_push($urlBASE, lib_get::baseUrl() . "user-system/register.php");
+    array_push($urlBASE, lib_get::baseUrl() . "user-system/forgot-password.php");
+    array_push($urlBASE, lib_get::baseUrl() . "user-system/forgot-username.php");
+
+    array_push($urlUSERS, lib_get::baseUrl() . "user-bonuses/special-news.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-bonuses/video-blog.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-bonuses/downloads.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-bonuses/streaming-audio.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-system/change-password.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-system/deactivate-account.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-system/account-info.php");
+    array_push($urlUSERS, lib_get::baseUrl() . "user-system/request-admin-access.php");
+
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/add-or-edit-update.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/error-statistics.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/login-statistics.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/page-statistics.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/error-log.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/login-log.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/page-log.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/user-demographic.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/page-flow.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/blasts.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/access-control.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/account-lock-administration.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/edit-admin-access.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/edit-annoyance-levels.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/edit-email-distros.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/edit-error-report-categories.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/edit-feature-request-categories.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/modify-debug-mode.php");
+    array_push($urlADMIN, lib_get::baseUrl() . "web-admin/php-info.php");
+
+    sort($urlBASE, SORT_REGULAR);
+    sort($urlUSERS, SORT_REGULAR);
+    sort($urlADMIN, SORT_REGULAR);
+
+
+    displayLatencySection($urlBASE, "Base Pages");
+    displayLatencySection($urlUSERS, "User Pages");
+    displayLatencySection($urlADMIN, "Admin Pages");
+}
+
+function displayLatencySection($pages, $header) {
+    echo("<hr/><h2>$header</h2>");
+    foreach($pages as $value) {
+        $currentURL = lib_get::currentUrl();
+        // Added for EasyPHP
+        if(strpos($currentURL, '127.0.0.1') !== FALSE) {
+            $urlToPing = str_replace("www.rockthepatch.com", "", $value);
+        } else {
+            $urlToPing = $value;
+        }
+        echo("<p><em><a href='" . $urlToPing ."'>" . $urlToPing . "</a></em><br/>");
+        // For each page we ping it 3 times
+        for($x = 0; $x < 3; $x++) {
+            lib::ping($urlToPing);
+            $pingVal = lib::ping($urlToPing);
+            if($pingVal < 10) {
+                echo("<strong>" . $pingVal ."</strong> ms; ");
+            } else {
+                echo("<strong><span class='error'>" . $pingVal ."</span></strong> ms; ");
+            }
+        }
+        echo("</p>");
+    }
+}
 ?>
 <!DOCTYPE html>
 <!-- ### Sets the class and language for IE 7,8, and 9 ### -->
@@ -25,7 +123,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Web Admin</title>
+    <title>Rock the Patch! v3 - Latency Checker</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -123,49 +221,14 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <!-- ### END content-area-left ### -->
     <!-- ### START content-area ### -->
     <div id="content-area">
-        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Web Admin</div>
-        <h1>Web Admin</h1>
+        <div id="bread-crumbs"><a href="/" title="Home">Home</a> / <a href="/web-admin/main.php" title="Web Admin">Web Admin</a> / Latency Checker</div>
+        <h1>Latency Checker</h1>
 
         <?php
             $isAdmin = lib_check::userIsAdmin();
-
             if($gLoginStatus == STATUS_LOGGED_IN) {
                 if ($isAdmin) {
-        ?>
-                    <h2>Admin Pages</h2>
-
-                    <p><strong>Log Pages</strong></p>
-                    <ul>
-                        <li><a href="../web-admin/error-log.php" title="Error Log">Error Log</a></li>
-                        <li><a href="../web-admin/login-log.php" title="Login Log">Login Log</a></li>
-                        <li><a href="../web-admin/page-log.php" title="Page Log">Page Log</a></li>
-                    </ul>
-
-                    <p><strong>Statistic Pages</strong></p>
-                    <ul>
-                        <li><a href="../web-admin/error-statistics.php" title="Error Statistics">Error Statistics</a></li>
-                        <li><a href="../web-admin/login-statistics.php" title="Login Statistics">Login Statistics</a></li>
-                        <li><a href="../web-admin/page-statistics.php" title="Page Statistics">Page Statistics</a></li>
-                    </ul>
-
-                    <p><strong>Other Administrative Pages</strong></p>
-                    <ul>
-                        <li><a href="../web-admin/access-control.php" title="Access Control">Access Control</a></li>
-                        <li><a href="../web-admin/account-lock-administration.php" title="Locked Out Users">Account Lock Administration</a></li>
-                        <li><a href="../web-admin/edit-admin-access.php" title="Edit Admin Access">Edit Admin Access</a></li>
-                        <li><a href="../web-admin/edit-annoyance-levels.php" title="Edit Annoyance Levels">Edit Annoyance Levels</a></li>
-                        <li><a href="../web-admin/edit-email-distros.php" title="Edit Email Distros">Edit Email Distros</a></li>
-                        <li><a href="../web-admin/edit-error-report-categories.php" title="Edit Error Report Categories">Edit Error Report Categories</a></li>
-                        <li><a href="../web-admin/edit-feature-request-categories.php" title="Edit Feature Request Categories">Edit Feature Request Categories</a></li>
-                        <li><a href="../web-admin/blasts.php" title="Blasts">Email and Text Blasts</a></li>
-                        <li><a href="../web-admin/page-flow.php" title="Page Flow">Page Flow</a></li>
-                        <li><a href="../web-admin/php-info.php" title="PHP Info">PHP Info</a></li>
-                        <li><a href="../web-admin/latency-checker.php" title="Latency">Latency Checker</a></li>
-                        <li><a href="../web-admin/modify-debug-mode.php" title="Modify Debug Mode">Modify Debug Mode</a></li>
-                        <li><a href="../web-admin/user-demographic.php" title="User Demographic">User Demographic</a></li>
-                        <li><a href="../web-admin/view-login-status.php" title="View Login Status">View Login Status</a></li>
-                    </ul>
-        <?php
+                    displayLatency();
                 } else {
                     echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
                 }

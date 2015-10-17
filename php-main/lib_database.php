@@ -871,6 +871,91 @@ class lib_database {
         return $user;
     }
 
+    public static function getUsers($status, $sessionExpired = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $users = array();
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM users");
+            $stmt->execute();
+
+            while ($row = $stmt->fetch()) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row IS NOT empty");
+                    log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
+
+                    $id = isset($row['id']) ? $row['id'] : "";
+                    $loginStatusFromDatabase = lib::decrypt($id . "_login");
+
+                    log_util::log(LOG_LEVEL_DEBUG, "id: " . $id);
+                    log_util::log(LOG_LEVEL_DEBUG, "loginStatusFromDatabase: ". $loginStatusFromDatabase);
+
+                    $user = new User();
+                    $user->setId((int)$row['id']);
+                    $user->setFirstName($row['firstName']);
+                    $user->setLastName($row['lastName']);
+                    $user->setUserName($row['userName']);
+                    $user->setEmail($row['email']);
+                    $user->setPassword($row['password']);
+                    $user->setSecurityQuestion((int)$row['securityQuestion']);
+                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setEmailBlasts((bool)$row['emailBlasts']);
+                    $user->setTextBlasts((bool)$row['textBlasts']);
+                    $user->setCell($row['cell']);
+                    $user->setRole((int)$row['role']);
+                    $user->setLocked((bool)$row['locked']);
+                    $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
+                    $user->setTimeLocked($row['timeLocked']);
+                    $user->setConsecutiveFailedLoginAttempts((int)$row['consecutiveFailedLoginAttempts']);
+                    $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
+
+                    $currentTime = gmdate('Y/m/d H:i:s');
+                    log_util::log(LOG_LEVEL_DEBUG, "currentTime: " . $currentTime);
+
+                    $timeDifference = strtotime($currentTime) - strtotime($user->getLastLoginAttemptTime());
+                    log_util::log(LOG_LEVEL_DEBUG, "timeDifference: " . $timeDifference);
+
+                    if($status == STATUS_LOGGED_IN && $loginStatusFromDatabase == STATUS_LOGGED_IN) {
+                        if($timeDifference < (60 * 60)) {
+                            log_util::log(LOG_LEVEL_DEBUG, "User WAS logged in AND session HAS NOT expired");
+
+                            if(!$sessionExpired) {
+                                array_push($users, $user);
+                            }
+                        } else {
+                            log_util::log(LOG_LEVEL_DEBUG, "User WAS logged in BUT session HAS expired");
+
+                            if($sessionExpired) {
+                                array_push($users, $user);
+                            }
+                        }
+                    }
+
+                    if($status == STATUS_LOGGED_OUT && $loginStatusFromDatabase == STATUS_LOGGED_OUT) {
+                        array_push($users, $user);
+                    }
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "Users: ", $users);
+        log_util::logDivider();
+
+        return $users;
+    }
+
     public static function getUsersSecurityQuestion($userNameOrEmail) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -897,7 +982,7 @@ class lib_database {
                 $securityQuestion->setId((int)$row['id']);
                 $securityQuestion->setQuestion($row['question']);
             } else {
-                log_util::log(LOG_LEVEL_ERROR, "row WAS empty");
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
             }
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
