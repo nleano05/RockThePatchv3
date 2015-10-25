@@ -44,6 +44,35 @@ class lib_database {
         return $pdo;
     }
 
+    public static function deleteTables($tables) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $dbh = lib_database::connect();
+
+        if(!empty($dbh)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            foreach($tables as $value) {
+                log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
+
+                $stmt = $dbh->prepare("DELETE FROM " . $value);
+                $stmt->execute();
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function deleteUpdate($id) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -87,6 +116,524 @@ class lib_database {
             $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    private static function displayFilter($field, $labelText, $db) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT Count(DISTINCT $field) FROM $db");
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
+
+            $count = $row[0];
+            log_util::log(LOG_LEVEL_DEBUG, "count: ", $count);
+
+            $stmt = $pdo->prepare("SELECT DISTINCT $field FROM $db ORDER BY $field ASC");
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        echo("<p style='float:left;padding:5px 18px'>" . $labelText . ":<br/><select name='" . $field . "' style='max-width:115px;display:inline-block;width:115px;'>");
+
+        if(empty($_POST[$field]) || $_POST[$field] == 'all' || !isset($_POST[$field])) {
+            echo("<option value='all' style='max-width:120px;' selected='selected'>-DISPLAY ALL-</option>");
+        } else {
+            echo("<option value='all' style='max-width:120px;'>-DISPLAY ALL-</option>");
+        }
+
+        for($x = 0; $x < $count; $x++) {
+            $row = $stmt->fetch();
+
+            log_util::logAsOption(LOG_LEVEL_DEBUG, "x: " . $x);
+            $limit = 60;
+
+            if($field == FIELD_SUCCESS) {
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "field WAS 'success', need to convert to true/false");
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "row[field]: " . $row[$field]);
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "strlen(row[field]): " . strlen($row[$field]));
+
+                if($row[$field]) {
+                    $fieldValue = "True";
+                } else {
+                    $fieldValue = "False";
+                }
+            } else {
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "field WAS NOT 'success', don't need to convert to true/false");
+
+                $fieldValue = $row[$field];
+            }
+            log_util::logAsOption(LOG_LEVEL_DEBUG, "fieldValue: " . $fieldValue);
+
+            if(!empty($_POST[$field])) {
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "Post for the given field IS NOT empty");
+
+                if($_POST[$field] == $fieldValue) {
+                    log_util::logAsOption(LOG_LEVEL_DEBUG, "Post for the given field DID match the row");
+
+                    if(strlen($fieldValue) > $limit) {
+                        echo("<option value='" . $fieldValue . "' selected='selected'>" . substr($fieldValue, 0, $limit) . "...</option>");
+                    } else {
+                        echo("<option value='" . $fieldValue . "' selected='selected'>" . $fieldValue  . "</option>");
+                    }
+                } else {
+                    log_util::logAsOption(LOG_LEVEL_DEBUG, "Post for the given field DID NOT match the row");
+
+                    if(strlen($fieldValue) > $limit) {
+                        echo("<option value='" . $fieldValue . "'>" . substr($fieldValue, 0, $limit)  . "...</option>");
+                    } else {
+                        echo("<option value='" . $fieldValue . "'>" . $fieldValue  . "</option>");
+                    }
+                }
+            } else {
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "Post for the given field IS empty");
+
+
+                if(strlen($fieldValue) > $limit) {
+                    echo("<option value='" . $fieldValue . "'>" . substr($fieldValue, 0, $limit)  . "...</option>");
+                } else {
+                    echo("<option value='" . $fieldValue . "'>" . $fieldValue  . "</option>");
+                }
+            }
+        }
+        echo("</select></p>");
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function displayErrorStatistics() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $clientErrors = array(400 => "Bad Request",
+            401 => "Unauthorized",
+            402 => "Payment Required",
+            403 => "Forbidden",
+            404 => "Not Found",
+            405 => "Method Not Allowed",
+            406 => "Not Acceptable",
+            407 => "Proxy Authentication Required",
+            408 => "Request Timeout",
+            409 => "Conflict",
+            410 => "Gone",
+            411 => "Length Required",
+            412 => "Precondition Failed",
+            413 => "Request Entity Too Large",
+            414 => "Request-URI Too Long",
+            415 => "Unsupported Media Type",
+            416 => "Requested Range Not Satisfiable",
+            417 => "Expectation Failed",
+            422 => "Unprocessable Entity (WebDAV; RFC 4918)",
+            423 => "Locked (WebDAV; RFC 4918)",
+            424 => "Failed Dependency (WebDAV; RFC 4918) / Method Failure (WebDAV)",
+            426 => "Upgrade Required (RFC 2817)",
+            428 => "Precondition Required (RFC 6585)",
+            429 => "Too Many Requests (RFC 6585)",
+            431 => "Request Header Fields Too Large (RFC 6585)");
+
+        $serverErrors = array(500 => "Internal Server Error",
+            501 => "Not Implemented",
+            502 => "Bad Gateway",
+            503 => "Service Unavailable",
+            504 => "Gateway Timeout",
+            505 => "HTTP Version Not Supported",
+            506 => "Variant Also Negotiates (RFC 2295)",
+            507 => "Insufficient Storage (WebDAV; RFC 4918)",
+            508 => "Loop Detected (WebDAV; RFC 5842)",
+            510 => "Not Extended (RFC 2774)",
+            511 => "Network Authentication Required (RFC 6585)");
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            echo("<h2>Client Errors</h2>");
+            echo("<ul>");
+
+            foreach($clientErrors as $key => $value) {
+                log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
+                log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
+
+                // Queries the database for the number of occurrences for the client side error
+                $stmt = $pdo->prepare("SELECT * FROM error_statistics WHERE errorCode = ?");
+                $stmt->bindParam(1, $key, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                if(!empty($row)) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                    $count = $row['count'];
+                } else {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS empty");
+                    $count = 0;
+                }
+
+                if($count > 0) {
+                    echo("<li>" . $key . " " . $value . ": <span class='error'>" . $count . "</span></li>");
+                } else {
+                    echo("<li>" . $key . " " . $value . ": " . $count . "</li>");
+                }
+            }
+            echo("</ul>");
+
+            echo("<h2>Server Errors</h2>");
+            echo("<ul>");
+
+            foreach($serverErrors as $key => $value) {
+                log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
+                log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
+
+                $stmt = $pdo->prepare("SELECT * FROM error_statistics WHERE errorCode = ?");
+                $stmt->bindParam(1, $key, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+                if(!empty($row)) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                    $count = $row['count'];
+                } else {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS empty");
+                    $count = 0;
+                }
+
+                if($count > 0) {
+                    echo("<li>" . $key . " " . $value . ": <font class='error'>" . $count . "</font></li>");
+                } else {
+                    echo("<li>" . $key . " " . $value . ": " . $count . "</li>");
+                }
+            }
+            echo("</ul>");
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function displayPageStatistics() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM page_statistics ORDER BY page ASC");
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_ERROR, "row IS NOT empty");
+
+                echo("<ul>");
+
+                echo("<li style='word-break:break-all;'><strong>Page:</strong> " . $row['page'] . ", ");
+                echo("<strong>Views:</strong> " . $row['views']. "</li>");
+
+                while($row = $stmt->fetch()) {
+                    log_util::log(LOG_LEVEL_ERROR, "row: ", $row);
+                    echo("<li style='word-break:break-all;'><strong>Page:</strong> " . $row['page'] . ", ");
+                    echo("<strong>Views:</strong> " . $row['views']. "</li>");
+                }
+                echo("</ul>");
+            } else {
+                log_util::log(LOG_LEVEL_ERROR, "row IS empty");
+                echo("<p class='error'><em>Page Statistics table is empty</em></p>");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            echo("<p class='error'><em>Page Statistics table is empty</em></p>");
+        }
+
+        $pdo = NULL;
+
+
+        log_util::logDivider();
+    }
+
+    public static function displayFilterForm($page, $action, $filters, $labels, $db) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        echo("<form name='" . $page . " Filters' method=post action='" . $action . "'>");
+        echo("<h2>Filters for " . $page . "</h2>");
+        for($x = 0; $x < count($filters);$x++) {
+            log_util::log(LOG_LEVEL_DEBUG, "Filter at " . $x . ": " . $filters[$x] . "; Label at " . $x . ": " . $labels[$x]);
+
+            lib_database::displayFilter($filters[$x], $labels[$x], $db);
+        }
+        echo("<div class='clear'></div>");
+        echo("<p><input type='submit' class='button' name='Filter " . $page . "' value='Filter " . $page . "'/></p>");
+        echo("</form>");
+        echo("<div class='clear'></div>");
+
+        log_util::logDivider();
+    }
+
+    public static function displayFilteredEntries($filters, $db, $page) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        echo("<h2>Filtered Entries</h2>");
+
+        for($x = 0; $x < count($filters);$x++) {
+            log_util::log(LOG_LEVEL_DEBUG, "Filter at " . $x . ": " . $filters[$x]);
+
+            $filter = $filters[$x];
+            $filterValues[$filter] = !empty($_POST[$filter]) && $_POST[$filter] != "all" && $_POST[$filter] != "empty" ? $_POST[$filter] : '*';
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "filterValues: ", $filterValues);
+
+        $displayAll = TRUE;
+        foreach($filterValues as $key => $value) {
+            log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
+            log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
+
+            if($value == "*") {
+                log_util::log(LOG_LEVEL_DEBUG, "value: " . $value . ", DOES equal '*'");
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "value: " . $value . ", DOES NOT equal '*'");
+                $displayAll = FALSE;
+                break;
+            }
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "filterValues: ", $filterValues);
+        log_util::log(LOG_LEVEL_DEBUG, "displayAll: ", $displayAll);
+
+
+        if($displayAll) {
+            log_util::log(LOG_LEVEL_DEBUG, "No filter was applied");
+            $select = "SELECT * FROM " . $db;
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "There was a filter applied");
+
+            $select = "SELECT * FROM " . $db . " WHERE ";
+
+            $firstFilter = TRUE;
+            foreach($filterValues as $key => $value) {
+                log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
+                log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
+
+                if($value != '*') {
+                    if($firstFilter) {
+                        $select .= $key . " = ? ";
+                        $firstFilter = FALSE;
+                    } else {
+                        $select .= "AND " . $key . " = ? ";
+                    }
+                }
+            }
+        }
+        $countSelect = str_replace("*", "Count(*)", $select);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+            log_util::log(LOG_LEVEL_DEBUG, "select: " . $select);
+            log_util::log(LOG_LEVEL_DEBUG, "countSelect: " . $countSelect);
+
+
+            $stmt = $pdo->prepare($countSelect);
+
+            $bindNumber = 1;
+            foreach ($filterValues as $key => $value) {
+                if ($value != '*') {
+                    $stmt->bindParam($bindNumber, $filterValues[$key], PDO::PARAM_STR);
+                    $bindNumber++;
+                }
+            }
+
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            $count = $row[0];
+
+            log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
+            log_util::log(LOG_LEVEL_DEBUG, "count: " . $count);
+
+            $stmt = $pdo->prepare($select);
+
+            $bindNumber = 1;
+            foreach ($filterValues as $key => $value) {
+                if ($value != '*') {
+                   if ($key == FIELD_SUCCESS) {
+                       log_util::log(LOG_LEVEL_DEBUG, "key was success, need to convert the TRUE/FALSE value to 0/1");
+
+                        if ($value == "True") {
+                            $filterValues[$key] = TRUE;
+                        } else {
+                            $filterValues[$key] = FALSE;
+                        }
+                    }
+
+                    $stmt->bindParam($bindNumber, $filterValues[$key], PDO::PARAM_STR);
+                    $bindNumber++;
+                }
+            }
+
+            $stmt->execute();
+
+            if ($page != "page-flow.php") {
+                echo("<p><strong>Entry Count:</strong> " . $count . "</p><hr/>");
+            } else {
+                echo("<hr/>");
+            }
+
+            if ($count != 0) {
+                $pageFlow = array();
+                $users = array();
+
+                for ($x = 0; $x < $count; $x++) {
+                    $row = $stmt->fetch();
+
+                    log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
+
+                    if ($page == PAGE_ERROR_LOG) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Matched error-log.php");
+
+                        echo("<p style='word-break:break-all;'><strong>Error Code:</strong> " . $row['errorCode'] . ", ");
+                        echo("<strong>Description:</strong> " . $row['description'] . ", ");
+                        echo("<strong>Type:</strong> " . $row['type'] . "<br/>");
+                        echo("<em>User:</em> " . $row['user'] . ", ");
+                        echo("<em>Request URI:</em> " . $row['requestUri'] . ", ");
+                        echo("<em>Referer:</em> " . $row['referer'] . ", ");
+                        echo("<em>Time:</em> " . $row['time'] . "</p><hr/>");
+                    } else if ($page == "page-log.php") {
+                        log_util::log(LOG_LEVEL_DEBUG, "Matched page-log.php");
+
+                        echo("<p style='word-break:break-all;'><strong>Page:</strong> " . $row['page'] . "<br/>");
+                        echo("<em>User:</em> " . $row['user'] . "<br/>");
+                        echo("<em>Referer:</em> " . $row['referer'] . "<br/>");
+                        echo("<em>Full Agent:</em> " . $row['fullAgent'] . "<br/>");
+                        echo("<em>Agent:</em> " . $row['agent'] . "<br/>");
+                        echo("<em>Agent Version:</em> " . $row['agentVersion'] . "<br/>");
+                        echo("<em>OS:</em> " . $row['os'] . "<br/>");
+                        echo("<em>OS Version:</em> " . $row['osVersion'] . "<br/>");
+                        echo("<em>Remote Address:</em> " . $row['remoteAddress'] . "<br/>");
+                        echo("<em>ISP:</em> " . $row['isp'] . "<br/>");
+                        echo("<em>Country:</em> " . $row['country'] . "<br/>");
+                        echo("<em>State:</em> " . $row['state'] . "<br/>");
+                        echo("<em>City:</em> " . $row['city'] . "<br/>");
+                        echo("<em>Time:</em> " . $row['time'] . "<br/>");
+                        echo("<em>Session Id:</em> " . $row['sessionId'] . "</p><hr/>");
+                    } else if ($page == PAGE_LOGIN_LOG) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Matched login-log.php");
+
+                        $user = lib_database::getUser($row['userId']);
+                        if($user != NULL){
+                            $user = $user->getEmail() . " / " . $user->getUserName();
+                        } else {
+                            $user = '';
+                        }
+
+                        if ($row['success']) {
+                            $succeeded = "Yes";
+
+                            echo("<p><strong>Entry:</strong> <em>Name:</em>" . $user . ", ");
+                            echo("<em>Succeeded:</em> " . $succeeded . ", ");
+                            echo("<em>Time:</em> " . $row['loginTime'] . "</p>");
+                        } else {
+                            $succeeded = "No";
+
+                            echo("<p class='error'><strong>Entry:</strong> <em>Name:</em>" . $user . ", ");
+                            echo("<em>Succeeded:</em> " . $succeeded . ", ");
+                            echo("<em>Time:</em> " . $row['loginTime'] . "</p>");
+                        }
+                    } else if ($page == PAGE_LOGIN_STATISTICS) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Matched login-statistics.php");
+
+                        $user = lib_database::getUser($row['userId']);
+                        if($user != NULL){
+                            $user = $user->getEmail() . " / " . $user->getUserName();
+                        } else {
+                            $user = '';
+                        }
+
+                        echo("<p><strong>User:</strong> " . $user . "<br/>");
+                        echo("<em>Total Attempts:</em> " . $row['attempts'] . "<br/>");
+                        echo("<em>Failed Login Attempts:</em> " . $row['failed'] . "<br/>");
+                        echo("<em>Succeeded Login Attempts:</em> " . $row['succeeded'] . "</p><hr/>");
+                    } else if ($page == PAGE_PAGE_FLOW) {
+                        log_util::log(LOG_LEVEL_DEBUG, "Matched page-flow.php");
+
+                        if (!isset($pageFlow[$row['sessionId']])) {
+                            $pageFlow[$row['sessionId']] = "";
+                        }
+
+                        if (!isset($users[$row['sessionId']])) {
+                            $users[$row['sessionId']] = "";
+                        }
+
+                        $pageFlow[$row['sessionId']] .= $row['page'] . " => ";
+                        $users[$row['sessionId']] = $row['user'];
+                    } else {
+                        log_util::log(LOG_LEVEL_WARNING, "DID NOT match a listed database");
+                    }
+                }
+
+                if ($page == PAGE_PAGE_FLOW) {
+                    log_util::log(LOG_LEVEL_DEBUG, "Matched page-flow.php");
+                    log_util::log(LOG_LEVEL_DEBUG, "pageFlow: ", $pageFlow);
+                    log_util::log(LOG_LEVEL_DEBUG, "users: ", $users);
+
+                    foreach ($pageFlow as $key => $value) {
+                        log_util::log(LOG_LEVEL_DEBUG, "key: " . $key);
+                        log_util::log(LOG_LEVEL_DEBUG, "value: ". $value);
+
+                        echo("<p><strong>Session ID: <em>" . $key . "</em><br/>");
+                        echo("User: <em>" . $users[$key] . "</em></strong></p>");
+                        echo("<p style='word-break:break-all;'>" . $pageFlow[$key] . " DROP OFF</p><hr/>");
+                    }
+                }
+            } else {
+                echo("<p class='error'><em>No log entries matched the current filter or log is empty...</em></p>");
+            }
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
@@ -1079,7 +1626,7 @@ class lib_database {
         }
         log_util::logFunctionStart($args);
 
-        $token = lib::generateToken();
+        $token = lib::generateRandomString(LENGTH_ACCESS_TOKEN);
 
         $timezone = date_default_timezone_get();
         date_default_timezone_set($timezone);
@@ -1459,6 +2006,91 @@ class lib_database {
         }
     }
 
+    public static function writeErrorStatisticsAndLog($errorCode, $description) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $requestUri = lib_get::requestUri();
+        log_util::log(LOG_LEVEL_DEBUG, "requestUri: " . $requestUri);
+
+        $referer = lib_get::referer();
+        if($referer == NULL) {
+            $referer = "Unknown Referer - Referer not set";
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "referer: " . $referer);
+
+        $currentUser = lib_get::currentUser();
+        if($currentUser != NULL) {
+            $user = $currentUser->getEmail();
+        } else {
+            $user = "Anonymous";
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "user: " . $user);
+
+        $time = gmdate('Y/m/d H:i:s');
+        log_util::log(LOG_LEVEL_DEBUG, "time: " . $time);
+
+        $internalReference = lib_check::internalReference($referer);
+        if($internalReference) {
+            $type = "Internal";
+        } else {
+            $type = "External";
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "type: " . $type);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM error_statistics WHERE errorCode = ?");
+            $stmt->bindParam(1, $errorCode, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "Error code is already logged in the statistics table, doing UPDATE");
+
+                $count = $row['count'] + 1;
+
+                $stmt = $pdo->prepare("UPDATE error_statistics SET count=? WHERE errorCode = ?");
+                $stmt->bindParam(1, $count, PDO::PARAM_INT);
+                $stmt->bindParam(2, $errorCode, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "Error code is NOT logged in the statistics table, doing INSERT");
+
+                $count = 1;
+
+                $stmt = $pdo->prepare("INSERT INTO error_statistics(errorCode, count) VALUE (?, ?)");
+                $stmt->bindParam(1, $errorCode, PDO::PARAM_INT);
+                $stmt->bindParam(2, $count, PDO::PARAM_INT);
+                $stmt->execute();
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO error_log (errorCode, description, user, requestUri, referer, time, type) VALUE (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bindParam(1, $errorCode, PDO::PARAM_INT);
+            $stmt->bindParam(2, $description, PDO::PARAM_STR);
+            $stmt->bindParam(3, $user, PDO::PARAM_BOOL);
+            $stmt->bindParam(4, $requestUri, PDO::PARAM_STR);
+            $stmt->bindParam(5, $referer, PDO::PARAM_STR);
+            $stmt->bindParam(6, $time, PDO::PARAM_STR);
+            $stmt->bindParam(7, $type, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function writeLoginLogAndStatistics($id, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -1525,6 +2157,128 @@ class lib_database {
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writePageLogAndStatistics($page) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $currentUser = lib_get::currentUser();
+        if($currentUser != NULL) {
+            $user = $currentUser->getEmail();
+        } else {
+            $user = "Anonymous";
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "user: " . $user);
+
+        $fullAgent = lib_get::fullAgent();
+        if($fullAgent == NULL) {
+            $fullAgent = "Unknown Full Agent - Full agent not set";
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "fullAgent: " . $fullAgent);
+
+        $referer = $referer = lib_get::referer();
+        if($referer == NULL) {
+            $referer = "Unknown Referer - Referer not set";
+        }
+        log_util::log(LOG_LEVEL_DEBUG, "referer: " . $referer);
+
+        $agentInfo = lib_get::agent();
+        $agent = $agentInfo['Agent'];
+        $agentVersion = $agentInfo['Version'];
+        log_util::log(LOG_LEVEL_DEBUG, "agent: " . $agent);
+        log_util::log(LOG_LEVEL_DEBUG, "agentVersion: " . $agentVersion);
+
+        $osInfo = lib_get::os();
+        $os = $osInfo['OS'];
+        $osVersion = $osInfo['Version'];
+        log_util::log(LOG_LEVEL_DEBUG, "os: " . $os);
+        log_util::log(LOG_LEVEL_DEBUG, "osVersion: " . $osVersion);
+
+        $remoteAddress = lib_get::remoteAddress();
+        log_util::log(LOG_LEVEL_DEBUG, "remoteAddress: " . $remoteAddress);
+
+        $geoLocation = lib_get::geoLocation($remoteAddress);
+        log_util::log(LOG_LEVEL_DEBUG, "geoLocation: ", $geoLocation);
+
+        $isp = lib_get::isp($remoteAddress);
+        log_util::log(LOG_LEVEL_DEBUG, "isp: " . $isp);
+
+        $country = $geoLocation->getCountry();
+        $state = $geoLocation->getState();
+        $city = $geoLocation->getCity();
+        log_util::log(LOG_LEVEL_DEBUG, "country: " . $country);
+        log_util::log(LOG_LEVEL_DEBUG, "state: " . $state);
+        log_util::log(LOG_LEVEL_DEBUG, "city: " . $city);
+
+        $time = gmdate('Y/m/d H:i:s');
+        log_util::log(LOG_LEVEL_DEBUG, "time: " . $time);
+
+        if(isset($_COOKIE[COOKIE_SESSION_ID])) {
+            $sessionId = $_COOKIE[COOKIE_SESSION_ID];
+        } else {
+            $sessionId = "No Session ID";
+        }
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM page_statistics WHERE page = ?");
+            $stmt->bindParam(1, $page, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "Page IS in the database, doing UPDATE");
+
+                $views = $row['views'] + 1;
+
+                $stmt = $pdo->prepare("UPDATE page_statistics SET views=? WHERE page = ?");
+                $stmt->bindParam(1, $views, PDO::PARAM_INT);
+                $stmt->bindParam(2, $page, PDO::PARAM_STR);
+                $stmt->execute();
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "Page IS NOT in the database already, doing INSERT");
+
+                $views = 1;
+
+                $stmt = $pdo->prepare("INSERT INTO page_statistics (page, views) VALUE (?, ?)");
+                $stmt->bindParam(1, $page, PDO::PARAM_STR);
+                $stmt->bindParam(2, $views, PDO::PARAM_INT);
+                $stmt->execute();
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO page_log (page, user, referer, fullAgent, agent, agentVersion, os, osVersion, remoteAddress, isp, country, state, city, time, sessionId) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bindParam(1, $page, PDO::PARAM_STR);
+            $stmt->bindParam(2, $user, PDO::PARAM_STR);
+            $stmt->bindParam(3, $referer, PDO::PARAM_STR);
+            $stmt->bindParam(4, $fullAgent, PDO::PARAM_STR);
+            $stmt->bindParam(5, $agent, PDO::PARAM_STR);
+            $stmt->bindParam(6, $agentVersion, PDO::PARAM_STR);
+            $stmt->bindParam(7, $os, PDO::PARAM_STR);
+            $stmt->bindParam(8, $osVersion, PDO::PARAM_STR);
+            $stmt->bindParam(9, $remoteAddress, PDO::PARAM_STR);
+            $stmt->bindParam(10, $isp, PDO::PARAM_STR);
+            $stmt->bindParam(11, $country, PDO::PARAM_STR);
+            $stmt->bindParam(12, $state, PDO::PARAM_STR);
+            $stmt->bindParam(13, $city, PDO::PARAM_STR);
+            $stmt->bindParam(14, $time, PDO::PARAM_STR);
+            $stmt->bindParam(15, $sessionId, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
         $pdo = NULL;

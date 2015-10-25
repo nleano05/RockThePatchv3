@@ -19,9 +19,9 @@ if($gDebugMode) {
 }
 
 $gLoginStatus = lib_get::loginStatus();
-// TODO - finish these two function and the block/session id logic
-//cookieCheckSessionID();
-//
+lib_check::sessionId();
+
+// TODO - finish this
 //$blocked = checkIPBlocked();
 //if($blocked) {
 //    redirect(FALSE, NULL, FALSE, "https://www.rockthepatch.com/blocked.php");

@@ -52,7 +52,35 @@ class log_util {
                 print_r($resource);
                 echo("</p>");
             } else {
-                echo("<p>");
+                echo("</p>");
+            }
+        }
+    }
+
+    public static function logAsOption($level, $message, $resource = NULL) {
+        global $gDebugMode;
+
+        if ($gDebugMode) {
+            switch ($level) {
+                case LOG_LEVEL_DEBUG:
+                    echo("<option>");
+                    break;
+                case LOG_LEVEL_WARNING:
+                    echo("<option style='color:orange;'>");
+                    break;
+                case LOG_LEVEL_ERROR:
+                    echo("<option style='color:red;'>");
+                    break;
+                default:
+                    echo("<option>");
+                    break;
+            }
+            echo($message);
+            if ($resource !== NULL) {
+                print_r($resource);
+                echo("</option>");
+            } else {
+                echo("</option>");
             }
         }
     }

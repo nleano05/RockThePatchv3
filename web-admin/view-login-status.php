@@ -37,7 +37,7 @@ function displayUsers($arrUsers) {
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Latency Checker</title>
+    <title>Rock the Patch! v3 - View Login Status</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -98,15 +98,14 @@ function displayUsers($arrUsers) {
             <!-- ### START user-nav ### -->
             <div id="user-nav">
                 <?php
-                require_once("../inc/user-nav.php");
-                if($gLoginStatus ==  STATUS_LOGGED_IN) {
-                    ?>
-                    <!-- Script to display the current page in the navigation -->
+                    require_once("../inc/user-nav.php");
+                    if($gLoginStatus ==  STATUS_LOGGED_IN) {
+                ?>
                     <script type="text/javascript">
                         document.getElementById("web-admin").className  = "current";
                     </script>
-                    <?php
-                }
+                <?php
+                    }
                 ?>
             </div>
             <!-- ### END user-nav ### -->

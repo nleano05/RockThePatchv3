@@ -16,6 +16,7 @@ require_once("models/EmailDistro.php");
 require_once("models/EncryptionData.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");
+require_once("models/GeoLocation.php");
 require_once("models/NetworkInfo.php");
 require_once("models/SecurityQuestion.php");
 require_once("models/Update.php");
@@ -463,19 +464,19 @@ class lib {
     }
 
     /**
-     *  This function generates a temporary password for a user so they can recover their account
+     *  This function generates a random string of lower case, upper case, and numbers given a length
      *
      * @param none
-     * @return string $tempPassword - The temporary password a user can log in with to recover their account
+     * @return string $randomString
      * @throws - nothing
      * @global - none
-     * @notes - Generates a sequence of 10 random characters and numbers
-     * @example - $tempPassword = lib::generateTempPassword();
+     * @notes - none
+     * @example - $tempPassword = lib::generateRandomString(12);
      * @author - Patches
      * @version - 1.0
      * @history - Created 10/10/2015
      */
-    public static function generateTempPassword() {
+    public static function generateRandomString($length) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -484,42 +485,19 @@ class lib {
         }
         log_util::logFunctionStart($args);
 
-        $tempPassword = '';
-        $length = 10;
+        $randomString = '';
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
         for ($i=0;$i<$length;$i++) {
-            $tempPassword .= $chars[mt_rand(0, (strlen($chars)-1))];
+            $randomString .= $chars[mt_rand(0, (strlen($chars)-1))];
         }
 
-        log_util::log(LOG_LEVEL_DEBUG, "tempPassword: " . $tempPassword);
+        log_util::log(LOG_LEVEL_DEBUG, "randomString: " . $randomString);
         log_util::logDivider();
 
-        return $tempPassword;
+        return $randomString;
     }
 
-    public static function generateToken() {
-        $reflector = new ReflectionClass(__CLASS__);
-        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
-        $args = [];
-        foreach ($parameters as $parameter) {
-            $args[$parameter->name] = ${$parameter->name};
-        }
-        log_util::logFunctionStart($args);
-
-        $token = '';
-        $length = 40;
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-        for ($i=0;$i<$length;$i++) {
-            $token .= $chars[mt_rand(0, (strlen($chars)-1))];
-        }
-
-        log_util::log(LOG_LEVEL_DEBUG, "token: " . $token);
-        log_util::logDivider();
-
-        return $token;
-    }
     /**
      *  This function uses curl to time how long it takes a page to load
      *

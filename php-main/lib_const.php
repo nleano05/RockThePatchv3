@@ -31,5 +31,25 @@ define("COOKIE_DEBUG_MODE", "debug_mode");
 define("COOKIE_LOGIN_STATUS_KEY", "login_status_key");
 define("COOKIE_USER_ID", "user_id");
 define("COOKIE_USERNAME_OR_EMAIL", "username_or_email");
+define("COOKIE_SESSION_ID", "session_id");
 
 define("SELECT_SECURITY_QUESTION", "- SELECT SECURITY QUESTION -");
+
+define("LENGTH_TEMP_PASSWORD", 12);
+define("LENGTH_SESSION_ID", 15);
+define("LENGTH_ACCESS_TOKEN", 40);
+
+define("FIELD_SUCCESS", "success");
+
+define("TABLE_PAGE_LOG", "page_log");
+define("TABLE_PAGE_STATISTICS", "page_statistics");
+define("TABLE_LOGIN_LOG", "login_log");
+define("TABLE_LOGIN_STATISTICS", "login_statistics");
+define("TABLE_ERROR_LOG", "error_log");
+define("TABLE_ERROR_STATISTICS", "error_statistics");
+
+define("PAGE_PAGE_LOG", "page-log.php");
+define("PAGE_ERROR_LOG", "error-log.php");
+define("PAGE_LOGIN_LOG", "login-log.php");
+define("PAGE_LOGIN_STATISTICS", "login-statistics.php");
+define("PAGE_PAGE_FLOW", "page-flow.php");

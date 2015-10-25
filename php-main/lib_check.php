@@ -238,6 +238,30 @@ class lib_check {
         return (substr($haystack, -$length) === $needle);
     }
 
+    public static function internalReference($input) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $internalReference = FALSE;
+
+        if(strpos($input, 'rockthepatch') !== FALSE || strpos($input, '127.0.0.1') !== FALSE) {
+            log_util::log(LOG_LEVEL_DEBUG, "Referer IS internal");
+            $internalReference = TRUE;
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Referer IS NOT internal");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "internalReference: " . $internalReference);
+        log_util::logDivider();
+
+        return $internalReference;
+    }
+
     /**
      *  This function checks if the given input is empty
      *
@@ -362,6 +386,51 @@ class lib_check {
         log_util::logDivider();
 
         return $same;
+    }
+
+    public static function sessionId() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        if(!isset($_COOKIE[COOKIE_SESSION_ID])) {
+            log_util::log(LOG_LEVEL_DEBUG, "Session ID IS NOT set, setting...");
+
+            $sessionId = lib::generateRandomString(LENGTH_SESSION_ID);
+
+            lib::cookieCreate(COOKIE_SESSION_ID, $sessionId);
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Session ID IS set, seeing where the user came from...");
+
+            $referer = lib_get::referer();
+            if($referer != NULL) {
+                log_util::log(LOG_LEVEL_DEBUG, "referer IS set");
+
+                if(strpos($referer, "rockthepatch.com") !== FALSE || strpos($referer, "127.0.0.1") !== FALSE) {
+                    log_util::log(LOG_LEVEL_DEBUG, "referer DID come from rockthepatch.com or local host");
+                } else {
+                    log_util::log(LOG_LEVEL_DEBUG, "referer DID NOT come from rockthepatch.com or local host");
+
+                    lib::cookieDestroy(COOKIE_SESSION_ID);
+
+                    $sessionId = lib::generateRandomString(LENGTH_SESSION_ID);
+                    lib::cookieCreate(COOKIE_SESSION_ID, $sessionId);
+                }
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "referer IS NOT set");
+
+                lib::cookieDestroy(COOKIE_SESSION_ID);
+
+                $sessionId = lib::generateRandomString(LENGTH_SESSION_ID);
+                lib::cookieCreate(COOKIE_SESSION_ID, $sessionId);
+            }
+        }
+
+        log_util::logDivider();
     }
 
     /**

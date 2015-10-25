@@ -62,7 +62,7 @@ function sendTempPassword() {
     if($user != NULL) {
         $userName = $user->getUserName();
         $email = $user->getEmail();
-        $tempPassword = lib::generateTempPassword();
+        $tempPassword = lib::generateRandomString(LENGTH_TEMP_PASSWORD);
 
         lib_database::updateUserPassword($user->getId(), $tempPassword);
 

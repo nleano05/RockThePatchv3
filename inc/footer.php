@@ -21,7 +21,7 @@ $currentURL = lib_get::currentUrl();
 $currentURL = "https://" . $currentURL;
 log_util::log(LOG_LEVEL_DEBUG, "currentURL: " . $currentURL);
 
-//dbWritePageStatisticsAndLog($currentURL);
+lib_database::writePageLogAndStatistics($currentURL);
 ?>
 <div id="social-media">
     <!--suppress HtmlUnknownTarget -->

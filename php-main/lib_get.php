@@ -401,6 +401,73 @@ class lib_get {
         return $currentURL;
     }
 
+    public static function fullAgent() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $fullAgent = NULL;
+        if(isset($_SERVER['HTTP_USER_AGENT'])) {
+            $fullAgent = $_SERVER['HTTP_USER_AGENT'];
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "fullAgent: " . $fullAgent);
+        log_util::logDivider();
+
+        return $fullAgent;
+    }
+
+    public static function geoLocation($ip) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $geoLocation = new GeoLocation();
+
+        if(filter_var($ip, FILTER_VALIDATE_IP)) {
+            log_util::log(LOG_LEVEL_DEBUG, "ip WAS valid");
+
+            $response = @file_get_contents('http://www.netip.de/search?query='.$ip);
+
+            if(!empty($response)) {
+                log_util::log(LOG_LEVEL_DEBUG, "server DID respond");
+
+                $geoLocation->setCountry(preg_match('#Country: (.*?)&nbsp;#i', $response, $value) && !empty($value[1]) ? $value[1] : 'Unknown Country - Pattern not found');
+                $geoLocation->setState(preg_match('#State/Region: (.*?)<br#i', $response, $value) && !empty($value[1]) ? $value[1] : 'Unknown State - Pattern not found');
+                $geoLocation->setCity(preg_match('#City: (.*?)<br#i', $response, $value) && !empty($value[1]) ? $value[1] : 'Unknown City - Pattern not found');
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "server DID NOT respond");
+
+                $geoLocation->setCountry("Unknown Country - Error contacting server");
+                $geoLocation->setState("Unknown State - Error contacting server");
+                $geoLocation->setCity("Unknown Town - Error contacting server");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_WARNING, "ip WAS NOT valid");
+
+            $geoLocation->setCountry("Unknown Country - Invalid ip");
+            $geoLocation->setState("Unknown State - Invalid ip");
+            $geoLocation->setCity("Unknown Town - Invalid ip");
+        }
+
+        if(str_replace(" ", "", $geoLocation->getCountry()) == "-") {
+            $geoLocation->setCountry("Unknown Country - Response was only '-'");
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "geoLocation: ", $geoLocation);
+        log_util::logDivider();
+
+        return $geoLocation;
+    }
+
     public static function gitHubIssues($state, $labels){
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -492,6 +559,43 @@ class lib_get {
         log_util::logDivider();
         
         return $milestones;
+    }
+
+    public static function isp($ip) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        if(filter_var($ip, FILTER_VALIDATE_IP)) {
+            log_util::log(LOG_LEVEL_DEBUG, "ip WAS valid");
+
+            $response= json_decode(@file_get_contents("http://ip-api.com/json/".$ip), true);
+
+            if(!empty($response)) {
+                log_util::log(LOG_LEVEL_DEBUG, "response: ", $response);
+
+                if(isset($response["isp"]) && strlen(trim($response["isp"])) > 0) {
+                    $isp = $response["isp"];
+                } else {
+                    $isp = "Unknown ISP - ISP not set in response";
+                }
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "server DID NOT respon");
+                $isp = "Unknown ISP - Error contacting server";
+            }
+        } else {
+            log_util::log(LOG_LEVEL_WARNING, "ip WAS NOT valid");
+            $isp = "Unknown ISP - Invalid ip";
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "isp: " . $isp);
+        log_util::logDivider();
+
+        return $isp;
     }
 
     /**
@@ -697,5 +801,55 @@ class lib_get {
         log_util::logDivider();
 
         return $referer;
+    }
+
+    public static function remoteAddress() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        if(isset($_SERVER['HTTP_CLIENT_IP'])) {
+            log_util::log(LOG_LEVEL_DEBUG, "HTTP_CLIENT_IP was set, using it");
+            $remoteAddress = $_SERVER['HTTP_CLIENT_IP'];
+        } else if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            log_util::log(LOG_LEVEL_DEBUG, "HTTP_X_FORWARDED_FOR was set, using it");
+            $remoteAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else if(isset($_SERVER['REMOTE_ADDR'])) {
+            log_util::log(LOG_LEVEL_DEBUG, "REMOTE_ADDR was set, using it");
+            $remoteAddress = $_SERVER['REMOTE_ADDR'];
+        } else {
+            log_util::log(LOG_LEVEL_WARNING, "HTTP_CLIENT_IP, HTTP_X_FORWARDED_FOR, and REMOTE_ADDR were not set, remote address not gathered");
+            $remoteAddress = "";
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "remoteAddress: " . $remoteAddress);
+        log_util::logDivider();
+
+        return $remoteAddress;
+    }
+
+    public static function requestUri() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        if(isset($_SERVER['REQUEST_URI'])) {
+            $requestURI = $_SERVER['REQUEST_URI'];
+        } else {
+            $requestURI = "No Request URI";
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "requestURI: " . $requestURI);
+        log_util::logDivider();
+
+        return $requestURI;
     }
 }
