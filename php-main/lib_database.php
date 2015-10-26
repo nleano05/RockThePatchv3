@@ -175,13 +175,16 @@ class lib_database {
 
                 if($row[$field]) {
                     $fieldValue = "True";
+                    $fieldDisplayValue = "True";
                 } else {
                     $fieldValue = "False";
+                    $fieldDisplayValue = "False";
                 }
             } else {
                 log_util::logAsOption(LOG_LEVEL_DEBUG, "field WAS NOT 'success', don't need to convert to true/false");
 
                 $fieldValue = $row[$field];
+                $fieldDisplayValue = $row[$field];
             }
             log_util::logAsOption(LOG_LEVEL_DEBUG, "fieldValue: " . $fieldValue);
 
@@ -192,17 +195,17 @@ class lib_database {
                     log_util::logAsOption(LOG_LEVEL_DEBUG, "Post for the given field DID match the row");
 
                     if(strlen($fieldValue) > $limit) {
-                        echo("<option value='" . $fieldValue . "' selected='selected'>" . substr($fieldValue, 0, $limit) . "...</option>");
+                        echo("<option value='" . $fieldValue . "' selected='selected'>" . substr($fieldDisplayValue, 0, $limit) . "...</option>");
                     } else {
-                        echo("<option value='" . $fieldValue . "' selected='selected'>" . $fieldValue  . "</option>");
+                        echo("<option value='" . $fieldValue . "' selected='selected'>" . $fieldDisplayValue  . "</option>");
                     }
                 } else {
                     log_util::logAsOption(LOG_LEVEL_DEBUG, "Post for the given field DID NOT match the row");
 
                     if(strlen($fieldValue) > $limit) {
-                        echo("<option value='" . $fieldValue . "'>" . substr($fieldValue, 0, $limit)  . "...</option>");
+                        echo("<option value='" . $fieldValue . "'>" . substr($fieldDisplayValue, 0, $limit)  . "...</option>");
                     } else {
-                        echo("<option value='" . $fieldValue . "'>" . $fieldValue  . "</option>");
+                        echo("<option value='" . $fieldValue . "'>" . $fieldDisplayValue  . "</option>");
                     }
                 }
             } else {
@@ -210,9 +213,9 @@ class lib_database {
 
 
                 if(strlen($fieldValue) > $limit) {
-                    echo("<option value='" . $fieldValue . "'>" . substr($fieldValue, 0, $limit)  . "...</option>");
+                    echo("<option value='" . $fieldValue . "'>" . substr($fieldDisplayValue, 0, $limit)  . "...</option>");
                 } else {
-                    echo("<option value='" . $fieldValue . "'>" . $fieldValue  . "</option>");
+                    echo("<option value='" . $fieldValue . "'>" . $fieldDisplayValue  . "</option>");
                 }
             }
         }
@@ -565,37 +568,23 @@ class lib_database {
                     } else if ($page == PAGE_LOGIN_LOG) {
                         log_util::log(LOG_LEVEL_DEBUG, "Matched login-log.php");
 
-                        $user = lib_database::getUser($row['userId']);
-                        if($user != NULL){
-                            $user = $user->getEmail() . " / " . $user->getUserName();
-                        } else {
-                            $user = '';
-                        }
-
                         if ($row['success']) {
                             $succeeded = "Yes";
 
-                            echo("<p><strong>Entry:</strong> <em>Name:</em>" . $user . ", ");
+                            echo("<p><strong>Entry:</strong> <em>User:</em> " . $row['user'] . ", ");
                             echo("<em>Succeeded:</em> " . $succeeded . ", ");
                             echo("<em>Time:</em> " . $row['loginTime'] . "</p>");
                         } else {
                             $succeeded = "No";
 
-                            echo("<p class='error'><strong>Entry:</strong> <em>Name:</em>" . $user . ", ");
+                            echo("<p class='error'><strong>Entry:</strong> <em>User:</em> " . $row['user'] . ", ");
                             echo("<em>Succeeded:</em> " . $succeeded . ", ");
                             echo("<em>Time:</em> " . $row['loginTime'] . "</p>");
                         }
                     } else if ($page == PAGE_LOGIN_STATISTICS) {
                         log_util::log(LOG_LEVEL_DEBUG, "Matched login-statistics.php");
 
-                        $user = lib_database::getUser($row['userId']);
-                        if($user != NULL){
-                            $user = $user->getEmail() . " / " . $user->getUserName();
-                        } else {
-                            $user = '';
-                        }
-
-                        echo("<p><strong>User:</strong> " . $user . "<br/>");
+                        echo("<p><strong>User:</strong> " . $row['user'] . "<br/>");
                         echo("<em>Total Attempts:</em> " . $row['attempts'] . "<br/>");
                         echo("<em>Failed Login Attempts:</em> " . $row['failed'] . "<br/>");
                         echo("<em>Succeeded Login Attempts:</em> " . $row['succeeded'] . "</p><hr/>");
@@ -636,6 +625,136 @@ class lib_database {
             }
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function displayUserDemographic() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $agentSet = array();
+        $osSet = array();
+        $ispSet = array();
+        $count = array();
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM page_log");
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "row IS NOT empty");
+
+                $tempAgent = $row['agent'] . " " . $row['agentVersion'];
+
+                $count[$tempAgent] = 1;
+                if(!in_array($tempAgent, $agentSet)) {
+                    array_push($agentSet, $tempAgent);
+                }
+
+                $tempOS = $row['os'] . " " . $row['osVersion'];
+                $count[$tempOS] = 1;
+                if(!in_array($tempOS, $osSet)) {
+                    array_push($osSet, $tempOS);
+                }
+
+                $tempISP = $row['isp'];
+                $count[$tempISP] = 1;
+                if(!in_array($tempISP, $ispSet)) {
+                    array_push($ispSet, $tempISP);
+                }
+                log_util::log(LOG_LEVEL_DEBUG, "count: ", $count);
+
+                while($row = $stmt->fetch()) {
+
+                    $tempAgent = $row['agent'] . " " . $row['agentVersion'];
+
+                    if(!isset($count[$tempAgent])) {
+                        $count[$tempAgent] = 1;
+                    } else {
+                        $count[$tempAgent] = $count[$tempAgent] + 1;
+                    }
+
+                    if(!in_array($tempAgent, $agentSet)) {
+                        array_push($agentSet, $tempAgent);
+                    }
+
+                    $tempOS = $row['os'] . " " . $row['osVersion'];
+                    if(!isset($count[$tempOS])) {
+                        $count[$tempOS] = 1;
+                    } else {
+                        $count[$tempOS] = $count[$tempOS] + 1;
+                    }
+
+                    if(!in_array($tempOS, $osSet)) {
+                        array_push($osSet, $tempOS);
+                    }
+
+                    $tempISP = $row['isp'];
+                    if(!isset($count[$tempISP])) {
+                        $count[$tempISP] = 1;
+                    } else {
+                        $count[$tempISP] = $count[$tempISP] + 1;
+                    }
+
+                    if(!in_array($tempISP, $ispSet)) {
+                        array_push($ispSet, $tempISP);
+                    }
+
+                    log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
+                    log_util::log(LOG_LEVEL_DEBUG, "count: ", $count);
+                }
+
+                log_util::log(LOG_LEVEL_DEBUG, "agentSet: ", $agentSet);
+                log_util::log(LOG_LEVEL_DEBUG, "osSet: ", $osSet);
+                log_util::log(LOG_LEVEL_DEBUG, "ispSet: ", $ispSet);
+                log_util::log(LOG_LEVEL_DEBUG, "count: ", $count);
+
+                echo("<h2>Agents</h2>");
+                echo("<ul>");
+                sort($agentSet);
+                foreach($agentSet as $value) {
+                    echo("<li>" . $value . ", <em>Count: " . $count[$value] . "</em></li>");
+                }
+                echo("</ul>");
+
+                echo("<h2>Operating Systems</h2>");
+                echo("<ul>");
+                sort($osSet);
+                foreach($osSet as $value) {
+                    echo("<li>" . $value . ", <em>Count: " . $count[$value] . "</em></li>");
+                }
+                echo("</ul>");
+
+                echo("<h2>ISP's</h2>");
+                echo("<ul>");
+                sort($ispSet);
+                foreach($ispSet as $value) {
+                    echo("<li>" . $value . ", <em>Count: " . $count[$value] . "</em></li>");
+                }
+                echo("</ul>");
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row IS empty");
+                echo("<p class='error'><em>Page Log is empty...</em></p>");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            echo("<p class='error'><em>Page Log is empty...</em></p>");
         }
 
         $pdo = NULL;
@@ -2091,7 +2210,7 @@ class lib_database {
         log_util::logDivider();
     }
 
-    public static function writeLoginLogAndStatistics($id, $passed) {
+    public static function writeLoginLogAndStatistics($user, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -2105,8 +2224,8 @@ class lib_database {
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
-            $stmt = $pdo->prepare("SELECT * FROM login_statistics WHERE userId = ?");
-            $stmt->bindParam(1, $id, PDO::PARAM_STR);
+            $stmt = $pdo->prepare("SELECT * FROM login_statistics WHERE user = ?");
+            $stmt->bindParam(1, $user, PDO::PARAM_STR);
             $stmt->execute();
             $row = $stmt->fetch();
 
@@ -2120,11 +2239,11 @@ class lib_database {
                     $failed = $row['failed'] + 1;
                 }
 
-                $stmt = $pdo->prepare("UPDATE login_statistics SET attempts=?, failed=?, succeeded=? WHERE userId = ?");
+                $stmt = $pdo->prepare("UPDATE login_statistics SET attempts=?, failed=?, succeeded=? WHERE user = ?");
                 $stmt->bindParam(1, $attempts, PDO::PARAM_INT);
                 $stmt->bindParam(2, $failed, PDO::PARAM_INT);
                 $stmt->bindParam(3, $succeeded, PDO::PARAM_INT);
-                $stmt->bindParam(4, $id, PDO::PARAM_STR);
+                $stmt->bindParam(4, $user, PDO::PARAM_STR);
                 $stmt->execute();
             } else {
                 $attempts = 1;
@@ -2136,8 +2255,8 @@ class lib_database {
                     $failed = 1;
                 }
 
-                $stmt = $pdo->prepare("INSERT INTO login_statistics (userId, attempts, failed, succeeded) VALUE (?, ?, ?, ?)");
-                $stmt->bindParam(1, $id, PDO::PARAM_INT);
+                $stmt = $pdo->prepare("INSERT INTO login_statistics (user, attempts, failed, succeeded) VALUE (?, ?, ?, ?)");
+                $stmt->bindParam(1, $user, PDO::PARAM_STR);
                 $stmt->bindParam(2, $attempts, PDO::PARAM_INT);
                 $stmt->bindParam(3, $failed, PDO::PARAM_INT);
                 $stmt->bindParam(4, $succeeded, PDO::PARAM_INT);
@@ -2150,8 +2269,8 @@ class lib_database {
 
             $passed = (int) $passed;
 
-            $stmt = $pdo->prepare("INSERT INTO login_log (userId, success, loginTime) VALUE (?, ?, ?)");
-            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt = $pdo->prepare("INSERT INTO login_log (user, success, loginTime) VALUE (?, ?, ?)");
+            $stmt->bindParam(1, $user, PDO::PARAM_STR);
             $stmt->bindParam(2, $passed, PDO::PARAM_INT);
             $stmt->bindParam(3, $time, PDO::PARAM_STR);
             $stmt->execute();

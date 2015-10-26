@@ -130,11 +130,11 @@ class log_util {
     public static function logFunctionStart($args) {
         global $gDebugMode, $gDebugFunctionColor;
 
-       if ($gDebugMode) {
+        if ($gDebugMode) {
             $callee = lib_get::callee();
             echo("<p style='color:" . $gDebugFunctionColor . ";' >" . $callee . ", args: ");
             print_r($args);
             echo("</p>");
-       }
+        }
     }
 }

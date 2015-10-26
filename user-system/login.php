@@ -69,9 +69,9 @@ function displayOutputLogin() {
 
         if($gUser != NULL) {
             if ($gAccountLocked != NULL && !$gAccountLocked->getLocked()) {
-                echo("<p><strong>Login Attempts:</strong> " . $gUser->getConsecutiveFailedLoginAttempts() . " <em>(You will only be given 5 before you are locked out for 30 mins)</em></p>");
+                echo("<p><strong>Login Attempts:</strong> " . ($gUser->getConsecutiveFailedLoginAttempts() + 1) . " <em>(You will only be given 5 before you are locked out for 30 mins)</em></p>");
             } else {
-                echo("<p><strong>Login Attempts:</strong> " . $gUser->getConsecutiveFailedLoginAttempts() . "</p>");
+                echo("<p><strong>Login Attempts:</strong> " . ($gUser->getConsecutiveFailedLoginAttempts() + 1). "</p>");
             }
         }
 
@@ -92,7 +92,10 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
 
     $userName = $email = isset($_POST['login-user-name-or-email']) ? strtolower($_POST['login-user-name-or-email']) : "";
     $password = isset($_POST['login-password']) ? $_POST['login-password'] : NULL;
-    $gUser  = lib_database::getUser(NULL, $email, $userName, $password, false, $noDebugModeOutput);
+    if(strlen($password) == 0){
+        $password = "empty";
+    }
+    $gUser = lib_database::getUser(NULL, $email, $userName, $password, FALSE, $noDebugModeOutput);
 
     if(!$noDebugModeOutput) {
         log_util::log(LOG_LEVEL_DEBUG, "userName: " . $userName);
@@ -117,16 +120,22 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
             lib::cookieCreate(COOKIE_LOGIN_STATUS_KEY, base64_encode($gUser->getId() . "_login"), $sendHeaders, $noDebugModeOutput);
 
             lib_database::updateUserLockAttributes($gUser->getId(), TRUE);
-            lib_database::writeLoginLogAndStatistics($gUser->getId(), TRUE);
+            lib_database::writeLoginLogAndStatistics($gUser->getEmail(), TRUE);
         } else {
             if (!$noDebugModeOutput) {
                 log_util::log(LOG_LEVEL_DEBUG, "Login DID NOT succeed");
             }
 
             lib_database::updateUserLockAttributes($gUser->getId(), FALSE);
-            lib_database::writeLoginLogAndStatistics($gUser->getId(), FALSE);
+            lib_database::writeLoginLogAndStatistics($gUser->getEmail(), FALSE);
         }
     } else {
+        $gUser = lib_database::getUser(NULL, $email, $userName, NULL, FALSE, $noDebugModeOutput);
+        if($gUser != NULL) {
+            lib_database::updateUserLockAttributes($gUser->getId(), FALSE);
+        }
+        lib_database::writeLoginLogAndStatistics($email, FALSE);
+
         log_util::log(LOG_LEVEL_WARNING, "User WAS null");
         $gCredentialsOk = FALSE;
     }

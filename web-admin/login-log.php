@@ -134,7 +134,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <p><input type="submit" value="Clear Login Log and Statistics" class="button" /></p>
                     </form>
         <?php
-                    $loginLogFilters = array("userId", "success", "loginTime");
+                    $loginLogFilters = array("user", "success", "loginTime");
                     $loginLogLabels = array("User", "Success", "Time");
 
                     lib_database::displayFilterForm("Login Log", PAGE_LOGIN_LOG, $loginLogFilters, $loginLogLabels, TABLE_LOGIN_LOG);
