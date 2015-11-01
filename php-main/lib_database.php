@@ -892,6 +892,48 @@ class lib_database {
         }
     }
 
+    public static function getAllEmails($display) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $mailingList = "";
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM users");
+            $stmt->execute();
+            while ($row = $stmt->fetch()) {
+                log_util::log(LOG_LEVEL_DEBUG, "row['email']: " . $row['email']);
+                $mailingList .= $row['email'] . ", ";
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $mailingList = trim($mailingList, ", ");
+
+        if($display) {
+            log_util::log(LOG_LEVEL_DEBUG, "display is true");
+            echo("<p>" . $mailingList . "</p>");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "display is false");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+
+        return $mailingList;
+    }
+
     /**
      *  This function gets all of the annoyance levels
      *
@@ -1233,6 +1275,56 @@ class lib_database {
         return $featureRequestCategories;
     }
 
+    public static function getMailingList($display, $testMode = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $mailingList = "";
+
+        if($testMode) {
+            $mailingList = "isupatches@aim.com";
+            //$mailingList = "patches@rockthepatch.com, isuPatches@yahoo.com, isuPatches@hotmail.com, isuPatches@gmail.com, isupatches@aim.com";
+        } else {
+            $pdo = lib_database::connect();
+
+            $emailBlast = 1;
+
+            if(!empty($pdo)) {
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE emailBlasts = ?");
+                $stmt->bindParam(1, $emailBlast, PDO::PARAM_INT);
+                $stmt->execute();
+                while ($row = $stmt->fetch()) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row['email']: " . $row['email']);
+                    $mailingList .= $row['email'] . ", ";
+                }
+            } else {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            }
+        }
+
+        $mailingList = trim($mailingList, ", ");
+
+        if($display) {
+            log_util::log(LOG_LEVEL_DEBUG, "display is true");
+            echo("<p>" . $mailingList . "</p>");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "display is false");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+
+        return $mailingList;
+    }
+
     /**
      *  This function gets the most recent update from the database
      *
@@ -1359,6 +1451,93 @@ class lib_database {
         log_util::logDivider();
 
         return $securityQuestions;
+    }
+
+    public static function getTextList($display, $testMode = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $textOut = $textOutBuild = "";
+
+        $textOutEmail = array();
+
+        if($testMode) {
+            $textOut = "317-432-5230";
+            $textOutEmail["317-432-5230"] = "3174325230@txt.att.net";
+        } else {
+            $textBlast = 1;
+
+            $pdo = lib_database::connect();
+
+            if(!empty($pdo)) {
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE textBlasts = ?");
+                $stmt->bindParam(1, $textBlast, PDO::PARAM_INT);
+                $stmt->execute();
+
+                while($row = $stmt->fetch()) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row['cell']: " . $row['cell']);
+
+                    if(isset($row['cell'])) {
+                        $phoneNumber = $row['cell'];
+                    } else {
+                        $phoneNumber = "";
+                    }
+
+                    $textOut .= $phoneNumber . ", ";
+
+                    // *NOTE* $textOutBuild is a var that will contain a string of the user's phone number
+                    // with the all of the supported carriers append that will be used later on for email
+
+                    // Main Cell Phone Carriers
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@vtext.com, "; // For Verizon users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@txt.att.net, "; // For AT&T users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@messaging.sprintpcs.com, "; // For Sprint users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@tmomail.net, "; // For T-Mobile users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@messaging.nextel.com, "; // For Nextel users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@vmobl.com, "; // For  Virgin Mobile users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@myboostmobile.com, "; // For Boost Mobile users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@message.alltel.com, "; // For Alltel users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@sms.mycricket.com, "; // For Cricket Wireless users
+
+                    // Other U.S. and Canada Carriers
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@csouth1.com, "; // For Cellular South users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@gocbw.com, "; // For Cincinnati Bell users
+                    $textOutBuild .= str_replace("-", "", $phoneNumber) . "@email.uscc.net, "; // For U.S. Cellular users
+
+                    // $textOutEmail is an associative array where the key is the user's phone number
+                    // and the value is a string of the phone number with all of the supported carriers
+                    // appended on so that it an be used later on for the email
+                    $textOutEmail[$phoneNumber] = trim($textOutBuild, ", ");
+
+                    // This needs to be reset for the next user's phone number
+                    $textOutBuild = "";
+                }
+            } else {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            }
+        }
+
+        $textOut = trim($textOut, ", ");
+
+        if($display) {
+            log_util::log(LOG_LEVEL_DEBUG, "display is true");
+            echo("<p>" . $textOut . "</p>");
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "display is false");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+
+        return $textOutEmail;
     }
 
     /**
