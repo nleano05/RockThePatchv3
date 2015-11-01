@@ -133,8 +133,10 @@ function login($sendHeaders = TRUE, $noDebugModeOutput = FALSE) {
         $gUser = lib_database::getUser(NULL, $email, $userName, NULL, FALSE, $noDebugModeOutput);
         if($gUser != NULL) {
             lib_database::updateUserLockAttributes($gUser->getId(), FALSE);
+            lib_database::writeLoginLogAndStatistics($gUser->getEmail(), FALSE);
+        } else {
+            lib_database::writeLoginLogAndStatistics($email, FALSE);
         }
-        lib_database::writeLoginLogAndStatistics($email, FALSE);
 
         log_util::log(LOG_LEVEL_WARNING, "User WAS null");
         $gCredentialsOk = FALSE;

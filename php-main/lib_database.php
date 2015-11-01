@@ -762,6 +762,78 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function displayUsersAccountLockAdministration($locked) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if($locked) {
+            echo("<h2>Locked Users</h2>");
+            echo("<form method='post' action='unlock-user.php' name='Unlock User'>");
+            echo("<p><select name='locked-users' style='width:90%;'>");
+        } else {
+            echo("<h2>Unlocked Users</h2>");
+            echo("<form method='post' action='lock-user.php' name='Lock User'>");
+            echo("<p><select name='unlocked-users' style='width:90%;'>");
+        }
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $locked = (int) $locked;
+
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE locked = ? ORDER BY lastName");
+            $stmt->bindParam(1, $locked, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "row IS NOT empty");
+
+                echo("<option value=\"" . $row['id'] . "\" > " . $row['lastName'] . ", " . $row['firstName'] . " - " . $row['userName'] . "</option>");
+
+                while($row = $stmt->fetch()) {
+                    echo("<option value=\"" . $row['id'] . "\" >" . $row['lastName'] . ", " . $row['firstName'] . " - " . $row['userName'] . "</option>");
+                }
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "row IS empty");
+
+                if($locked) {
+                    echo("<option>" . NO_LOCKED_USERS ."</option>");
+                } else {
+                    echo("<option>" . NO_UNLOCKED_USERS . "</option>");
+                }
+            }
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
+
+            if($locked) {
+                echo("<option>" . NO_LOCKED_USERS ."</option>");
+            } else {
+                echo("<option>" . NO_UNLOCKED_USERS . "</option>");
+            }
+        }
+
+        echo("</select></p>");
+
+        if($locked) {
+            echo("<p><input type='submit' name='unlock-user.php' value='Unlock User' class='button' /></p>");
+        } else {
+            echo("<p><input type='submit' name='lock-user.php' value='Lock User' class='button' /></p>");
+        }
+        echo("</form>");
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function getAccessToken($token, $clientSecret) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -1841,6 +1913,103 @@ class lib_database {
         }
     }
 
+    public static function toggleLock($id, $lock) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if($lock) {
+            $locked = 1;
+            $lockedByAdmin = 1;
+            $timeLocked = "";
+            $consecutiveFailedLoginAttempts = 0;
+        } else {
+            $locked = 0;
+            $lockedByAdmin = 0;
+            $timeLocked = "";
+            $consecutiveFailedLoginAttempts = 0;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "locked: " . $locked);
+        log_util::log(LOG_LEVEL_DEBUG, "lockedByAdmin: " . $lockedByAdmin);
+        log_util::log(LOG_LEVEL_DEBUG, "timeLocked: " . $timeLocked);
+        log_util::log(LOG_LEVEL_DEBUG, "consecutiveFailedLoginAttempts: " . $consecutiveFailedLoginAttempts);
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                $user = $row['lastName'] . ", " . $row['firstName'] . " - " .$row['userName'];
+                $email = $row['email'];
+
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                log_util::log(LOG_LEVEL_DEBUG, "email: " . $email);
+
+                $id = (int) $id;
+
+                $stmt = $pdo->prepare("UPDATE users SET locked=?, lockedByAdmin=?, timeLocked=?, consecutiveFailedLoginAttempts=? WHERE id = ?");
+                $stmt->bindParam(1, $locked, PDO::PARAM_INT);
+                $stmt->bindParam(2, $lockedByAdmin, PDO::PARAM_INT);
+                $stmt->bindParam(3, $timeLocked, PDO::PARAM_STR);
+                $stmt->bindParam(4, $consecutiveFailedLoginAttempts, PDO::PARAM_INT);
+                $stmt->bindParam(5, $id, PDO::PARAM_INT);
+                $stmt->execute();
+
+                if($lock) {
+                    $subject = "Rock the Patch! User Locked";
+                    $body = "<h2 style='color:#e44d26;'>The Following 'Rock The Patch!' User Has Been Locked</h2>\r\n\r\n"
+                        ."\r\n"
+                        ."The following 'Rock the Patch!' user has been locked and will NOT be able to log in again without contacting an administrator."
+                        ."<br/><br/>\r\n\r\n"
+                        ."<strong>User: </strong> $user\r\n\r\n"
+                        ."<br/><br/>\r\n\r\n";
+                } else {
+                    $subject = "Rock the Patch! User Unlocked";
+                    $body = "<h2 style='color:#e44d26;'>The Following 'Rock The Patch!' User Has Been Unlocked</h2>\r\n\r\n"
+                        ."\r\n"
+                        ."The following 'Rock the Patch!' user has been unlocked and will now be able to log in again."
+                        ."<br/><br/>\r\n\r\n"
+                        ."<strong>User: </strong> $user\r\n\r\n"
+                        ."<br/><br/>\r\n\r\n";
+                }
+
+                $success = lib::sendMail($email, $subject, $body);
+                if($success) {
+                    if($lock) {
+                        echo("<p><strong><em>EMAIL SUCCESS -- The user has been notified that their account is now locked</em></strong></p>");
+                    } else {
+                        echo("<p><strong><em>EMAIL SUCCESS -- The user has been notified that their account is now unlocked</em></strong></p>");
+                    }
+                } else {
+                    if($lock) {
+                        echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to notify the user that their account is now locked. Please try later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+                    } else {
+                        echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to notify the user that their account is now unlocked. Please try later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+                    }
+                }
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS NOT empty");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        lib::redirect(FALSE, NULL, FALSE, "../web-admin/account-lock-administration.php");
+
+        log_util::logDivider();
+    }
+
     public static function updateUserLockAttributes($id, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -1922,8 +2091,9 @@ class lib_database {
             $lockedByAdmin = (int) $lockedByAdmin;
 
             log_util::log(LOG_LEVEL_DEBUG, "locked: " . $locked);
+            log_util::log(LOG_LEVEL_DEBUG, "lockedByAdmin: " . $lockedByAdmin);
             log_util::log(LOG_LEVEL_DEBUG, "timeLocked: " . $timeLocked);
-            log_util::log(LOG_LEVEL_DEBUG, "consecutiveFailedLoginAttempts" . $consecutiveFailedLoginAttempts);
+            log_util::log(LOG_LEVEL_DEBUG, "consecutiveFailedLoginAttempts: " . $consecutiveFailedLoginAttempts);
 
             $stmt = $pdo->prepare("UPDATE users SET locked=?, lockedByAdmin=?, timeLocked=?, consecutiveFailedLoginAttempts=?, lastLoginAttemptTime=? WHERE id = ?");
             $stmt->bindParam(1, $locked, PDO::PARAM_INT);

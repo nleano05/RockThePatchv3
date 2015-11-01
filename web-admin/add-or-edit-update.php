@@ -10,10 +10,10 @@ $postKeys = array_keys($_POST);
 log_util::log(LOG_LEVEL_DEBUG, "post: ", $_POST);
 log_util::log(LOG_LEVEL_DEBUG, "postKeys: ", $postKeys);
 
+$validForm = FALSE;
+
 global $gUpdate;
 global $gUpdateId;
-
-$gValidForm = FALSE;
 
 if(isset($_GET['id'])) {
     $gUpdateId = $_GET['id'];
@@ -21,8 +21,8 @@ if(isset($_GET['id'])) {
 }
 
 if (isset($_POST['save-update'])) {
-    $gValidForm = checkInput();
-    if($gValidForm) {
+    $validForm = checkInput();
+    if($validForm) {
         if (empty($gUpdate)) {
             $gUpdate = new Update();
         }
@@ -125,10 +125,10 @@ function displayOutputDate() {
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
     <?php
-        if(!empty($gUpdate)) {
-            echo("<title>Rock the Patch! v3 - Edit Update</title>");
-        } else {
+        if($gUpdate == NULL || empty($gUpdate)) {
             echo("<title>Rock the Patch! v3 - Add Update</title>");
+        } else {
+            echo("<title>Rock the Patch! v3 - Edit Update</title>");
         }
     ?>
     <meta name="robots" content="all"/>
@@ -224,15 +224,15 @@ function displayOutputDate() {
     <!-- ### START content-area ### -->
     <div id="content-area">
         <?php
-            if(!empty($gUpdate)) {
-        ?>
-                <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Edit Update</div>
-                <h1>Edit Update</h1>
-        <?php
-            } else {
+            if($gUpdate == NULL || empty($gUpdate)) {
         ?>
                 <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Add Update</div>
                 <h1>Add Update</h1>
+        <?php
+            } else {
+        ?>
+                <div id="bread-crumbs"><a href="/" title="Home">Home</a> / Edit Update</div>
+                <h1>Edit Update</h1>
         <?php
             }
         ?>
@@ -252,7 +252,7 @@ function displayOutputDate() {
                 <p><strong>Update Title:</strong></p>
                 <p><input type="text" name="update-title" value="<?php if(isset($_POST['update-title'])) { echo($_POST['update-title']); } else if(!empty($gUpdate) && !empty($gUpdate->getTitle())){ echo($gUpdate->getTitle()); } ?>"/></p>
                 <?php
-                    if(!$gValidForm && isset($_POST['save-update'])) {
+                    if(!$validForm && isset($_POST['save-update'])) {
                         displayOutputTitle();
                     }
                 ?>
@@ -260,7 +260,7 @@ function displayOutputDate() {
                 <p><strong>Update:</strong></p>
                 <p><textarea name="update-body" rows="5" cols="1" style="width:100%;height:125px;"><?php if(isset($_POST['update-body'])) { echo($_POST['update-body']); } else if(!empty($gUpdate) && !empty($gUpdate->getText())) { echo($gUpdate->getText()); }?></textarea></p>
                 <?php
-                    if(!$gValidForm && isset($_POST['save-update'])) {
+                    if(!$validForm && isset($_POST['save-update'])) {
                         displayOutputBody();
                     }
                 ?>
@@ -268,7 +268,7 @@ function displayOutputDate() {
                 <p><strong>Date:</strong></p>
                 <p><input id="update-date" name="update-date" type="text"  value="<?php if(isset($_POST['update-date'])) { echo($_POST['update-date']); } else if(!empty($gUpdate) && !empty($gUpdate->getDate())){ echo($gUpdate->getDate()); } ?>"></p>
                 <?php
-                    if(!$gValidForm && isset($_POST['save-update'])) {
+                    if(!$validForm && isset($_POST['save-update'])) {
                         displayOutputDate();
                     }
                 ?>
@@ -304,7 +304,7 @@ function displayOutputDate() {
         <!-- ### END contact-info ### -->
         <!-- ### START RSS feed ### -->
         <div id="rss">
-            <?php require_once('../inc/rss.php'); ?>
+            <?php require_once('../inc/rss-secondary.php'); ?>
         </div>
         <!-- ### END RSS feed ### -->
         <!-- ### START validation ### -->

@@ -32,7 +32,7 @@ function displayUpdates($updates) {
             echo("<form action='recent-updates-log.php' method='post' name='delete-update-form'>");
                 echo("<p class='float-left'><input type='submit' name='delete-update-" . $update->getId() . "' value='Delete Update' class='button' /></p>");
             echo("</form>");
-            echo("<form action='add-or-edit-update.php?id=" . $update->getId() . "' method='post' name='edit-update-form'>");
+            echo("<form action='web-admin/add-or-edit-update.php?id=" . $update->getId() . "' method='post' name='edit-update-form'>");
                 echo("<p class='float-left'><input type='submit' name='edit-update' value='Edit Update' class='button' /></p>");
             echo("</form>");
         }
@@ -164,18 +164,18 @@ function displayUpdates($updates) {
         <h1>Recent Updates Log</h1>
 
         <?php
-        $updates = lib_database::getUpdates();
+            $updates = lib_database::getUpdates();
 
-        if (!empty($updates) && (count($updates) > 0)) {
-            echo("<form action='web-admin/add-or-edit-update.php' method='post' name='add-update-form'>");
-            if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
-                echo("<p><input type='submit' name='add-update' value='Add Update' class='button' /></p>");
+            if (!empty($updates) && (count($updates) > 0)) {
+                echo("<form action='web-admin/add-or-edit-update.php' method='post' name='add-update-form'>");
+                if(lib_get::loginStatus() == STATUS_LOGGED_IN && lib_check::userIsAdmin()) {
+                    echo("<p><input type='submit' name='add-update' value='Add Update' class='button' /></p>");
+                }
+                echo("</form>");
+                displayUpdates($updates);
+            } else {
+                echo("<p><em>No updates to display at this time</em><p>");
             }
-            echo("</form>");
-            displayUpdates($updates);
-        } else {
-            echo("<p><em>No updates to display at this time</em><p>");
-        }
         ?>
     </div>
     <!-- ### END content-area ### -->
