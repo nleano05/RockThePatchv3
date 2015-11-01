@@ -91,7 +91,7 @@ class lib {
                 setcookie($key, $value, time() + 3600, '/', '.rockthepatch.com', TRUE);
                 $referer = lib_get::referer();
                 // Added for EasyPHP
-                if (strpos($referer, 'http://127.0.0.1') !== FALSE) {
+                if (strpos($referer, '127.0.0.1') !== FALSE) {
                     setcookie($key, $value, time() + 3600, '/', '127.0.0.1', FALSE);
                 }
             }
@@ -139,7 +139,7 @@ class lib {
             setcookie($key, "", time() + 1, '/', '.rockthepatch.com', TRUE);
             $referer = lib_get::referer();
 
-            if (strpos($referer, 'http://127.0.0.1') !== FALSE) {
+            if (strpos($referer, '127.0.0.1') !== FALSE) {
                 setcookie($key, "", time() - 3600, '/', '127.0.0.1', FALSE);
                 setcookie($key, "", time() + 1, '/', '127.0.0.1', FALSE);
             }

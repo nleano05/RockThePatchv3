@@ -129,6 +129,8 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             if(lib_get::loginStatus() == STATUS_LOGGED_IN) {
                 if(lib_check::userIsAdmin()) {
         ?>
+                    <p>Debug mode has been enabled for this session!</p>
+
                     <!-- ### START Debug Mode Form ### -->
                     <form action="modify-debug-mode-edit.php" method="post">
                         <p><strong>Debug Mode:</strong></p>
@@ -136,19 +138,19 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <p>THIS IS AN ADVANCED FEATURE. To see additional output via echo statements for debugging, admin users can enable or disable debug mode via this page.</p>
 
                         <p><strong><em>*NOTES*<br/>
-                        <br/>- To logout in debug mode, you must use the 'Logout In Debug Mode' link in the user nav area");
-                        <br/>- To login after logging out via 'Logout In Debug Mode' you must use the 'Login With Debug Mode' button in the Login area</em></strong></p>
+                                    <br/>- To logout in debug mode, you must use the 'Logout In Debug Mode' link in the user nav area");
+                                    <br/>- To login after logging out via 'Logout In Debug Mode' you must use the 'Login With Debug Mode' button in the Login area</em></strong></p>
 
                         <?php
                             global $gDebugMode;
                             if(!$gDebugMode) {
-                        ?>
+                                ?>
                                 <p><input type="submit" value="Enable Debug Mode For This Session" name="enable" class="button"/></p>
-                        <?php
+                                <?php
                             } else {
-                        ?>
+                                ?>
                                 <p><input type="submit" value="Disable Debug Mode For This Session" name="disable" class="button"/></p>
-                        <?php
+                                <?php
                             }
                         ?>
                     </form>

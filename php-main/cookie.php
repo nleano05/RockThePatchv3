@@ -12,8 +12,8 @@ if($gDebugMode) {
     echo("<br/>- To logout in debug mode, you must use the 'Logout In Debug Mode' link in the user nav area");
     echo("<br/>- To login after logging out via 'Logout In Debug Mode' you must use the 'Login With Debug Mode' button in the Login area</em></strong></p>");
     ?>
-    <form action="https://www.rockthepatch.com/web-admin/modify-debug-mode-edit.php" method="post">
-        <p><input type="submit" value="Disable Debug Mode For This Session" name="disable-cookie" class="button" /></p>
+    <form action="../web-admin/modify-debug-mode-edit.php" method="post">
+        <p><input type="submit" value="Disable Debug Mode For This Session" name="disable" class="button" /></p>
     </form>
     <?php
 }
