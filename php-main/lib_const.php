@@ -57,3 +57,4 @@ define("PAGE_PAGE_FLOW", "page-flow.php");
 define("NO_LOCKED_USERS", "-- There are currently no locked users --");
 define("NO_UNLOCKED_USERS", "-- There are currently no unlocked users --");
 define("NO_BLOCKED_IP_GROUPS", "-- There are currently no blocked IP groups --");
+define("NO_NON_ADMIN_USERS", "-- There are currently no non-admin users. --");

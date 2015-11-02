@@ -152,6 +152,47 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function displayAdminUsers() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        echo("<p><select name='non-admin-users' style='width:90%;'>");
+        if(!empty($pdo)) {
+            log_util::logAsOption(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $role = ROLE_ADMIN;
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE role = ? ORDER BY lastName");
+            $stmt->bindParam(1, $role, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                echo("<option value='" . $row['id'] . "'> " . $row['lastName'] . ", " . $row['fname'] . " - " . $row['userName'] . "</option>");
+                while($row = $stmt->fetch()) {
+                    echo("<option value='" . $row['id'] . "'> " . $row['lastName'] . ", " . $row['fname'] . " - " . $row['userName'] . "</option>");
+                }
+            } else {
+                log_util::logAsOption(LOG_LEVEL_WARNING, "row WAS empty");
+                echo("<option>" . NO_NON_ADMIN_USERS . "</option>");
+            }
+        } else {
+            log_util::logAsOption(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            echo("<option>" . NO_NON_ADMIN_USERS . "</option>");
+        }
+        echo("</select></p>");
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     private static function displayFilter($field, $labelText, $db) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -654,6 +695,47 @@ class lib_database {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
         }
 
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function displayNonAdminUsers() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        echo("<p><select name='non-admin-users' style='width:90%;'>");
+        if(!empty($pdo)) {
+            log_util::logAsOption(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $role = ROLE_USER;
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE role = ? ORDER BY lastName");
+            $stmt->bindParam(1, $role, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::logAsOption(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                echo("<option value='" . $row['id'] . "'> " . $row['lastName'] . ", " . $row['fname'] . " - " . $row['userName'] . "</option>");
+                while($row = $stmt->fetch()) {
+                    echo("<option value='" . $row['id'] . "'> " . $row['lastName'] . ", " . $row['fname'] . " - " . $row['userName'] . "</option>");
+                }
+            } else {
+                log_util::logAsOption(LOG_LEVEL_WARNING, "row WAS empty");
+                echo("<option>" . NO_NON_ADMIN_USERS . "</option>");
+            }
+        } else {
+            log_util::logAsOption(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            echo("<option>" . NO_NON_ADMIN_USERS . "</option>");
+        }
+        echo("</select></p>");
         $pdo = NULL;
 
         log_util::logDivider();
@@ -2061,6 +2143,87 @@ class lib_database {
             }
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function toggleAdminAccess($userId, $granted) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        $role = $granted ? ROLE_ADMIN : ROLE_USER;
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                $email = $user = $row['email'];
+
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+                log_util::log(LOG_LEVEL_DEBUG, "email: " . $email);
+
+                $stmt = $pdo->prepare("UPDATE users SET role=? WHERE id = ?");
+                $stmt->bindParam(1, $role, PDO::PARAM_INT);
+                $stmt->bindParam(2, $userId, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                $email = $user = "";
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+        } else {
+            $email = $user = "";
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        if($granted) {
+            log_util::log(LOG_LEVEL_DEBUG, "Sending email for admin access being granted");
+
+            $subject = "Rock the Patch! - Admin Access Granted";
+            $body = "<h2 style='color:#e44d26;'>Rock The Patch! - Admin Access Granted</h2>\r\n\r\n"
+                ."\r\n"
+                ."The following 'Rock the Patch!' user has been granted admin access and will now have escalated privileges while logged in."
+                ."<br/><br/>\r\n\r\n"
+                ."<strong>User: </strong> $user\r\n\r\n"
+                ."<br/><br/>\r\n\r\n";
+
+            $success = lib::sendMail($email, $subject, $body);
+            if($success) {
+                echo("<p><strong><em>EMAIL SUCCESS -- The user has been sent a confirmation that they were added as an admin user.</em></strong></p>");
+            } else {
+                echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to email the confirmation that the user was added as an admin user. Please try later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "Sending email for admin access being revoked");
+
+            $subject = "Rock the Patch! - Admin Access Revoked";
+            $body = "<h2 style='color:#e44d26;'>Rock The Patch! - Admin Access Revoked</h2>\r\n\r\n"
+                ."\r\n"
+                ."The following 'Rock the Patch!' user has had admin access revoked and will no longer have escalated privileges while logged in."
+                ."<br/><br/>\r\n\r\n"
+                ."<strong>User: </strong> $user\r\n\r\n"
+                ."<br/><br/>\r\n\r\n";
+
+            $success = lib::sendMail($email, $subject, $body);
+            if($success) {
+                echo("<p><strong><em>EMAIL SUCCESS -- The user has been sent a confirmation that they have had admin access revoked.</em></strong></p>");
+            } else {
+                echo("<p><strong><em>EMAIL FAILURE -- Bummer, we were not able to email the confirmation that the user has had admin access revoked. Please try later or contact $masterAdminName at: <a href='mailto:$masterAdminEmail' title='Email $masterAdminName'>$masterAdminEmail</a>.</em></strong></p>");
+            }
         }
 
         $pdo = NULL;
