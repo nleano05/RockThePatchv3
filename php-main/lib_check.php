@@ -94,6 +94,31 @@ class lib_check {
         return $black;
     }
 
+    public static function blocked() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $blocked = FALSE;
+
+        $remoteAddress = lib_get::remoteAddress();
+
+        $ipOverlapDetector = lib_check::IPRangeOverlap($remoteAddress, "32");
+        if($ipOverlapDetector->overlapDetected()) {
+            $blocked = TRUE;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "ipOverlapDetector: ", $ipOverlapDetector);
+        log_util::log(LOG_LEVEL_DEBUG, "blocked: " . $blocked);
+        log_util::logDivider();
+
+        return $blocked;
+    }
+
     /**
      *  This function checks if a connecting agent is a known bot or spider
      *
@@ -260,6 +285,79 @@ class lib_check {
         log_util::logDivider();
 
         return $internalReference;
+    }
+
+    public static function IPRangeOverlap($ip, $subnet, $checkUsersIP = FALSE) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $ipRangeOverlapDetector = new IPOverlapDetector();
+        $ipRangeOverlapDetector->setOverlapDetected(FALSE);
+        $ipRangeOverlapDetector->setOverlapsWithUsersIP(FALSE);
+
+        $networkInfo = lib::subySubnet($ip, $subnet);
+        $lowestIPInRangeToCheckAsLong = ip2long($networkInfo->getFirstHostIP());
+        $greatestIPInRangeToCheckAsLong = ip2long($networkInfo->getLastHostIP());
+
+        log_util::log(LOG_LEVEL_DEBUG, "Network info of range to check: ", $networkInfo);
+        log_util::log(LOG_LEVEL_DEBUG, "Stating ip of subnet to check: " . $networkInfo->getFirstHostIP());
+        log_util::log(LOG_LEVEL_DEBUG, "Ending ip of subnet to check: " . $networkInfo->getLastHostIP());
+        log_util::log(LOG_LEVEL_DEBUG, "lowestIPInRangeToCheckAsLong: " . $lowestIPInRangeToCheckAsLong);
+        log_util::log(LOG_LEVEL_DEBUG, "greatestIPInRangeToCheckAsLong: " . $greatestIPInRangeToCheckAsLong);
+
+        $blockedIPGroups = lib_database::getBlockedIPGroups();
+        log_util::log(LOG_LEVEL_DEBUG, "blockedIPGroups: ", $blockedIPGroups);
+
+        if($blockedIPGroups[0] != NO_BLOCKED_IP_GROUPS) {
+            for($ipInRangeToCheckAsLong = $lowestIPInRangeToCheckAsLong; $ipInRangeToCheckAsLong <= $greatestIPInRangeToCheckAsLong; $ipInRangeToCheckAsLong++) {
+                log_util::log(LOG_LEVEL_DEBUG, "ipInRangeToCheckAsLong: " . $ipInRangeToCheckAsLong);
+
+                foreach($blockedIPGroups as $blockedIPGroup) {
+                    $blockedIPGroupNetworkInfo = lib::subySubnet($blockedIPGroup->getIp(), $blockedIPGroup->getSubnet());
+
+                    log_util::log(LOG_LEVEL_DEBUG, "Network info for blocked ip group:: ", $blockedIPGroupNetworkInfo);
+                    log_util::log(LOG_LEVEL_DEBUG, "Stating ip of subnet to check: " . $blockedIPGroupNetworkInfo->getFirstHostIP());
+                    log_util::log(LOG_LEVEL_DEBUG, "Ending ip of subnet to check: " . $blockedIPGroupNetworkInfo->getLastHostIP());
+                    log_util::log(LOG_LEVEL_DEBUG, "ip2long(blockedIPGroupNetworkInfo->firstHostIP): " . ip2long($blockedIPGroupNetworkInfo->getFirstHostIP()));
+                    log_util::log(LOG_LEVEL_DEBUG, "ip2long(blockedIPGroupNetworkInfo->lastHostIP): " . ip2long($blockedIPGroupNetworkInfo->getLastHostIP()));
+                    log_util::log(LOG_LEVEL_DEBUG, "ip2long(ip):: " .  ip2long($ip));
+
+                    if($ipInRangeToCheckAsLong <= ip2long($blockedIPGroupNetworkInfo->getLastHostIP()) && ip2long($blockedIPGroupNetworkInfo->getFirstHostIP()) <= $ipInRangeToCheckAsLong) {
+                        log_util::log(LOG_LEVEL_WARNING, "Overlap detected!");
+                        $ipRangeOverlapDetector->setOverlapDetected(TRUE);
+                        $ipRangeOverlapDetector->setIpOfOverlap($blockedIPGroup->getIp());
+                        $ipRangeOverlapDetector->setSubnetOfOverlap($blockedIPGroup->getSubnet());
+                        break;
+                    }
+                }
+
+                if($ipRangeOverlapDetector->overlapDetected()) {
+                    break;
+                }
+            }
+        }
+
+        if($checkUsersIP) {
+            $remoteAddress = lib_get::remoteAddress();
+            log_util::log(LOG_LEVEL_DEBUG, "remoteAddress: " . $remoteAddress);
+
+            if(ip2long($remoteAddress) <= ip2long($networkInfo->getLastHostIP()) && ip2long($networkInfo->getFirstHostIP()) <= ip2long($remoteAddress)) {
+                $ipRangeOverlapDetector->setOverlapDetected(TRUE);
+                $ipRangeOverlapDetector->setOverlapsWithUsersIP(TRUE);
+                $ipRangeOverlapDetector->setIpOfOverlap($remoteAddress);
+                $ipRangeOverlapDetector->setSubnetOfOverlap("32");
+            }
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "ipRangeOverlapDetector: ", $ipRangeOverlapDetector);
+        log_util::logDivider();
+
+        return $ipRangeOverlapDetector;
     }
 
     /**

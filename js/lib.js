@@ -5,6 +5,7 @@ window.onload = function() {
 
     syncLoginForms();
 
+    toggleAccessControlBlockType();
     toggleAccountInfoEditConfirmEmail();
     toggleAccountInfoEditConfirmSecurityAnswer();
     toggleAccountInfoEditNewPassword();

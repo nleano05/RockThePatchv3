@@ -21,9 +21,7 @@ if($gDebugMode) {
 $gLoginStatus = lib_get::loginStatus();
 lib_check::sessionId();
 
-// TODO - finish this
-//$blocked = checkIPBlocked();
-//if($blocked) {
-//    redirect(FALSE, NULL, FALSE, "https://www.rockthepatch.com/blocked.php");
-//}
-?>
+$blocked = lib_check::blocked();
+if($blocked) {
+    lib::redirect(FALSE, NULL, FALSE, lib_get::baseUrl() . "blocked.php");
+}

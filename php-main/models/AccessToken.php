@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class AccountLock
+ * Class AccessToken
  * @author - Patches
  * @version - 1.0
  * @history - Created 10/12/2015

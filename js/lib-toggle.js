@@ -1,3 +1,35 @@
+function toggleAccessControlBlockType() {
+    var accessControlForm = document.getElementsByName("access-control");
+    if(accessControlForm.length > 0) {
+        var PRIVATE_toggleBlockOption = function (blockOption) {
+            if(blockOption.value == "single") {
+                blockIPGroup.style.display = "none";
+                blockSingleIP.style.display = "block";
+            } else {
+                blockIPGroup.style.display = "block";
+                blockSingleIP.style.display = "none";
+            }
+        };
+
+        var blockOption = accessControlForm[0].elements['block-option'];
+
+        var blockIPGroup = document.getElementById("block-group");
+        var blockSingleIP = document.getElementById("block-single");
+
+        blockOption.onload = function() {
+            PRIVATE_toggleBlockOption(blockOption);
+        };
+
+        blockOption[0].onchange = function() {
+            PRIVATE_toggleBlockOption(blockOption);
+        };
+
+        blockOption[1].onchange = function() {
+            PRIVATE_toggleBlockOption(blockOption);
+        };
+    }
+}
+
 function toggleAccountInfoEditConfirmEmail() {
     var accountInfoEditForm = document.getElementsByName("account-info-edit");
     if(accountInfoEditForm.length > 0) {

@@ -169,10 +169,10 @@ Class NetworkInfo {
      * @param float|NULL $hostPortion
      */
     public function setHostPortion($hostPortion) {
-        if (is_float($hostPortion) || $hostPortion == NULL) {
+        if (is_float($hostPortion) || is_int($hostPortion) || $hostPortion == NULL) {
             $this->hostPortion = $hostPortion;
         } else {
-            trigger_error('Expected a float or null for $hostPortion.', E_USER_WARNING);
+            trigger_error('Expected a float, int, or null for $hostPortion.', E_USER_WARNING);
         }
     }
 
