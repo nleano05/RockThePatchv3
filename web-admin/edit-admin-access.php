@@ -147,12 +147,12 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     </form>
                     <!-- ### END Grant Admin Access form ### -->
         <?php
+                } else {
+                    echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
+                }
             } else {
-                echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
+                echo("<p><em>" . NOTICE_MUST_BE_LOGGED_IN . "</em></p>");
             }
-        } else {
-            echo("<p><em>" . NOTICE_MUST_BE_LOGGED_IN . "</em></p>");
-        }
         ?>
     </div>
     <!-- ### END content-area ### -->

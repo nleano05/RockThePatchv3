@@ -126,6 +126,32 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function deleteAnnoyanceLevel($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM annoyance_levels WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function deleteUser($id) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -954,6 +980,8 @@ class lib_database {
 
         $pdo = lib_database::connect();
 
+        $accessToken = NULL;
+
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
@@ -1041,6 +1069,46 @@ class lib_database {
         log_util::logDivider();
 
         return $mailingList;
+    }
+
+    public static function getAnnoyanceLevelById($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $annoyanceLevel = NULL;
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection IS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM annoyance_levels WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if (!empty($row )) {
+                $annoyanceLevel = new AnnoyanceLevel();
+                $annoyanceLevel->setId((int)$row['id']);
+                $annoyanceLevel->setName($row['name']);
+                $annoyanceLevel->setLevel((int)$row['level']);
+                $annoyanceLevel->setIsDefault((bool)$row['isDefault']);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "annoyanceLevel: ", $annoyanceLevel);
+        log_util::logDivider();
+
+        return $annoyanceLevel;
     }
 
     /**
@@ -2371,6 +2439,35 @@ class lib_database {
         }
     }
 
+    public static function updateAnnoyanceLevel($id, $level, $name, $isDefault) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("UPDATE annoyance_levels SET level=?, name=?, isDefault=? WHERE id = ?");
+            $stmt->bindParam(1, $level, PDO::PARAM_INT);
+            $stmt->bindParam(2, $name, PDO::PARAM_STR);
+            $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
+            $stmt->bindParam(4, $id, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     /**
      *  This function writes encryption data out to the database
      *
@@ -2658,6 +2755,34 @@ class lib_database {
             $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
             $stmt->bindParam(1, $encryptedPassword, PDO::PARAM_STR);
             $stmt->bindParam(2, $id, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeAnnoyanceLevel($level, $name, $isDefault) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("INSERT INTO annoyance_levels (level, name, isDefault) VALUE (?, ?, ?)");
+            $stmt->bindParam(1, $level, PDO::PARAM_INT);
+            $stmt->bindParam(2, $name, PDO::PARAM_STR);
+            $stmt->bindParam(2, $isDefault, PDO::PARAM_INT);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");

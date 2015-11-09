@@ -74,7 +74,7 @@
     }
 
     .input70 {
-        float: left;
+        float: none;
         width: 100%;
     }
 
@@ -86,6 +86,30 @@
     .input70 select {
         width:94%;
         margin:auto 5px;
+    }
+
+    .label10 {
+        float: none;
+        width: 100%;
+    }
+
+    .input90 {
+        float: none;
+        width: 100%;
+    }
+
+    .input90 input {
+        float: none;
+        width: 100%;
+    }
+
+    .input90 select {
+        float: none;
+        width: 100%;
+    }
+
+    .radio-button-holder p {
+        float:none;
     }
 }
 

@@ -3,12 +3,18 @@ window.onload = function() {
 
     autoformatPhoneNumberWatcher();
 
+    populateAnnoyanceLevelEdit();
+
     syncLoginForms();
 
     toggleAccessControlBlockType();
     toggleAccountInfoEditConfirmEmail();
     toggleAccountInfoEditConfirmSecurityAnswer();
     toggleAccountInfoEditNewPassword();
+    toggleAnnoyanceLevelsAddEditOrDelete();
+    toggleEmailDistrosAddEditOrDelete();
+    toggleErrorReportCategoryAddEditOrDelete();
+    toggleFeatureRequestCategoryAddEditOrDelete();
 };
 
 function createAccessToken(callback) {

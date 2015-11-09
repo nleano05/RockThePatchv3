@@ -185,8 +185,8 @@ blockquote, blockquote p {
 * Styles for user nav
 */
 #user-nav {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     width: 100%;
     height: auto;
     background: #333;
@@ -195,8 +195,8 @@ blockquote, blockquote p {
 }
 
 #user-nav ul {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     list-style: none;
 }
 
@@ -205,7 +205,7 @@ blockquote, blockquote p {
     width: auto;
     text-align: center;
     padding: 7px 18px;
-    margin: 0px;
+    margin: 0;
 }
 
 #user-nav ul li a {
@@ -304,7 +304,7 @@ blockquote, blockquote p {
 }
 
 /**
-* Styles for
+* Styles for forms
 */
 
 form {
@@ -350,6 +350,46 @@ form {
     width: 95%;
     margin: 7px 12px 5px 0;
     float: right;
+}
+
+.label10 {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.input90 {
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 90%
+}
+
+.input90 input {
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.input90 select {
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.radio-button-holder {
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.radio-button-holder p {
+    float: left;
+    margin: 0;
+    padding: 0;
 }
 
 /**
