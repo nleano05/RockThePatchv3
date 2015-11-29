@@ -139,6 +139,10 @@ function sendTempPassword() {
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
 
+    <!-- ### JQuerey Imports ###, JSUnresolvedLibraryURL, JSUnresolvedLibraryURL -->
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
     <!-- ### Common Javascript Library Imports ### -->
     <script type="text/javascript" src="/js/lib.js"></script>
     <script type="text/javascript" src="/js/lib-autoformat.js"></script>

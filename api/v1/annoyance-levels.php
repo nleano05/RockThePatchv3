@@ -11,9 +11,17 @@ if(isset($headers['Authorizationtoken'])) {
     if(lib_check::accessToken($headers['Authorizationtoken'])) {
         if(isset($_GET['id'])) {
             $annoyanceLevel = lib_database::getAnnoyanceLevelById($_GET['id']);
+
+            if($annoyanceLevel->isDefault() != NULL && $annoyanceLevel->isDefault() == TRUE) {
+                $isDefault = 1;
+            } else {
+                $isDefault = 0;
+            }
+
             $annoyanceLevelJSON = "{";
             $annoyanceLevelJSON .= "\"id\":" . $annoyanceLevel->getId() . ",";
             $annoyanceLevelJSON .= "\"level\":" . $annoyanceLevel->getLevel() . ",";
+            $annoyanceLevelJSON .= "\"isDefault\":" . $isDefault . ",";
             $annoyanceLevelJSON .= "\"name\":\"" . $annoyanceLevel->getName() . "\"";
             $annoyanceLevelJSON .= "}";
         } else {

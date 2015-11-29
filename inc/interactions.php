@@ -26,11 +26,9 @@
     function onHoverFeatureRequest() {
         $(".feature-request-img").attr("src", "/images/icons-and-logos/feature-request-hover.png");
     }
-
     function offHoverFeatureRequest() {
         $(".feature-request-img").attr("src", "/images/icons-and-logos/feature-request.png");
     }
-
     function onHoverErrorReport() {
         $(".error-report-img").attr("src", "/images/icons-and-logos/error-report-hover.png");
     }

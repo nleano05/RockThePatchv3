@@ -2453,6 +2453,19 @@ class lib_database {
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
+            if($isDefault == "yes") {
+                $isDefault = 1;
+
+                $newIsDefault = 0;
+
+                $stmt = $pdo->prepare("UPDATE annoyance_levels SET isDefault = ? WHERE isDefault = ?");
+                $stmt->bindParam(1, $newIsDefault, PDO::PARAM_INT);
+                $stmt->bindParam(2, $isDefault, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                $isDefault = 0;
+            }
+
             $stmt = $pdo->prepare("UPDATE annoyance_levels SET level=?, name=?, isDefault=? WHERE id = ?");
             $stmt->bindParam(1, $level, PDO::PARAM_INT);
             $stmt->bindParam(2, $name, PDO::PARAM_STR);
@@ -2779,10 +2792,22 @@ class lib_database {
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
 
+            if($isDefault == "yes") {
+                $isDefault = 1;
+                $newIsDefault = 0;
+
+                $stmt = $pdo->prepare("UPDATE annoyance_levels SET isDefault = ? WHERE isDefault = ?");
+                $stmt->bindParam(1, $newIsDefault, PDO::PARAM_INT);
+                $stmt->bindParam(2, $isDefault, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                $isDefault = 0;
+            }
+
             $stmt = $pdo->prepare("INSERT INTO annoyance_levels (level, name, isDefault) VALUE (?, ?, ?)");
             $stmt->bindParam(1, $level, PDO::PARAM_INT);
             $stmt->bindParam(2, $name, PDO::PARAM_STR);
-            $stmt->bindParam(2, $isDefault, PDO::PARAM_INT);
+            $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");

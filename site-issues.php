@@ -49,6 +49,10 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
     <link rel="stylesheet" href="/css/ie7.css" type="text/css" media="screen"/>
     <![endif]-->
 
+    <!-- ### JQuerey Imports ###, JSUnresolvedLibraryURL, JSUnresolvedLibraryURL -->
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
     <!-- ### Favicons ### -->
     <link rel="shortcut icon" href="/images/icons-and-logos/favicon.ico"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon.png"/>

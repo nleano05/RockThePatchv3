@@ -106,14 +106,14 @@ function checkInputEditAnnoyanceLevel() {
     $annoyanceLevels = lib_database::getAnnoyanceLevels();
 
     foreach($annoyanceLevels as $annoyanceLevel) {
-        if($annoyanceLevel->getName() == $editName) {
+        if($annoyanceLevel->getName() == $editName && $annoyanceLevel->getId() != $editAnnoyanceLevelSelect) {
             $gInUseEditName = TRUE;
             break;
         }
     }
 
     foreach($annoyanceLevels as $annoyanceLevel) {
-        if($annoyanceLevel->getLevel() == $editLevel) {
+        if($annoyanceLevel->getLevel() == $editLevel && $annoyanceLevel->getId() != $editAnnoyanceLevelSelect) {
             $validForm = FALSE;
             $gInUseEditLevel = TRUE;
             break;
@@ -224,6 +224,10 @@ function displayOutputDeleteAnnoyanceLevel() {
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-72x72.png"/>
     <link rel="apple-touch-icon" href="/images/icons-and-logos/apple-touch-icon-114x114.png"/>
+
+    <!-- ### JQuerey Imports ###, JSUnresolvedLibraryURL, JSUnresolvedLibraryURL -->
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <!-- ### Common Javascript Library Imports ### -->
     <script type="text/javascript" src="/js/lib.js"></script>
@@ -397,18 +401,18 @@ function displayOutputDeleteAnnoyanceLevel() {
                                 <div>
                                     <p><strong>Make this the default annoyance level? (all others will be set to false): </strong></p>
                                 </div>
-                                <div>
+                                <div class='radio-button-holder'>
                                 <?php
                                     $addIsDefault = isset($_POST['add-is-default']) ? $_POST['add-is-default'] : "no";
                                     if($addIsDefault == "no") {
                                 ?>
-                                        <p><input type="radio" name="add-is-default" value="yes" />Yes
-                                        <input type="radio" name="add-is-default" value="no" checked="checked" />No</p>
+                                        <p><input type="radio" name="add-is-default" value="yes" />Yes</p>
+                                        <p><input type="radio" name="add-is-default" value="no" checked="checked" />No</p>
                                 <?php
                                     } else {
                                 ?>
-                                        <p><input type="radio" name="add-is-default" value="yes" checked="checked" />Yes
-                                        <input type="radio" name="add-is-default" value="no" />No</p>
+                                        <p><input type="radio" name="add-is-default" value="yes" checked="checked" />Yes</p>
+                                        <p><input type="radio" name="add-is-default" value="no" />No</p>
                                 <?php
                                     }
                                 ?>
@@ -505,20 +509,20 @@ function displayOutputDeleteAnnoyanceLevel() {
                                     <div>
                                         <p><strong>Make this the default annoyance level? (all others will be set to false): </strong></p>
                                     </div>
-                                    <div>
+                                    <div class='radio-button-holder'>
                                         <?php
-                                        $editIsDefault = isset($_POST['edit-is-default']) ? $_POST['edit-is-default'] : "no";
-                                        if($editIsDefault == "no") {
-                                            ?>
-                                            <p><input type="radio" name="edit-is-default" value="yes" />Yes
-                                                <input type="radio" name="edit-is-default" value="no" checked="checked" />No</p>
-                                            <?php
-                                        } else {
-                                            ?>
-                                            <p><input type="radio" name="edit-is-default" value="yes" checked="checked" />Yes
-                                                <input type="radio" name="edit-is-default" value="no" />No</p>
-                                            <?php
-                                        }
+                                            $editIsDefault = isset($_POST['edit-is-default']) ? $_POST['edit-is-default'] : "no";
+                                            if($editIsDefault == "no") {
+                                        ?>
+                                                <p><input type="radio" name="edit-is-default" value="yes" />Yes</p>
+                                                <p><input type="radio" name="edit-is-default" value="no" checked="checked" />No</p>
+                                        <?php
+                                            } else {
+                                        ?>
+                                            <p><input type="radio" name="edit-is-default" value="yes" checked="checked" />Yes</p>
+                                            <p><input type="radio" name="edit-is-default" value="no" />No</p>
+                                        <?php
+                                            }
                                         ?>
                                     </div>
                                     <div class='clear'></div>

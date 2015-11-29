@@ -4,14 +4,15 @@ function populateAnnoyanceLevelEdit() {
         var editAnnoyanceLevelSelect = document.getElementsByName("edit-annoyance-level-select");
         var editAnnoyanceLevelSelectValue = editAnnoyanceLevelSelect[0].value;
 
-        //var editAnnoyanceLevelSelectValueSplit = editAnnoyanceLevelSelectValue.split(" - ");
-        //
-        //var editLevel = document.getElementsByName("edit-level");
-        //var editName = document.getElementsByName("edit-name");
+        var editLevel = document.getElementsByName("edit-level");
+        var editName = document.getElementsByName("edit-name");
 
         if(editAnnoyanceLevelSelectValue != "-- SELECT ANNOYANCE LEVEL TO EDIT --"){
-            setAppendString(editAnnoyanceLevelSelectValue[0]);
+            setAppendString(editAnnoyanceLevelSelectValue);
             createAccessToken(populateAnnoyanceLevelEditTokenCallback);
+        } else {
+            editLevel[0].value = "";
+            editName[0].value = "";
         }
 
         editAnnoyanceLevelSelect[0].onchange = function() {
@@ -36,6 +37,7 @@ function populateAnnoyanceLevelEditCallback(response) {
 
     editLevel[0].value = responseObject.level;
     editName[0].value = responseObject.name;
+
     if(responseObject.isDefault == 1) {
         editIsDefault[0].checked = true;
         editIsDefault[1].checked = false;
