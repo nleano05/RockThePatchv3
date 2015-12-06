@@ -104,7 +104,7 @@ function sendFeatureRequest() {
     $featureRequestCategoryInfo = lib_database::getFeatureRequestCategories($category);
 
     if(!empty($featureRequestCategoryInfo) && !empty($featureRequestCategoryInfo[0])) {
-        $emailDistroInfo = lib_database::getEmailDistros($featureRequestCategoryInfo[0]->getDistro());
+        $emailDistroInfo = lib_database::getEmailDistroById($featureRequestCategoryInfo[0]->getDistro());
     }
 
     $subject = "Rock the Patch! - Feature Request";
@@ -120,8 +120,11 @@ function sendFeatureRequest() {
         ."<strong>Category:</strong> $category<br/><br/>\r\n\r\n"
         ."<strong>Request:</strong> $request<br/><br/>\r\n\r\n";
 
-    if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->emailMembers)) {
-        $recipients = $emailDistroInfo[0]->emailMembers;
+    if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->getDistroMembers())) {
+        $recipients = [];
+        foreach($emailDistroInfo[0]->getDistroMembers() as $distroMember){
+            array_push($recipients, $distroMember->getEmail());
+        }
     } else{
         $recipients = $gMasterAdminEmail;
     }

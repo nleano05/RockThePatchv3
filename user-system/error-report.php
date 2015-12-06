@@ -107,7 +107,7 @@ function sendErrorReport() {
 
 
     if(!empty($errorReportCategoryInfo)) {
-        $emailDistroInfo = lib_database::getEmailDistros($errorReportCategoryInfo[0]->getDistro());
+        $emailDistroInfo = lib_database::getEmailDistroById($errorReportCategoryInfo[0]->getDistro());
     }
 
     $invalidFile = lib_check::upload("../error-reports/");
@@ -145,11 +145,13 @@ function sendErrorReport() {
         ."<strong>Agent Version:</strong> " . $agent['Version'] . "<br/>\n\n"
         ."<strong>Full Agent:</strong> $fullAgent<br/><br/>\n\n";
 
-	$success = FALSE;
     if(!empty($_FILES["file"]["name"])) {
         if($invalidFile) {
-            if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->emailMembers)) {
-                $recipients = $emailDistroInfo[0]->emailMembers;
+            if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->getDistroMembers())) {
+                $recipients = [];
+                foreach($emailDistroInfo[0]->getDistroMembers() as $distroMember){
+                    array_push($recipients, $distroMember->getEmail());
+                }
             } else{
                 $recipients = $gMasterAdminEmail;
             }
@@ -157,16 +159,22 @@ function sendErrorReport() {
         } else {
             $file = "../error-reports/" . $_FILES["file"]["name"];
             $fileType = $_FILES["file"]["type"];
-            if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->emailMembers)) {
-                $recipients = $emailDistroInfo[0]->emailMembers;
+            if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->getDistroMembers())) {
+                $recipients = [];
+                foreach($emailDistroInfo[0]->getDistroMembers() as $distroMember){
+                    array_push($recipients, $distroMember->getEmail());
+                }
             } else{
                 $recipients = $gMasterAdminEmail;
             }
             $success = lib::sendMail($recipients, $subject, $body, TRUE, TRUE, $file, $fileType);
         }
     } else {
-        if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->emailMembers)) {
-            $recipients = $emailDistroInfo[0]->emailMembers;
+        if(!empty($emailDistroInfo) && !empty($emailDistroInfo[0]->getDistroMembers())) {
+            $recipients = [];
+            foreach($emailDistroInfo[0]->getDistroMembers() as $distroMember){
+                array_push($recipients, $distroMember->getEmail());
+            }
         } else{
             $recipients = $gMasterAdminEmail;
         }

@@ -4,6 +4,7 @@ window.onload = function() {
     autoformatPhoneNumberWatcher();
 
     populateAnnoyanceLevelEdit();
+    populateEmailDistroEdit();
 
     syncLoginForms();
 

@@ -68,7 +68,86 @@ class lib_database {
 
         $pdo = NULL;
 
-       log_util::logDivider();
+        log_util::logDivider();
+    }
+
+
+    public static function deleteEmailDistro($distroId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM email_distros WHERE id = ?");
+            $stmt->bindParam(1, $distroId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function deleteEmailDistroMember($distroMemberId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM email_distro_members WHERE id = ?");
+            $stmt->bindParam(1, $distroMemberId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function deleteEmailDistroMembers($distroId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM email_distro_members WHERE distro = ?");
+            $stmt->bindParam(1, $distroId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
     }
 
     public static function deleteTables($tables) {
@@ -1086,7 +1165,7 @@ class lib_database {
 
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection IS NOT empty");
-
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt = $pdo->prepare("SELECT * FROM annoyance_levels WHERE id = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -1234,7 +1313,7 @@ class lib_database {
      * @version - 1.0
      * @history - Created 07/03/2015
      */
-    public static function getEmailDistros($name = NULL) {
+    public static function getEmailDistros() {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -1250,61 +1329,58 @@ class lib_database {
         if (!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
-            if($name != NULL) {
-                $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro WHERE name = ? ORDER BY name ASC");
-                $stmt->bindParam(1, $name, PDO::PARAM_STR);
-            } else {
-                $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro ORDER BY name ASC");
-            }
+            $stmt = $pdo->prepare("SELECT * FROM email_distros ORDER BY name ASC");
             $stmt->execute();
             $row = $stmt->fetch();
 
             if (!empty($row)) {
-                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty. row: ", $row);
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty for distro.");
 
-                $emailDistroMembers = [];
+                $emailDistros = [];
                 $emailDistro = new EmailDistro();
-
-                $currentDistro = $row['name'];
-                $emailDistro->setName($currentDistro);
-                array_push($emailDistroMembers, $row['email']);
-
-                log_util::log(LOG_LEVEL_DEBUG, "emailDistroMembers: ", $emailDistroMembers);
-
-                /** @noinspection PhpAssignmentInConditionInspection */
-                while ($row = $stmt->fetch()) {
-
-                    log_util::log(LOG_LEVEL_DEBUG, "currentDistro: " . $currentDistro);
-                    log_util::log(LOG_LEVEL_DEBUG, "row: ", $row);
-
-                    if ($row['name'] != $currentDistro) {
-                        log_util::log(LOG_LEVEL_DEBUG, "currentDistro DID vary from " . $row['name']);
-
-                        $emailDistro->setEmails($emailDistroMembers);
-
-                        array_push($emailDistros, $emailDistro);
-
-                        $emailDistro = new EmailDistro();
-                        $emailDistroMembers = [];
-                        $currentDistro = $row['name'];
-                        $emailDistro->setName($currentDistro);
-
-                        array_push($emailDistroMembers, $row['email']);
-                    } else {
-                        log_util::log(LOG_LEVEL_DEBUG, "currentDistro DID NOT  vary from " . $row['name']);
-                        array_push($emailDistroMembers, $row['email']);
-                    }
-
-                    $currentDistro = $row['name'];
-                    log_util::log(LOG_LEVEL_DEBUG, "currentDistro: " . $currentDistro);
-                    log_util::log(LOG_LEVEL_DEBUG, "emailDistroMembers: ", $emailDistroMembers);
-                }
-
-                $emailDistro->setEmails($emailDistroMembers);
+                $emailDistro->setId($row['id']);
+                $emailDistro->setName($row['name']);
                 array_push($emailDistros, $emailDistro);
 
+                while ($row = $stmt->fetch()) {
+                    $emailDistro = new EmailDistro();
+                    $emailDistro->setId($row['id']);
+                    $emailDistro->setName($row['name']);
+                    array_push($emailDistros, $emailDistro);
+                }
+
             } else {
-                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty for distro");
+            }
+
+            foreach($emailDistros as $emailDistro) {
+                $stmt = $pdo->prepare("SELECT * FROM email_distro_members WHERE distro = ?");
+                $distroId = $emailDistro->getId();
+                $stmt->bindParam(1, $distroId, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                if (!empty($row)) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty for distro members.");
+                    $emailDistroMembers = [];
+                    $emailDistroMember = new EmailDistroMember();
+                    $emailDistroMember->setId($row['id']);
+                    $emailDistroMember->setDistro($row['distro']);
+                    $emailDistroMember->setEmail($row['email']);
+
+                    array_push($emailDistroMembers, $emailDistroMember);
+
+                    while ($row = $stmt->fetch()) {
+                        $emailDistroMember = new EmailDistroMember();
+                        $emailDistroMember->setId($row['id']);
+                        $emailDistroMember->setDistro($row['distro']);
+                        $emailDistroMember->setEmail($row['email']);
+
+                        array_push($emailDistroMembers, $emailDistroMember);
+                    }
+                } else {
+                    log_util::log(LOG_LEVEL_WARNING, "row WAS empty for distro members");
+                }
             }
 
         } else {
@@ -1317,6 +1393,66 @@ class lib_database {
         log_util::logDivider();
 
         return $emailDistros;
+    }
+
+    public static function getEmailDistroById($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM email_distros LEFT JOIN email_distro_members ON email_distros.id = email_distro_members.distro WHERE email_distros.id = ? ORDER BY name ASC");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if (!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty. row: ", $row);
+
+                $emailDistroMembers = [];
+                $emailDistro = new EmailDistro();
+
+                $emailDistro->setId($row['distro']);
+                $emailDistro->setName($row['name']);
+
+                $emailDistroMember = new EmailDistroMember();
+                $emailDistroMember->setId($row['id']);
+                $emailDistroMember->setEmail($row['email']);
+                array_push($emailDistroMembers, $emailDistroMember);
+                $emailDistro->setDistroMembers($emailDistroMembers);
+
+                log_util::log(LOG_LEVEL_DEBUG, "emailDistroMembers: ", $emailDistroMembers);
+
+                while ($row = $stmt->fetch()) {
+                    $emailDistroMember = new EmailDistroMember();
+                    $emailDistroMember->setId($row['id']);
+                    $emailDistroMember->setEmail($row['email']);
+                    array_push($emailDistroMembers, $emailDistroMember);
+                    $emailDistro->setDistroMembers($emailDistroMembers);
+                    log_util::log(LOG_LEVEL_DEBUG, "emailDistroMembers: ", $emailDistroMembers);
+                }
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "emailDistro: ", $emailDistro);
+        log_util::logDivider();
+
+        return $emailDistro;
     }
 
     /**
@@ -2481,6 +2617,36 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function updateEmailDistro($distroId, $name) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            var_dump($distroId);
+            var_dump($name);
+
+            $stmt = $pdo->prepare("UPDATE email_distros SET name=? WHERE id=?");
+            $stmt->bindParam(1, $name, PDO::PARAM_INT);
+            $stmt->bindParam(2, $distroId, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     /**
      *  This function writes encryption data out to the database
      *
@@ -2991,6 +3157,59 @@ class lib_database {
             $stmt = $pdo->prepare("INSERT INTO access_control (ip, subnet) VALUE (?, ?)");
             $stmt->bindParam(1, $ip, PDO::PARAM_STR);
             $stmt->bindParam(2, $subnet, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeEmailDistro($name) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("INSERT INTO email_distros (name) VALUE (?)");
+            $stmt->bindParam(1, $name, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeEmailDistroMember($distroId, $email) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("INSERT INTO email_distro_members (distro, email) VALUE (?, ?)");
+            $stmt->bindParam(1, $distroId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $email, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");

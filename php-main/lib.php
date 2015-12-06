@@ -14,6 +14,7 @@ require_once("models/AccountLock.php");
 require_once("models/AnnoyanceLevel.php");
 require_once("models/BlockedIPGroup.php");
 require_once("models/EmailDistro.php");
+require_once("models/EmailDistroMember.php");
 require_once("models/EncryptionData.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");

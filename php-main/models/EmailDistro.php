@@ -9,14 +9,14 @@
 class EmailDistro {
     private $id;
     private $name;
-    private $emails;
+    private $distroMembers;
 
     /**
      * @param int|NULL $id - The id of the email distro
      * @param string|NULL $name - The name of the email distro
-     * @param array|NULL $emails - A string array of emails attached to the email distro
+     * @param array|NULL $distroMembers - A string array of emails attached to the email distro
      */
-    public function __construct($id = NULL, $name = NULL, $emails = NULL) {
+    public function __construct($id = NULL, $name = NULL, $distroMembers = NULL) {
         if (is_int($id) || $id == NULL) {
             $this->id = $id;
         } else {
@@ -27,10 +27,10 @@ class EmailDistro {
         } else {
             trigger_error('Expected a string or null for $name.', E_USER_WARNING);
         }
-        if (is_array($emails) || $emails == NULL) {
-            $this->emails = $emails;
+        if (is_array($distroMembers) || $distroMembers == NULL) {
+            $this->distroMembers = $distroMembers;
         } else {
-            trigger_error('Expected an array or null for $emails.', E_USER_WARNING);
+            trigger_error('Expected an array or null for $distroMembers.', E_USER_WARNING);
         }
     }
 
@@ -71,20 +71,20 @@ class EmailDistro {
     }
 
     /**
-     * @return array|NULL $emails
+     * @return array|NULL $distroMembers
      */
-    public function getEmails() {
-        return $this->emails;
+    public function getDistroMembers() {
+        return $this->distroMembers;
     }
 
     /**
-     * @param array|NULL $emails
+     * @param array|NULL $distroMembers
      */
-    public function setEmails($emails) {
-        if (is_array($emails) || $emails == NULL) {
-            $this->emails = $emails;
+    public function setDistroMembers($distroMembers) {
+        if (is_array($distroMembers) || $distroMembers == NULL) {
+            $this->distroMembers = $distroMembers;
         } else {
-            trigger_error('Expected an array or null for $emails.', E_USER_WARNING);
+            trigger_error('Expected an array or null for $distroMembers.', E_USER_WARNING);
         }
     }
 }
