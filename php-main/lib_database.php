@@ -44,6 +44,32 @@ class lib_database {
         return $pdo;
     }
 
+    public static function deleteAnnoyanceLevel($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM annoyance_levels WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     private static function deleteBlockedIPGroup($ip, $subnet) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -70,7 +96,6 @@ class lib_database {
 
         log_util::logDivider();
     }
-
 
     public static function deleteEmailDistro($distroId) {
         $reflector = new ReflectionClass(__CLASS__);
@@ -150,6 +175,32 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function deleteErrorReportCategory($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM error_report_categories WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function deleteTables($tables) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -159,15 +210,15 @@ class lib_database {
         }
         log_util::logFunctionStart($args);
 
-        $dbh = lib_database::connect();
+        $pdo = lib_database::connect();
 
-        if(!empty($dbh)) {
+        if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
             foreach($tables as $value) {
                 log_util::log(LOG_LEVEL_DEBUG, "value: " . $value);
 
-                $stmt = $dbh->prepare("DELETE FROM " . $value);
+                $stmt = $pdo->prepare("DELETE FROM " . $value);
                 $stmt->execute();
             }
         } else {
@@ -195,32 +246,6 @@ class lib_database {
 
             $stmt = $pdo->prepare("DELETE FROM recent_updates WHERE id = ?");
             $stmt->bindParam(1, $id, PDO::PARAM_INT);
-            $stmt->execute();
-        } else {
-            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
-        }
-
-        $pdo = NULL;
-
-        log_util::logDivider();
-    }
-
-    public static function deleteAnnoyanceLevel($id) {
-        $reflector = new ReflectionClass(__CLASS__);
-        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
-        $args = [];
-        foreach ($parameters as $parameter) {
-            $args[$parameter->name] = ${$parameter->name};
-        }
-        log_util::logFunctionStart($args);
-
-        $pdo = lib_database::connect();
-
-        if(!empty($pdo)) {
-            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
-
-            $stmt = $pdo->prepare("DELETE FROM annoyance_levels WHERE id = ?");
-            $stmt->bindParam(1, $id, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
@@ -1455,6 +1480,49 @@ class lib_database {
         return $emailDistro;
     }
 
+    public static function getErrorReportCategoryById($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $errorReportCategory = NULL;
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM error_report_categories WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if (!empty($row)) {
+                $errorReportCategory = new ErrorReportCategory();
+                $errorReportCategory->setId((int)$row['id']);
+                $errorReportCategory->setName($row['name']);
+                $errorReportCategory->setDistro((int)$row['distro']);
+                $errorReportCategory->setIsDefault((bool)$row['isDefault']);
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "errorReportCategory: ", $errorReportCategory);
+        log_util::logDivider();
+
+        return $errorReportCategory;
+    }
+
     /**
      *  This
      *
@@ -2631,12 +2699,45 @@ class lib_database {
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
 
-            var_dump($distroId);
-            var_dump($name);
-
             $stmt = $pdo->prepare("UPDATE email_distros SET name=? WHERE id=?");
             $stmt->bindParam(1, $name, PDO::PARAM_INT);
             $stmt->bindParam(2, $distroId, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+
+    public static function updateErrorReportCategory($categoryId, $category, $distro, $isDefault) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if($isDefault == "yes") {
+                $isDefault = 1;
+            } else {
+                $isDefault = 0;
+            }
+
+            $stmt = $pdo->prepare("UPDATE error_report_categories SET name=?, distro=?, isDefault=? WHERE id = ?");
+            $stmt->bindParam(1, $category, PDO::PARAM_STR);
+            $stmt->bindParam(2, $distro, PDO::PARAM_INT);
+            $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
+            $stmt->bindParam(4, $categoryId, PDO::PARAM_INT);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
@@ -3213,6 +3314,47 @@ class lib_database {
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeErrorReportCategory($category, $distro, $isDefault) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if($isDefault == "yes") {
+                $isDefault = 1;
+                $defaultUnset = 1;
+                $defaultSet = 0;
+
+                $stmt = $pdo->prepare("UPDATE error_report_categories SET isDefault=? WHERE isDefault = ?");
+                $stmt->bindParam(1, $defaultSet, PDO::PARAM_BOOL);
+                $stmt->bindParam(2, $defaultUnset, PDO::PARAM_BOOL);
+                $stmt->execute();
+            } else {
+                $isDefault = 0;
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO error_report_categories(name, distro, isDefault) VALUE (?, ?, ?)");
+            $stmt->bindParam(1, $category, PDO::PARAM_STR);
+            $stmt->bindParam(2, $distro, PDO::PARAM_STR);
+            $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
         }
 
         $pdo = NULL;

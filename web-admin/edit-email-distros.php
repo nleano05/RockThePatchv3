@@ -84,12 +84,12 @@ function checkInputAddEmailDistro() {
 }
 
 function checkInputDeleteEmailDistro() {
-    global $gDefaultDeleteEmailDistro, $gInUseFeatureRequest, $gInUseErrorReport, $gMainEmailDistro;
+    global $gDefaultDeleteEmailDistro, $gInUseFeatureRequest, $gInUseErrorReport, $gMainEmailDistro, $gMasterAdminName;
 
     $validForm = TRUE;
 
     $deleteEmailDistro = isset($_POST['delete-distro']) ? $_POST['delete-distro'] : "";
-    if($deleteEmailDistro == "-- SELECT EMAIL DISTRO TO DELETE --") {
+    if($deleteEmailDistro == SELECT_EMAIL_DISTRO_TO_DELETE) {
         $gDefaultDeleteEmailDistro = TRUE;
         $validForm = FALSE;
     }
@@ -112,7 +112,7 @@ function checkInputDeleteEmailDistro() {
         }
     }
 
-    if($deleteEmailDistro == "Patches") {
+    if($deleteEmailDistro == MASTER_ADMIN_NAME) {
         $gMainEmailDistro = TRUE;
         $validForm = FALSE;
     }
@@ -144,7 +144,7 @@ function checkInputEditEmailDistroAddMember() {
         $validForm = FALSE;
     }
 
-    if($editEmailDistroSelect == "-- SELECT EMAIL DISTRO TO EDIT --") {
+    if($editEmailDistroSelect == SELECT_EMAIL_DISTRO_TO_EDIT) {
         $gDefaultEditEmailDistro = TRUE;
         $validForm = FALSE;
     }
@@ -200,12 +200,12 @@ function checkInputEditEmailDistroRemoveMember() {
     $editEmailDistroSelect = isset($_POST['edit-email-distro-select']) ? $_POST['edit-email-distro-select'] : "";
     $editRemoveMemberSelect = isset($_POST['edit-remove-member-select']) ? $_POST['edit-remove-member-select'] : "";
 
-    if($editEmailDistroSelect != "-- SELECT EMAIL DISTRO TO EDIT --") {
+    if($editEmailDistroSelect != SELECT_EMAIL_DISTRO_TO_EDIT) {
         $validForm = TRUE;
         $gDefaultEditEmailDistro = FALSE;
     }
 
-    if($editRemoveMemberSelect == "-- SELECT EMAIL DISTRO MEMBER TO REMOVE --") {
+    if($editRemoveMemberSelect == SELECT_EMAIL_MEMBER_TO_REMOVE) {
         $validForm = FALSE;
         $gDefaultEditRemoveMember = TRUE;
     }
@@ -294,7 +294,7 @@ function displayOutputEditEmailDistroRemoveMember() {
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Edit Admin Access</title>
+    <title>Rock the Patch! v3 - Edit Email Distros</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -487,7 +487,7 @@ function displayOutputEditEmailDistroRemoveMember() {
                                     $editEmailDistroSelect = isset($_POST['edit-email-distro-select']) ? $_POST['edit-email-distro-select'] : "-- SELECT EMAIL DISTRO TO EDIT --";
 
                                     echo("<p class='email-distro'><select name='edit-email-distro-select' style='width:100%;'>");
-                                    echo("<option value='-- SELECT EMAIL DISTRO TO EDIT --'>-- SELECT EMAIL DISTRO TO EDIT --</option>");
+                                    echo("<option value='" . SELECT_EMAIL_DISTRO_TO_EDIT . "'>" . SELECT_EMAIL_DISTRO_TO_EDIT . "</option>");
                                     foreach($emailDistros as $emailDistro) {
                                         if($editEmailDistroSelect == $emailDistro->getId()) {
                                             echo("<option value=" . $emailDistro->getId() . " selected='selected'>" . $emailDistro->getName() . "</option>");
@@ -546,7 +546,7 @@ function displayOutputEditEmailDistroRemoveMember() {
                                         $editRemoveMemberSelect = isset($_POST['edit-remove-member-select']) ? $_POST['edit-remove-member-select'] : "";
 
                                         echo("<p class='email-distro'><select name='edit-remove-member-select'>");
-                                        echo("<option value='-- SELECT EMAIL DISTRO MEMBER TO REMOVE --'>-- SELECT EMAIL DISTRO MEMBER TO REMOVE --</option>");
+                                        echo("<option value='" . SELECT_EMAIL_MEMBER_TO_REMOVE . "'>" . SELECT_EMAIL_MEMBER_TO_REMOVE . "</option>");
                                         foreach($emailDistros as $emailDistro) {
                                             if($emailDistro->getName() == $editRemoveMemberSelect) {
                                                 $emailDistroMembers = $emailDistro->emailMembers;
@@ -599,7 +599,7 @@ function displayOutputEditEmailDistroRemoveMember() {
 
                                         echo("<p class='email-distro'>");
                                         echo("<select name='delete-distro' style='width:100%;'>");
-                                        echo("<option value='-- SELECT EMAIL DISTRO TO DELETE --'>-- SELECT EMAIL DISTRO TO DELETE --</option>");
+                                        echo("<option value='" . SELECT_EMAIL_DISTRO_TO_DELETE . "'>" . SELECT_EMAIL_DISTRO_TO_DELETE . "</option>");
                                         foreach($emailDistros as $emailDistro) {
                                             if($emailDistro->getId() == $deleteDistro) {
                                                 echo("<option value='" . $emailDistro->getId() . "' selected='selected'>" . $emailDistro->getName() . "</option>");
