@@ -2346,22 +2346,22 @@ class lib_database {
                     log_util::log(LOG_LEVEL_DEBUG, "timeDifference: " . $timeDifference);
 
                     if($status == STATUS_LOGGED_IN && $loginStatusFromDatabase == STATUS_LOGGED_IN) {
-                        if($timeDifference < (60 * 60)) {
+                        if ($timeDifference < (60 * 60)) {
                             log_util::log(LOG_LEVEL_DEBUG, "User WAS logged in AND session HAS NOT expired");
 
-                            if(!$sessionExpired) {
+                            if (!$sessionExpired) {
                                 array_push($users, $user);
                             }
                         } else {
                             log_util::log(LOG_LEVEL_DEBUG, "User WAS logged in BUT session HAS expired");
 
-                            if($sessionExpired) {
+                            if ($sessionExpired) {
                                 array_push($users, $user);
                             }
                         }
-                    }
-
-                    if($status == STATUS_LOGGED_OUT && $loginStatusFromDatabase == STATUS_LOGGED_OUT) {
+                    } else if($status == STATUS_LOGGED_OUT && $loginStatusFromDatabase == STATUS_LOGGED_OUT) {
+                        array_push($users, $user);
+                    } else if($status == STATUS_UNKNOWN) {
                         array_push($users, $user);
                     }
             }

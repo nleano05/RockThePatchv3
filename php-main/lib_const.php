@@ -7,6 +7,7 @@ define("ROLE_USER", 2);
 
 define("STATUS_LOGGED_IN", 1);
 define("STATUS_LOGGED_OUT", 2);
+define("STATUS_UNKNOWN", 3);
 
 define("RSS_MAX_DESC_CHARS", 100);
 

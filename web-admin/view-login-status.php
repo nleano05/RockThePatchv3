@@ -148,6 +148,7 @@ function displayUsers($arrUsers) {
                     $loggedInUsers = lib_database::getUsers(STATUS_LOGGED_IN);
                     $loggedInUsersWithExpiredSessions = lib_database::getUsers(STATUS_LOGGED_IN, TRUE);
                     $loggedOutUsers = lib_database::getUsers(STATUS_LOGGED_OUT);
+                    $usersWithUnknownStatus = lib_database::getUsers(STATUS_UNKNOWN);
         ?>
                     <h2>Logged In Users</h2>
                     <?php
@@ -160,8 +161,12 @@ function displayUsers($arrUsers) {
                     ?>
 
                     <h2>Logged Off Users</h2>
-                    <?php
+        <?php
                         displayUsers($loggedOutUsers);
+        ?>
+                    <h2>Users with Unknown Status</h2>
+        <?php
+                        displayUsers($usersWithUnknownStatus);
                 } else {
                     echo("<p><em>" . NOTICE_MUST_BE_ADMIN . "</em></p>");
                 }
