@@ -201,6 +201,32 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function deleteFeatureRequestCategory($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM feature_request_categories WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function deleteTables($tables) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -1650,6 +1676,49 @@ class lib_database {
         return $errorReportCategories;
     }
 
+    public static function getFeatureRequestCategoryById($id) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $featureRequestCategory = NULL;
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM feature_request_categories WHERE id = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if (!empty($row)) {
+                $featureRequestCategory = new FeatureRequestCategory();
+                $featureRequestCategory->setId((int)$row['id']);
+                $featureRequestCategory->setName($row['name']);
+                $featureRequestCategory->setDistro((int)$row['distro']);
+                $featureRequestCategory->setIsDefault((bool)$row['isDefault']);
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "errorReportCategory: ", $featureRequestCategory);
+        log_util::logDivider();
+
+        return $featureRequestCategory;
+    }
+
     /**
      *  This function gets all of the feature request categories
      *
@@ -2712,7 +2781,6 @@ class lib_database {
         log_util::logDivider();
     }
 
-
     public static function updateErrorReportCategory($categoryId, $category, $distro, $isDefault) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -2734,6 +2802,41 @@ class lib_database {
             }
 
             $stmt = $pdo->prepare("UPDATE error_report_categories SET name=?, distro=?, isDefault=? WHERE id = ?");
+            $stmt->bindParam(1, $category, PDO::PARAM_STR);
+            $stmt->bindParam(2, $distro, PDO::PARAM_INT);
+            $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
+            $stmt->bindParam(4, $categoryId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function updateFeatureRequestCategory($categoryId, $category, $distro, $isDefault) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if($isDefault == "yes") {
+                $isDefault = 1;
+            } else {
+                $isDefault = 0;
+            }
+
+            $stmt = $pdo->prepare("UPDATE feature_request_category SET name=?, distro=?, isDefault=? WHERE id = ?");
             $stmt->bindParam(1, $category, PDO::PARAM_STR);
             $stmt->bindParam(2, $distro, PDO::PARAM_INT);
             $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
@@ -3349,6 +3452,47 @@ class lib_database {
             }
 
             $stmt = $pdo->prepare("INSERT INTO error_report_categories(name, distro, isDefault) VALUE (?, ?, ?)");
+            $stmt->bindParam(1, $category, PDO::PARAM_STR);
+            $stmt->bindParam(2, $distro, PDO::PARAM_STR);
+            $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeFeatureRequestCategory($category, $distro, $isDefault) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if($isDefault == "yes") {
+                $isDefault = 1;
+                $defaultUnset = 1;
+                $defaultSet = 0;
+
+                $stmt = $pdo->prepare("UPDATE feature_request_categories SET isDefault=? WHERE isDefault = ?");
+                $stmt->bindParam(1, $defaultSet, PDO::PARAM_BOOL);
+                $stmt->bindParam(2, $defaultUnset, PDO::PARAM_BOOL);
+                $stmt->execute();
+            } else {
+                $isDefault = 0;
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO feature_request_categories(name, distro, isDefault) VALUE (?, ?, ?)");
             $stmt->bindParam(1, $category, PDO::PARAM_STR);
             $stmt->bindParam(2, $distro, PDO::PARAM_STR);
             $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);

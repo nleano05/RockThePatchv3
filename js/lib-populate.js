@@ -162,6 +162,58 @@ function populateErrorReportCategoryEditCallback(response)
     }
 }
 
+function populateFeatureRequestCategoryEdit() {
+    var manageFeatureRequestCategoriesForm = document.getElementsByName("manage-feature-request-categories");
+    if(manageFeatureRequestCategoriesForm.length > 0) {
+        var editCategorySelect = document.getElementsByName("edit-category-select");
+        var editCategorySelectValue = editCategorySelect[0].value;
+
+        var editCategory = document.getElementsByName("edit-category");
+        var editEmailDistro = document.getElementsByName("edit-email-distro");
+        var editDefault = document.getElementsByName("edit-default");
+
+        if(editCategorySelectValue != "-- SELECT FEATURE REQUEST CATEGORY TO EDIT --") {
+            setAppendString(editCategorySelectValue);
+            createAccessToken(populateFeatureRequestCategoryEditTokenCallback);
+        } else {
+            editCategory[0].value = "";
+            editEmailDistro[0].value = "-- SELECT EMAIL DISTRO --";
+            editDefault[0].checked = false;
+            editDefault[1].checked = true;
+        }
+
+        editCategorySelect[0].onchange = function() {
+            populateFeatureRequestCategoryEdit();
+        }
+    }
+}
+
+function populateFeatureRequestCategoryEditTokenCallback(response){
+    var responseObject = JSON.parse(response);
+    var accessToken = responseObject.accessToken;
+
+    sendHTTPRequest("GET", getBaseURL() + "api/v1/feature-request-categories.php?id=" + getAppendString(), populateFeatureRequestCategoryEditCallback, "Authorizationtoken", accessToken);
+}
+
+function populateFeatureRequestCategoryEditCallback(response) {
+
+    var editCategory = document.getElementsByName("edit-category");
+    var editEmailDistro = document.getElementsByName("edit-email-distro");
+    var editDefault = document.getElementsByName("edit-default");
+
+    var responseObject = JSON.parse(response);
+
+    editCategory[0].value = responseObject.name;
+    editEmailDistro[0].value = responseObject.distro;
+    if(responseObject.isDefault == 1) {
+        editDefault[0].checked = true;
+        editDefault[1].checked = false;
+    } else {
+        editDefault[0].checked = false;
+        editDefault[1].checked = true;
+    }
+}
+
 function getAppendString() {
     return gAppendString;
 }

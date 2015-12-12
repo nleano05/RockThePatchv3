@@ -6,6 +6,7 @@ window.onload = function() {
     populateAnnoyanceLevelEdit();
     populateEmailDistroEdit();
     populateErrorReportCategoryEdit();
+    populateFeatureRequestCategoryEdit();
 
     syncLoginForms();
 
