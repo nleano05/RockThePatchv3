@@ -187,7 +187,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         </div>
 
         <div class="float-left49">
-            <?php
+        <?php
             $isAdmin = lib_check::userIsAdmin();
 
             if($gLoginStatus == STATUS_LOGGED_IN) {
@@ -202,7 +202,13 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     <li><a href="/user-system/change-password.php" title="Change Password">Change Password</a></li>
                     <li><a href="/user-system/deactivate-account.php" title="Deactivate Account">Deactivate Account</a></li>
                     <li><a href="/user-system/account-info.php" title="Account Info">Account Info</a></li>
-                    <li><a href="/user-system/request-admin-access.php" title="Request Admin Access">Request Admin Access</a></li>
+                    <?php
+                        if(!$isAdmin) {
+                    ?>
+                            <li><a href="/user-system/request-admin-access.php" title="Request Admin Access">Request Admin Access</a></li>
+                    <?php
+                        }
+                    ?>
                     <li><a href="/user-system/logout.php" title="Logout">Logout</a></li>
                 </ul>
 
@@ -216,7 +222,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 </ul>
                 <?php
                     if($isAdmin) {
-                    ?>
+                ?>
                     <h2>For Admin Users</h2>
 
                     <ul>
@@ -241,9 +247,10 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                                 <li><a href="../web-admin/account-lock-administration.php" title="Account Lock Administration">Account Lock Administration</a></li>
                                 <li><a href="../web-admin/edit-admin-access.php" title="Edit Admin Access">Edit Admin Access</a></li>
                                 <li><a href="../web-admin/edit-annoyance-levels.php" title="Edit Annoyance Levels">Edit Annoyance Levels</a></li>
-                                <li><a href="../web-admin/edit-email-distros.php" title="Edit Email Dsitros">Edit Email Distros</a></li>
+                                <li><a href="../web-admin/edit-email-distros.php" title="Edit Email Distros">Edit Email Distros</a></li>
                                 <li><a href="../web-admin/edit-error-report-categories.php" title="Edit Error Report Categories">Edit Error Report Categories</a></li>
                                 <li><a href="../web-admin/edit-feature-request-categories.php" title="Edit Feature Request Categories">Edit Feature Request Categories</a></li>
+                                <li><a href="../web-admin/edit-security-questions.php" title="Edit Security Questions">Edit Security Questions</a></li>
                                 <li><a href="../web-admin/blasts.php" title="Blasts">Email and Text Blasts</a></li>
                                 <li><a href="../web-admin/page-flow.php" title="Page Flow">Page Flow</a></li>
                                 <li><a href="../web-admin/php-info.php" title="PHP Info">PHP Info</a></li>

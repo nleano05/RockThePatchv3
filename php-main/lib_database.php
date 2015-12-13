@@ -227,6 +227,32 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function deleteSecurityQuestion($question) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM security_questions WHERE id = ?");
+            $stmt->bindParam(1, $question, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function deleteTables($tables) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -2934,6 +2960,33 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function updateSecurityQuestion($questionToUpdate, $question) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("UPDATE security_questions SET question=? WHERE id = ?");
+            $stmt->bindParam(1, $question, PDO::PARAM_STR);
+            $stmt->bindParam(2, $questionToUpdate, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function updateUserLockAttributes($id, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -3691,6 +3744,32 @@ class lib_database {
             $stmt->bindParam(13, $city, PDO::PARAM_STR);
             $stmt->bindParam(14, $time, PDO::PARAM_STR);
             $stmt->bindParam(15, $sessionId, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeSecurityQuestion($question) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("INSERT INTO security_questions (question) VALUE (?)");
+            $stmt->bindParam(1, $question, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");

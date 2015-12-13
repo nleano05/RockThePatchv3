@@ -29,8 +29,7 @@ if(isset($_POST['delete-feature-request-category'])) {
 if(isset($_POST['edit-feature-request-category']))
 {
     $validForm = checkInputEditFeatureRequestCategory();
-    if($validForm)
-    {
+    if($validForm) {
         $categoryToUpdate = isset($_POST['edit-category-select']) ? $_POST['edit-category-select'] : "";
         $editCategory = isset($_POST['edit-category']) ? $_POST['edit-category'] : "";
         $editEmailDistro = isset($_POST['edit-email-distro']) ? $_POST['edit-email-distro'] : "";
@@ -84,7 +83,7 @@ function checkInputDeleteFeatureRequestCategory() {
 
     $deleteCategory = isset($_POST['delete-category']) ? $_POST['delete-category'] : "";
 
-    if($deleteCategory == SELECT_A_FEATURE_REQUEST_CATEGORY_TO_DELETE) {
+    if($deleteCategory == SELECT_FEATURE_REQUEST_CATEGORY_TO_DELETE) {
         $gDefaultDeleteCategory = TRUE;
         $validForm = FALSE;
     }
@@ -434,9 +433,9 @@ function displayOutputEditEmailDistro() {
                                 echo("<p class='feature-request-category'>");
                                 echo("<select name='edit-category-select' style='width:100%;'>");
                                 if($editCategory == "") {
-                                    echo("<option value='" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_EDIT . "' selected='selected'>" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_EDIT . "</option>");
+                                    echo("<option value='" . SELECT_FEATURE_REQUEST_CATEGORY_TO_EDIT . "' selected='selected'>" . SELECT_FEATURE_REQUEST_CATEGORY_TO_EDIT . "</option>");
                                 } else {
-                                    echo("<option value='" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_EDIT . "'>" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_EDIT . "</option>");
+                                    echo("<option value='" . SELECT_FEATURE_REQUEST_CATEGORY_TO_EDIT . "'>" . SELECT_FEATURE_REQUEST_CATEGORY_TO_EDIT . "</option>");
                                 }
                                 foreach($featureRequestCategories as $featureRequestCategory) {
                                     if($featureRequestCategory->getId() == $editCategory) {
@@ -548,9 +547,9 @@ function displayOutputEditEmailDistro() {
                                 echo("<p class='feature-request-category'>");
                                 echo("<select name='delete-category' style='width:100%;'>");
                                 if($deleteCategory == "") {
-                                    echo("<option value='" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_DELETE . "' selected='selected'>" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_DELETE . "</option>");
+                                    echo("<option value='" . SELECT_FEATURE_REQUEST_CATEGORY_TO_DELETE . "' selected='selected'>" . SELECT_FEATURE_REQUEST_CATEGORY_TO_DELETE . "</option>");
                                 } else {
-                                    echo("<option value='" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_DELETE . "'>" . SELECT_A_FEATURE_REQUEST_CATEGORY_TO_DELETE . "</option>");
+                                    echo("<option value='" . SELECT_FEATURE_REQUEST_CATEGORY_TO_DELETE . "'>" . SELECT_FEATURE_REQUEST_CATEGORY_TO_DELETE . "</option>");
                                 }
                                 foreach($featureRequestCategories as $featureRequestCategory) {
                                     if($featureRequestCategory->getId() == $deleteCategory) {

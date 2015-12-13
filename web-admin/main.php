@@ -161,6 +161,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <li><a href="../web-admin/edit-email-distros.php" title="Edit Email Distros">Edit Email Distros</a></li>
                         <li><a href="../web-admin/edit-error-report-categories.php" title="Edit Error Report Categories">Edit Error Report Categories</a></li>
                         <li><a href="../web-admin/edit-feature-request-categories.php" title="Edit Feature Request Categories">Edit Feature Request Categories</a></li>
+                        <li><a href="../web-admin/edit-security-questions.php" title="Edit Security Questions">Edit Security Questions</a></li>
                         <li><a href="../web-admin/blasts.php" title="Blasts">Email and Text Blasts</a></li>
                         <li><a href="../web-admin/page-flow.php" title="Page Flow">Page Flow</a></li>
                         <li><a href="../web-admin/php-info.php" title="PHP Info">PHP Info</a></li>

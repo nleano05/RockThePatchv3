@@ -308,3 +308,45 @@ function toggleFeatureRequestCategoryAddEditOrDelete() {
         }
     }
 }
+
+function toggleSecurityQuestionAddEditOrDelete() {
+    var manageSecurityQuestionsForms = document.getElementsByName("manage-security-questions");
+    if(manageSecurityQuestionsForms.length > 0) {
+        var PRIVATE_toggleAddEditOrDelete = function (addEditOrDelete) {
+            if(addEditOrDelete.value == "Add") {
+                addSecurityQuestion.style.display = "block";
+                editSecurityQuestion.style.display = "none";
+                deleteSecurityQuestion.style.display = "none";
+            } else if(addEditOrDelete.value == "Edit") {
+                addSecurityQuestion.style.display = "none";
+                editSecurityQuestion.style.display = "block";
+                deleteSecurityQuestion.style.display = "none";
+            } else {
+                addSecurityQuestion.style.display = "none";
+                editSecurityQuestion.style.display = "none";
+                deleteSecurityQuestion.style.display = "block";
+            }
+        };
+
+        var addEditOrDelete = manageSecurityQuestionsForms[0].elements['add-edit-or-delete'];
+        var addSecurityQuestion = document.getElementById('add-security-question-container');
+        var editSecurityQuestion = document.getElementById('edit-security-question-container');
+        var deleteSecurityQuestion = document.getElementById('delete-security-question-container');
+
+        addEditOrDelete.onload = function() {
+            PRIVATE_toggleAddEditOrDelete(addEditOrDelete);
+        };
+
+        addEditOrDelete[0].onchange = function() {
+            PRIVATE_toggleAddEditOrDelete(addEditOrDelete);
+        };
+
+        addEditOrDelete[1].onchange = function() {
+            PRIVATE_toggleAddEditOrDelete(addEditOrDelete);
+        };
+
+        addEditOrDelete[2].onchange = function() {
+            PRIVATE_toggleAddEditOrDelete(addEditOrDelete);
+        }
+    }
+}

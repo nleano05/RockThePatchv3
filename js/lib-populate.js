@@ -214,6 +214,40 @@ function populateFeatureRequestCategoryEditCallback(response) {
     }
 }
 
+function populateSecurityQuestionEdit() {
+    var manageFeatureRequestCategoriesForm = document.getElementsByName("manage-security-questions");
+    if(manageFeatureRequestCategoriesForm.length > 0) {
+        var editQuestionSelect = document.getElementsByName("edit-question-select");
+        var editQuestionSelectValue = editQuestionSelect[0].value;
+
+        var editQuestion = document.getElementsByName("edit-question");
+
+        if(editQuestionSelectValue != "-- SELECT SECURITY QUESTION TO EDIT --") {
+            setAppendString(editQuestionSelectValue);
+            createAccessToken(populateSecurityQuestionEditTokenCallback);
+        } else {
+            editQuestion[0].value = "";
+        }
+
+        editQuestionSelect[0].onchange = function() {
+            populateSecurityQuestionEdit();
+        }
+    }
+}
+
+function populateSecurityQuestionEditTokenCallback(response){
+    var responseObject = JSON.parse(response);
+    var accessToken = responseObject.accessToken;
+
+    sendHTTPRequest("GET", getBaseURL() + "api/v1/security-questions.php?id=" + getAppendString(), populateSecurityQuestionEditCallback, "Authorizationtoken", accessToken);
+}
+
+function populateSecurityQuestionEditCallback(response) {
+    var editQuestion = document.getElementsByName("edit-question");
+    var responseObject = JSON.parse(response);
+    editQuestion[0].value = responseObject.question;
+}
+
 function getAppendString() {
     return gAppendString;
 }

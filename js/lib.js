@@ -7,6 +7,7 @@ window.onload = function() {
     populateEmailDistroEdit();
     populateErrorReportCategoryEdit();
     populateFeatureRequestCategoryEdit();
+    populateSecurityQuestionEdit();
 
     syncLoginForms();
 
@@ -18,6 +19,7 @@ window.onload = function() {
     toggleEmailDistrosAddEditOrDelete();
     toggleErrorReportCategoryAddEditOrDelete();
     toggleFeatureRequestCategoryAddEditOrDelete();
+    toggleSecurityQuestionAddEditOrDelete();
 };
 
 function createAccessToken(callback) {
