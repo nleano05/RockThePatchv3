@@ -173,6 +173,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <li><a href="/ducks.php" title="Ducks">Ducks</a></li>
                         <li><a href="/palindrome-checker.php" title="Palindrome Checker">Palindrome Checker</a></li>
                         <li><a href="/rock-paper-scissors.php">Rock, Paper, Scissors, Chuck Norris</a></li>
+                        <li><a href="/string-generator.php">String Generator</a></li>
                         <li><a href="/subnet-calculator.php">Subnet Calculator</a></li>
                     </ul>
                 </li>

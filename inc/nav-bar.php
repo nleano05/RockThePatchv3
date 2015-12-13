@@ -47,6 +47,7 @@
             <li id="ducks"><a href="/ducks.php" title="Ducks">Ducks</a></li>
             <li id="palindrome-checker"><a href="/palindrome-checker.php" title="Palindrome Checker">Palindrome Checker</a></li>
             <li id="rock-paper-scissors"><a href="/rock-paper-scissors.php" title="Rock, Paper, Scissors">Rock, Paper, Scissors</a></li>
+            <li id="string-generator"><a href="/string-generator.php" title="String Generator">String Generator</a></li>
             <li id="subnet-calculator"><a href="/subnet-calculator.php" title="Subnet Calculator">Subnet Calculator</a></li>
         </ul>
     </li><li id="martial-arts">
