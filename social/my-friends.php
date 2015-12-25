@@ -5,6 +5,75 @@ include("../php-main/lib.php");
 include("../php-main/cookie.php");
 
 $timeModified = gmdate("F d, Y h:m:s", getlastmod());
+
+global $gFriends;
+
+$postKeys = array_keys($_POST);
+$currentUser = lib_get::currentUser();
+
+foreach($postKeys as $key){
+    if(lib_check::startsWith("remove-friend", $key)) {
+        $friendId = str_replace("remove-friend-", "", $key);
+
+
+        lib_database::deleteFriend($currentUser->getId(), $friendId);
+        lib_database::deleteFriend($friendId, $currentUser->getId());
+    } else if(lib_check::startsWith("block-friend", $key)) {
+        $friendId = str_replace("block-friend-", "", $key);
+
+        lib_database::updateFriend($currentUser->getId(), $friendId, FRIEND_STATUS_BLOCKED, $currentUser->getId(), $friendId);
+    } else if(lib_check::startsWith("unblock-friend", $key)) {
+        $friendId = str_replace("unblock-friend-", "", $key);
+
+        lib_database::updateFriend($currentUser->getId(), $friendId, FRIEND_STATUS_PENDING, $currentUser->getId(), $friendId);
+    }
+}
+
+$gFriends = lib_database::getFriends();
+
+function displayFriends() {
+    global $gFriends;
+
+    if(isset($gFriends)) {
+        log_util::log(LOG_LEVEL_DEBUG, "gFriends IS set");
+
+        if(count($gFriends) > 0) {
+            echo("<ul>");
+            foreach($gFriends as $friend) {
+                if($friend->getStatus() == FRIEND_STATUS_PENDING) {
+                    $status = "pending";
+                } else if($friend->getStatus() == FRIEND_STATUS_ACCEPTED) {
+                    $status = "accepted";
+                } else if($friend->getStatus() == FRIEND_STATUS_DECLINED) {
+                    $status = "declined";
+                } else if($friend->getStatus() == FRIEND_STATUS_BLOCKED) {
+                    $status = "blocked";
+                } else {
+                    $status = "unassociated";
+                }
+
+                echo("<li><p>" . $friend->getUser()->getFirstName() . " " . $friend->getUser()->getFirstName() . ", status: <em>" . $status . "</em><br/>");
+                echo("<a href='../social/profile.php?id=" . $friend->getUser()->getId() . "'>View Profile</a></p>");
+                if($friend->getStatus() != FRIEND_STATUS_BLOCKED) {
+                    echo("<p class='float-left'><input type='submit' name='remove-friend-" . $friend->getUser()->getId() . "' value='Remove Friend' class='button' /></p>");
+                }
+                if($friend->getStatus() == FRIEND_STATUS_BLOCKED) {
+                    echo("<p class='float-left'><input type='submit' name='unblock-friend-" . $friend->getUser()->getId() . "' value='Unblock Friend' class='button' /></p>");
+                } else {
+                    echo("<p class='float-left'><input type='submit' name='block-friend-" . $friend->getUser()->getId() . "' value='Block Friend' class='button' /></p>");
+                }
+
+                echo("<div class='clear'></div>");
+                echo("</li>");
+            }
+            echo("</ul>");
+        } else {
+            echo("<p><em>No friends</em></p>");
+        }
+    } else {
+        log_util::log(LOG_LEVEL_DEBUG, "gFriends IS NOT set");
+    }
+}
 ?>
 <!DOCTYPE html>
 <!-- ### Sets the class and language for IE 7,8, and 9 ### -->
@@ -25,7 +94,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 <!-- ### START Head ### -->
 <head>
     <!-- ### Basic Page Needs and Meta Data ### -->
-    <title>Rock the Patch! v3 - Social</title>
+    <title>Rock the Patch! v3 - My Friends</title>
     <meta name="robots" content="all"/>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
     <meta name="description" content="Rock the Patch! Musician, Programmer, Artist, and More"/>
@@ -135,11 +204,11 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
             if($gLoginStatus == STATUS_LOGGED_IN) {
         ?>
-                <ul>
-                    <li><a href="/social/profile.php<?php echo("?id=".lib_get::currentUser()->getId()) ?>" title="Mt Profile">My Profile</a></li>
-                    <li><a href="/social/search-users.php" title="Search Users">Search Users</a></li>
-                    <li><a href="/social/my-friends.php" title="My Friends">My Friends</a></li>
-                </ul>
+                <form action="my-friends.php" method="post" name="my-friends-form">
+                    <?php
+                        displayFriends();
+                    ?>
+                </form>
         <?php
             } else {
                 echo("<p><em>" . NOTICE_MUST_BE_LOGGED_IN . "</em></p>");

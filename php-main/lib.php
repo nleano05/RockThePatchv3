@@ -18,6 +18,7 @@ require_once("models/EmailDistroMember.php");
 require_once("models/EncryptionData.php");
 require_once("models/ErrorReportCategory.php");
 require_once("models/FeatureRequestCategory.php");
+require_once("models/Friend.php");
 require_once("models/GeoLocation.php");
 require_once("models/IPOverlapDetector.php");
 require_once("models/NetworkInfo.php");

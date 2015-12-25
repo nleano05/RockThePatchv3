@@ -227,6 +227,33 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function deleteFriend($userId, $friendId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("DELETE FROM friends WHERE userId = ? AND friendId = ?");
+            $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $friendId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function deleteSecurityQuestion($question) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -1805,6 +1832,123 @@ class lib_database {
         return $featureRequestCategories;
     }
 
+    public static function getFriends() {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $friends = array();
+
+        $pdo = lib_database::connect();
+
+        if (!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $id = lib_get::currentUser()->getId();
+
+            $stmt = $pdo->prepare("SELECT * FROM friends LEFT JOIN users ON friends.friendId = users.id WHERE friends.userId = ?");
+            $stmt->bindParam(1, $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(!empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+
+                $user = new User();
+                $user->setId($row['id']);
+                $user->setFirstName($row['firstName']);
+                $user->setLastName($row['lastName']);
+                $user->setUserName($row['userName']);
+                $user->setEmail($row['email']);
+
+                $friend = new Friend();
+                $friend->setFriendId($row['friendId']);
+                $friend->setUserId($row['userId']);
+                $friend->setStatus($row['status']);
+                $friend->setUser($user);
+
+                array_push($friends, $friend);
+
+                while($row = $stmt->fetch()) {
+                    $user = new User();
+                    $user->setId($row['id']);
+                    $user->setFirstName($row['firstName']);
+                    $user->setLastName($row['lastName']);
+                    $user->setUserName($row['userName']);
+                    $user->setEmail($row['email']);
+
+                    $friend = new Friend();
+                    $friend->setFriendId($row['friendId']);
+                    $friend->setUserId($row['userId']);
+                    $friend->setStatus($row['status']);
+                    $friend->setUser($user);
+
+                    array_push($friends, $friend);
+                }
+            } else {
+                log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "Friends: ", $friends);
+        log_util::logDivider();
+
+        return $friends;
+    }
+
+    public static function getFriendStatus($userId, $friendId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        if($userId != $friendId) {
+            $status = FRIEND_STATUS_UNASSOCIATED;
+
+            $pdo = lib_database::connect();
+
+            if(!empty($pdo)) {
+                log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+                $stmt = $pdo->prepare("SELECT * FROM friends WHERE userId = ? AND friendId = ?");
+                $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+                $stmt->bindParam(2, $friendId, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                if(!empty($row)) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row WAS NOT empty");
+
+                    $status = $row['status'];
+                } else {
+                    log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
+                }
+            } else {
+                log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+            }
+
+            $pdo = NULL;
+        } else {
+            $status = FRIEND_STATUS_SELF;
+        }
+
+        log_util::log(LOG_LEVEL_DEBUG, "Status: " . $status);
+        log_util::logDivider();
+
+        return $status;
+    }
+
     public static function getMailingList($display, $testMode = FALSE) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -2517,6 +2661,68 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function searchFriends($query, $page = 1) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        $query = strtolower($query);
+        $users = array();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM users");
+            $stmt->execute();
+            while ($row = $stmt->fetch()) {
+                if(lib_check::wildCardSearch($query, strtolower($row['userName'])) || lib_check::wildCardSearch($query, strtolower($row['firstName'])) || lib_check::wildCardSearch($query, strtolower($row['lastName']))) {
+                    log_util::log(LOG_LEVEL_DEBUG, "row DOES match query");
+
+                    $user = new User();
+                    $user->setId((int)$row['id']);
+                    $user->setFirstName($row['firstName']);
+                    $user->setLastName($row['lastName']);
+                    $user->setUserName($row['userName']);
+                    $user->setEmail($row['email']);
+                    $user->setPassword($row['password']);
+                    $user->setSecurityQuestion((int)$row['securityQuestion']);
+                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setEmailBlasts((bool)$row['emailBlasts']);
+                    $user->setTextBlasts((bool)$row['textBlasts']);
+                    $user->setCell($row['cell']);
+                    $user->setRole((int)$row['role']);
+                    $user->setLocked((bool)$row['locked']);
+                    $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
+                    $user->setTimeLocked($row['timeLocked']);
+                    $user->setConsecutiveFailedLoginAttempts((int)$row['consecutiveFailedLoginAttempts']);
+                    $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
+
+                    $friendStatus = lib_database::getFriendStatus(lib_get::currentUser()->getId(), $user->getId());
+                    $user->setFriendStatus($friendStatus);
+
+                    array_push($users, $user);
+                } else {
+                    log_util::log(LOG_LEVEL_ERROR, "row DOES NOT match query");
+                }
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::log(LOG_LEVEL_DEBUG, "Users: ", $users);
+        log_util::logDivider();
+
+        return $users;
+    }
+
     public static function toggleAdminAccess($userId, $granted) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -2867,6 +3073,36 @@ class lib_database {
             $stmt->bindParam(2, $distro, PDO::PARAM_INT);
             $stmt->bindParam(3, $isDefault, PDO::PARAM_INT);
             $stmt->bindParam(4, $categoryId, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function updateFriend($newUserId, $newFriendId, $status, $userId, $friendId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("UPDATE friends SET userId=?, friendId=?, status=? WHERE userId = ? AND friendId = ?");
+            $stmt->bindParam(1, $newUserId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $newFriendId, PDO::PARAM_INT);
+            $stmt->bindParam(3, $status, PDO::PARAM_INT);
+            $stmt->bindParam(4, $userId, PDO::PARAM_INT);
+            $stmt->bindParam(5, $friendId, PDO::PARAM_INT);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
@@ -3559,6 +3795,46 @@ class lib_database {
         log_util::logDivider();
     }
 
+    public static function writeFriend($userId, $friendId, $status) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM friends WHERE userId = ? AND friendId = ?");
+            $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $friendId, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch();
+
+            if(empty($row)) {
+                log_util::log(LOG_LEVEL_DEBUG, "Entry with userId: " . $userId . " and friendId " . $friendId . " WAS NOT found");
+
+                $stmt = $pdo->prepare("INSERT INTO friends(userId, friendId, status) VALUE (?, ?, ?)");
+                $stmt->bindParam(1, $userId, PDO::PARAM_INT);
+                $stmt->bindParam(2, $friendId, PDO::PARAM_INT);
+                $stmt->bindParam(3, $status, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                log_util::log(LOG_LEVEL_DEBUG, "Entry with userId: " . $userId . " and friendId " . $friendId . " WAS found");
+            }
+        } else {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
     public static function writeLoginLogAndStatistics($user, $passed) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -3744,6 +4020,43 @@ class lib_database {
             $stmt->bindParam(13, $city, PDO::PARAM_STR);
             $stmt->bindParam(14, $time, PDO::PARAM_STR);
             $stmt->bindParam(15, $sessionId, PDO::PARAM_STR);
+            $stmt->execute();
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+    }
+
+    public static function writeNotification($toId, $fromId, $read, $type, $text, $link) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            if($read) {
+                $readOut = 1;
+            } else {
+                $readOut = 0;
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO notifications (toId, fromId, isRead, type, text, link) VALUE (?, ?, ?, ?, ?, ?)");
+            $stmt->bindParam(1, $toId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $fromId, PDO::PARAM_INT);
+            $stmt->bindParam(3, $readOut, PDO::PARAM_INT);
+            $stmt->bindParam(4, $type, PDO::PARAM_INT);
+            $stmt->bindParam(5, $text, PDO::PARAM_STR);
+            $stmt->bindParam(6, $link, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
