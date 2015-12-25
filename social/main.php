@@ -136,7 +136,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
             if($gLoginStatus == STATUS_LOGGED_IN) {
         ?>
                 <ul>
-                    <li><a href="/social/profile.php<?php echo("?id=".lib_get::currentUser()->getId()) ?>" title="Mt Profile">My Profile</a></li>
+                    <li><a href="/social/profile.php<?php echo("?id=".lib_get::currentUser()->getId()) ?>" title="My Profile">My Profile</a></li>
                     <li><a href="/social/search-users.php" title="Search Users">Search Users</a></li>
                     <li><a href="/social/my-friends.php" title="My Friends">My Friends</a></li>
                 </ul>

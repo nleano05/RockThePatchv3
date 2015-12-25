@@ -155,6 +155,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <li>Palindrome Checker</li>
                         <li>Rock, Paper, Scissors, Chuck Norris</li>
                         <li>Subnet Calculator</li>
+                        <li>String Generator</li>
                     </ul>
                 </div>
             </li>
@@ -215,7 +216,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <li>Ability to edit account information</li>
                         <li>Ability to change an accounts password</li>
                         <li>Ability to deactivate an account</li>
-                        <li>Access to downloadable content</li>
+                        <li>Access to downloadable/streaming content</li>
                         <li>Ability to send an error report</li>
                         <li>Ability to send a feature request</li>
                         <li>Ability to receive a temp password to recover an account</li>
@@ -254,6 +255,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                         <li>Ability to add, edit, and delete email distribution lists</li>
                         <li>Ability to add, edit, and delete error report categories</li>
                         <li>Ability to add, edit, and delete feature request categories</li>
+                        <li>Ability to add, edit, and delete security questions</li>
                     </ul>
                 </div>
             </li>

@@ -125,10 +125,9 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
         <div id="bread-crumbs"><a href="/" title="Home">Home</a> / About This Site / Site Issues</div>
         <h1>Site Issues</h1>
 
-        <p>Here is where you can come to get updated information about the known issues
-            that I am aware of and working on for the site.  If you see anything weird and it doesn't seem
+        <p>Here is where you can come to get updated information about the known issues. If you see anything weird or that doesn't seem
             to be reported, please email me at: <a href="mailto:<?php global $gMasterAdminEmail; echo($gMasterAdminEmail); ?>" title="Email <?php global $gMasterAdminName; echo($gMasterAdminName); ?>"><?php global $gMasterAdminEmail; echo($gMasterAdminEmail); ?></a>
-            or file a report here or on GitHub so that I can get information about what issues you're experiencing.</p>
+            or file a report through <a href="/user-system/error-report.php" title="Error Report"/>here</a> or <a href="https://github.com/isuPatches/RockThePatchv3/issues" title="https://github.com/isuPatches/RockThePatchv3/issues">GitHub</a>.</p>
 
         <p>For a full list of bug issues please check out: <a href="https://github.com/isuPatches/RockThePatchv3/labels/Bug" title="https://github.com/isuPatches/RockThePatchv3/labels/Bug">https://github.com/isuPatches/RockThePatchv3/labels/Bug</a>.</p>
 
