@@ -13,8 +13,12 @@ class User {
     private $userName;
     private $email;
     private $password;
-    private $securityQuestion;
-    private $securityQuestionAnswer;
+    private $securityQuestion1;
+    private $securityQuestion1Answer;
+    private $securityQuestion2;
+    private $securityQuestion2Answer;
+    private $securityQuestion3;
+    private $securityQuestion3Answer;
     private $emailBlasts;
     private $textBlasts;
     private $cell;
@@ -32,8 +36,12 @@ class User {
      * @param string|NULL $userName - The username for the user
      * @param string|NULL $email - The email for the user
      * @param string|NULL $password - An encrypted version of the users password
-     * @param int|NULL $securityQuestion - The id of the security question for the user
-     * @param string|NULL $securityQuestionAnswer - The answer to the security question the user chose
+     * @param int|NULL $securityQuestion1 -
+     * @param string|NULL $securityQuestion1Answer -
+     * @param int|NULL $securityQuestion2 -
+     * @param string|NULL $securityQuestion2Answer -
+     * @param int|NULL $securityQuestion3 -
+     * @param string|NULL $securityQuestion3Answer -
      * @param bool|NULL $emailBlasts - If the user is signed up to receive email blasts
      * @param bool|NULL $textBlasts - If the user is signed up to receive text blasts
      * @param string|NULL $cell - The user's cell phone number
@@ -52,8 +60,12 @@ class User {
         $userName = NULL,
         $email = NULL,
         $password = NULL,
-        $securityQuestion = NULL,
-        $securityQuestionAnswer = NULL,
+        $securityQuestion1 = NULL,
+        $securityQuestion1Answer = NULL,
+        $securityQuestion2 = NULL,
+        $securityQuestion2Answer = NULL,
+        $securityQuestion3 = NULL,
+        $securityQuestion3Answer = NULL,
         $emailBlasts = NULL,
         $textBlasts = NULL,
         $cell = NULL,
@@ -95,15 +107,35 @@ class User {
         } else {
             trigger_error('Expected a string or null for $password.', E_USER_WARNING);
         }
-        if (is_int($securityQuestion) || $securityQuestion == NULL) {
-            $this->securityQuestion = $securityQuestion;
+        if (is_int($securityQuestion1) || $securityQuestion1 == NULL) {
+            $this->securityQuestion1 = $securityQuestion1;
         } else {
-            trigger_error('Expected an int or null for $securityQuestion.', E_USER_WARNING);
+            trigger_error('Expected an int or null for $securityQuestion1.', E_USER_WARNING);
         }
-        if (is_string($securityQuestionAnswer) || $securityQuestionAnswer == NULL) {
-            $this->securityQuestionAnswer = $securityQuestionAnswer;
+        if (is_string($securityQuestion1Answer) || $securityQuestion1Answer == NULL) {
+            $this->securityQuestion1Answer = $securityQuestion1Answer;
         } else {
-            trigger_error('Expected a string or null for $securityQuestion.', E_USER_WARNING);
+            trigger_error('Expected a string or null for $securityQuestion1Answer.', E_USER_WARNING);
+        }
+        if (is_int($securityQuestion2) || $securityQuestion2 == NULL) {
+            $this->securityQuestion2 = $securityQuestion2;
+        } else {
+            trigger_error('Expected an int or null for $securityQuestion2.', E_USER_WARNING);
+        }
+        if (is_string($securityQuestion2Answer) || $securityQuestion2Answer == NULL) {
+            $this->securityQuestion2Answer = $securityQuestion2Answer;
+        } else {
+            trigger_error('Expected a string or null for $securityQuestion2Answer.', E_USER_WARNING);
+        }
+        if (is_int($securityQuestion3) || $securityQuestion3 == NULL) {
+            $this->securityQuestion3 = $securityQuestion3;
+        } else {
+            trigger_error('Expected an int or null for $securityQuestion3.', E_USER_WARNING);
+        }
+        if (is_string($securityQuestion3Answer) || $securityQuestion3Answer == NULL) {
+            $this->securityQuestion3Answer = $securityQuestion3Answer;
+        } else {
+            trigger_error('Expected a string or null for $securityQuestion3Answer.', E_USER_WARNING);
         }
         if (is_bool($emailBlasts) || $emailBlasts == NULL) {
             $this->emailBlasts = $emailBlasts;
@@ -266,38 +298,110 @@ class User {
     }
 
     /**
-     * @return int|NULL $securityQuestion
+     * @return int|NULL $securityQuestion1
      */
-    public function getSecurityQuestion() {
-        return $this->securityQuestion;
+    public function getSecurityQuestion1() {
+        return $this->securityQuestion1;
     }
 
     /**
-     * @param int|NULL $securityQuestion
+     * @param int|NULL $securityQuestion1
      */
-    public function setSecurityQuestion($securityQuestion) {
-        if (is_int($securityQuestion) || $securityQuestion == NULL) {
-            $this->securityQuestion = $securityQuestion;
+    public function setSecurityQuestion1($securityQuestion1) {
+        if (is_int($securityQuestion1) || $securityQuestion1 == NULL) {
+            $this->securityQuestion1 = $securityQuestion1;
         } else {
-            trigger_error('Expected an int or null for $securityQuestion.', E_USER_WARNING);
+            trigger_error('Expected an int or null for $securityQuestion1.', E_USER_WARNING);
         }
     }
 
     /**
-     * @return string|NULL $securityQuestionAnswer
+     * @return string|NULL $securityQuestion1Answer
      */
-    public function getSecurityQuestionAnswer() {
-        return $this->securityQuestionAnswer;
+    public function getSecurityQuestion1Answer() {
+        return $this->securityQuestion1Answer;
     }
 
     /**
-     * @param string|NULL $securityQuestionAnswer
+     * @param string|NULL $securityQuestion1Answer
      */
-    public function setSecurityQuestionAnswer($securityQuestionAnswer) {
-        if (is_string($securityQuestionAnswer) || $securityQuestionAnswer == NULL) {
-            $this->securityQuestionAnswer = $securityQuestionAnswer;
+    public function setSecurityQuestion1Answer($securityQuestion1Answer) {
+        if (is_string($securityQuestion1Answer) || $securityQuestion1Answer == NULL) {
+            $this->securityQuestion1Answer = $securityQuestion1Answer;
         } else {
-            trigger_error('Expected a string or null for $securityQuestion.', E_USER_WARNING);
+            trigger_error('Expected a string or null for $securityQuestion1Answer.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return int|NULL $securityQuestion2
+     */
+    public function getSecurityQuestion2() {
+        return $this->securityQuestion2;
+    }
+
+    /**
+     * @param int|NULL $securityQuestion2
+     */
+    public function setSecurityQuestion2($securityQuestion2) {
+        if (is_int($securityQuestion2) || $securityQuestion2 == NULL) {
+            $this->securityQuestion2 = $securityQuestion2;
+        } else {
+            trigger_error('Expected an int or null for $securityQuestion2.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return string|NULL $securityQuestion2Answer
+     */
+    public function getSecurityQuestion2Answer() {
+        return $this->securityQuestion2Answer;
+    }
+
+    /**
+     * @param string}NULL $securityQuestion2Answer
+     */
+    public function setSecurityQuestion2Answer($securityQuestion2Answer) {
+        if (is_string($securityQuestion2Answer) || $securityQuestion2Answer == NULL) {
+            $this->securityQuestion2Answer = $securityQuestion2Answer;
+        } else {
+            trigger_error('Expected a string or null for $securityQuestion2Answer.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return int|NULL $securityQuestion3
+     */
+    public function getSecurityQuestion3() {
+        return $this->securityQuestion3;
+    }
+
+    /**
+     * @param int|NULL $securityQuestion3
+     */
+    public function setSecurityQuestion3($securityQuestion3) {
+        if (is_int($securityQuestion3) || $securityQuestion3 == NULL) {
+            $this->securityQuestion3 = $securityQuestion3;
+        } else {
+            trigger_error('Expected an int or null for $securityQuestion3.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @return string|NULL $securityQuestion3Answer
+     */
+    public function getSecurityQuestion3Answer() {
+        return $this->securityQuestion3Answer;
+    }
+
+    /**
+     * @param string|NULL $securityQuestion3Answer
+     */
+    public function setSecurityQuestion3Answer($securityQuestion3Answer) {
+        if (is_string($securityQuestion3Answer) || $securityQuestion3Answer == NULL) {
+            $this->securityQuestion3Answer = $securityQuestion3Answer;
+        } else {
+            trigger_error('Expected a string or null for $securityQuestion3Answer.', E_USER_WARNING);
         }
     }
 

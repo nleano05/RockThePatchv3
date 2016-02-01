@@ -73,50 +73,146 @@ function toggleAccountInfoEditConfirmEmail() {
     }
 }
 
-function toggleAccountInfoEditConfirmSecurityAnswer() {
+function toggleAccountInfoEditConfirmSecurityQuestionOneAnswer() {
     var accountInfoEditForm = document.getElementsByName("account-info-edit");
     if(accountInfoEditForm.length > 0) {
-        var securityAnswer = accountInfoEditForm[0].elements['answer'];
-        var securityAnswerConfirm = document.getElementById('answer-confirm');
-        var oldSecurityAnswer = getOldSecurityAnswer();
+        var securityQuestionOneAnswer = accountInfoEditForm[0].elements['security-question-one-answer'];
+        var securityQuestionOneAnswerConfirm = document.getElementById('security-question-one-answer-confirm');
+        var oldSecurityQuestionOneAnswer = getOldSecurityQuestionOneAnswer();
 
-        if(typeof oldSecurityAnswer != "undefined") {
-            if(securityAnswer.value.toLowerCase().trim() != oldSecurityAnswer.toLowerCase().trim()) {
-                securityAnswerConfirm.style.display = "block";
+        if(typeof oldSecurityQuestionOneAnswer != "undefined") {
+            if(securityQuestionOneAnswer.value.length == 0 || securityQuestionOneAnswer.value.toLowerCase().trim() != oldSecurityQuestionOneAnswer.toLowerCase().trim()) {
+                securityQuestionOneAnswerConfirm.style.display = "block";
             } else {
-                securityAnswerConfirm.style.display = "none";
+                securityQuestionOneAnswerConfirm.style.display = "none";
             }
         } else {
-            getOldSecurityAnswerForAccountInfoEdit();
-            securityAnswerConfirm.style.display = "none";
+            getOldSecurityQuestionOneAnswerForAccountInfoEdit();
+            securityQuestionOneAnswerConfirm.style.display = "none";
         }
 
-        securityAnswer.onkeypress = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.onkeypress = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
         };
 
-        securityAnswer.onkeyup = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.onkeyup = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
         };
 
-        securityAnswer.onkeydown = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.onkeydown = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
         };
 
-        securityAnswer.onchange = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.onchange = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
         };
 
-        securityAnswer.onblur = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.onblur = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
         };
 
-        securityAnswer.oncut = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.oncut = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
         };
 
-        securityAnswer.onpaste = function() {
-            toggleAccountInfoEditConfirmSecurityAnswer();
+        securityQuestionOneAnswer.onpaste = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
+        }
+    }
+}
+
+function toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer() {
+    var accountInfoEditForm = document.getElementsByName("account-info-edit");
+    if(accountInfoEditForm.length > 0) {
+        var securityQuestionTwoAnswer = accountInfoEditForm[0].elements['security-question-two-answer'];
+        var securityQuestionTwoAnswerConfirm = document.getElementById('security-question-two-answer-confirm');
+        var oldSecurityQuestionTwoAnswer = getOldSecurityQuestionTwoAnswer();
+
+        if(typeof oldSecurityQuestionTwoAnswer != "undefined") {
+            if(oldSecurityQuestionTwoAnswer.value.length == 0 || securityQuestionTwoAnswer.value.toLowerCase().trim() != oldSecurityQuestionTwoAnswer.toLowerCase().trim()) {
+                securityQuestionTwoAnswerConfirm.style.display = "block";
+            } else {
+                securityQuestionTwoAnswerConfirm.style.display = "none";
+            }
+        } else {
+            getOldSecurityQuestionTwoAnswerForAccountInfoEdit();
+            securityQuestionTwoAnswerConfirm.style.display = "none";
+        }
+
+        securityQuestionTwoAnswer.onkeypress = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        };
+
+        securityQuestionTwoAnswer.onkeyup = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        };
+
+        securityQuestionTwoAnswer.onkeydown = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        };
+
+        securityQuestionTwoAnswer.onchange = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        };
+
+        securityQuestionTwoAnswer.onblur = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        };
+
+        securityQuestionTwoAnswer.oncut = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        };
+
+        securityQuestionTwoAnswer.onpaste = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+        }
+    }
+}
+
+function toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer() {
+    var accountInfoEditForm = document.getElementsByName("account-info-edit");
+    if(accountInfoEditForm.length > 0) {
+        var securityQuestionThreeAnswer = accountInfoEditForm[0].elements['security-question-three-answer'];
+        var securityQuestionThreeAnswerConfirm = document.getElementById('security-question-three-answer-confirm');
+        var oldSecurityQuestionThreeAnswer = getOldSecurityQuestionThreeAnswer();
+
+        if(typeof oldSecurityQuestionThreeAnswer != "undefined") {
+            if(oldSecurityQuestionThreeAnswer.value.length == 0 || securityQuestionThreeAnswer.value.toLowerCase().trim() != oldSecurityQuestionThreeAnswer.toLowerCase().trim()) {
+                securityQuestionThreeAnswerConfirm.style.display = "block";
+            } else {
+                securityQuestionThreeAnswerConfirm.style.display = "none";
+            }
+        } else {
+            getOldSecurityQuestionTwoAnswerForAccountInfoEdit();
+            securityQuestionThreeAnswerConfirm.style.display = "none";
+        }
+
+        securityQuestionThreeAnswer.onkeypress = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
+        };
+
+        securityQuestionThreeAnswer.onkeyup = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
+        };
+
+        securityQuestionThreeAnswer.onkeydown = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
+        };
+
+        securityQuestionThreeAnswer.onchange = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
+        };
+
+        securityQuestionThreeAnswer.onblur = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
+        };
+
+        securityQuestionThreeAnswer.oncut = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
+        };
+
+        securityQuestionThreeAnswer.onpaste = function() {
+            toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
         }
     }
 }

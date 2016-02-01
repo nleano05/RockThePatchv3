@@ -33,6 +33,9 @@ define("COOKIE_LOGIN_STATUS_KEY", "login_status_key");
 define("COOKIE_USER_ID", "user_id");
 define("COOKIE_USERNAME_OR_EMAIL", "username_or_email");
 define("COOKIE_SESSION_ID", "session_id");
+define("COOKIE_SECURITY_QUESTION_ONE_ANSWER", "security_question_one_answer");
+define("COOKIE_SECURITY_QUESTION_TWO_ANSWER", "security_question_two_answer");
+define("COOKIE_SECURITY_QUESTION_THREE_ANSWER", "security_question_three_answer");
 
 define("SELECT_SECURITY_QUESTION", "-- SELECT SECURITY QUESTION --");
 define("SELECT_ANNOYANCE_LEVEL_TO_DELETE", "-- SELECT ANNOYANCE LEVEL TO DELETE --");

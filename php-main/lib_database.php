@@ -2072,9 +2072,10 @@ class lib_database {
             $stmt->execute();
             $row = $stmt->fetch();
 
+            $securityQuestion = new SecurityQuestion();
+
             /** @noinspection PhpAssignmentInConditionInspection */
             if (!empty($row )) {
-                $securityQuestion = new SecurityQuestion();
                 $securityQuestion->setId((int)$row['id']);
                 $securityQuestion->setQuestion($row['question']);
             }
@@ -2403,8 +2404,12 @@ class lib_database {
                         $user->setUserName($row['userName']);
                         $user->setEmail($row['email']);
                         $user->setPassword($row['password']);
-                        $user->setSecurityQuestion((int)$row['securityQuestion']);
-                        $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                        $user->setSecurityQuestion1((int)$row['securityQuestion1']);
+                        $user->setSecurityQuestion1Answer($row['securityQuestion1Answer']);
+                        $user->setSecurityQuestion2((int)$row['securityQuestion2']);
+                        $user->setSecurityQuestion2Answer($row['securityQuestion2Answer']);
+                        $user->setSecurityQuestion3((int)$row['securityQuestion3']);
+                        $user->setSecurityQuestion3Answer($row['securityQuestion3Answer']);
                         $user->setEmailBlasts((bool)$row['emailBlasts']);
                         $user->setTextBlasts((bool)$row['textBlasts']);
 						$user->setCell($row['cell']);
@@ -2429,8 +2434,12 @@ class lib_database {
                     $user->setUserName($row['userName']);
                     $user->setEmail($row['email']);
                     $user->setPassword($row['password']);
-                    $user->setSecurityQuestion((int)$row['securityQuestion']);
-                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setSecurityQuestion1((int)$row['securityQuestion1']);
+                    $user->setSecurityQuestion1Answer($row['securityQuestion1Answer']);
+                    $user->setSecurityQuestion2((int)$row['securityQuestion2']);
+                    $user->setSecurityQuestion2Answer($row['securityQuestion2Answer']);
+                    $user->setSecurityQuestion3((int)$row['securityQuestion3']);
+                    $user->setSecurityQuestion3Answer($row['securityQuestion3Answer']);
                     $user->setEmailBlasts((bool)$row['emailBlasts']);
                     $user->setTextBlasts((bool)$row['textBlasts']);
 					$user->setCell($row['cell']);
@@ -2497,8 +2506,12 @@ class lib_database {
                     $user->setUserName($row['userName']);
                     $user->setEmail($row['email']);
                     $user->setPassword($row['password']);
-                    $user->setSecurityQuestion((int)$row['securityQuestion']);
-                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setSecurityQuestion1((int)$row['securityQuestion1']);
+                    $user->setSecurityQuestion1Answer($row['securityQuestion1Answer']);
+                    $user->setSecurityQuestion2((int)$row['securityQuestion2']);
+                    $user->setSecurityQuestion2Answer($row['securityQuestion2Answer']);
+                    $user->setSecurityQuestion3((int)$row['securityQuestion3']);
+                    $user->setSecurityQuestion3Answer($row['securityQuestion3Answer']);
                     $user->setEmailBlasts((bool)$row['emailBlasts']);
                     $user->setTextBlasts((bool)$row['textBlasts']);
                     $user->setCell($row['cell']);
@@ -2547,7 +2560,7 @@ class lib_database {
         return $users;
     }
 
-    public static function getUsersSecurityQuestion($userNameOrEmail) {
+    public static function getUsersSecurityQuestions($userNameOrEmail) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -2560,18 +2573,24 @@ class lib_database {
         $securityQuestion = NULL;
 
         if(!empty($pdo)) {
-            $stmt = $pdo->prepare("SELECT * FROM users INNER JOIN security_questions ON users.securityQuestion = security_questions.id WHERE email = ? OR userName = ?");
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR userName = ?");
             $stmt->bindParam(1, $userNameOrEmail, PDO::PARAM_STR);
             $stmt->bindParam(2, $userNameOrEmail, PDO::PARAM_STR);
             $stmt->execute();
             $row = $stmt->fetch();
 
+            $securityQuestions = array();
+
             if(!empty($row)) {
                 log_util::log(LOG_LEVEL_ERROR, "row WAS NOT empty");
 
-                $securityQuestion = new SecurityQuestion();
-                $securityQuestion->setId((int)$row['id']);
-                $securityQuestion->setQuestion($row['question']);
+                $securityQuestion1 = lib_database::getSecurityQuestionById($row['securityQuestion1']);
+                $securityQuestion2 = lib_database::getSecurityQuestionById($row['securityQuestion2']);
+                $securityQuestion3 = lib_database::getSecurityQuestionById($row['securityQuestion3']);
+
+                array_push($securityQuestions, $securityQuestion1);
+                array_push($securityQuestions, $securityQuestion2);
+                array_push($securityQuestions, $securityQuestion3);
             } else {
                 log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
             }
@@ -2581,7 +2600,8 @@ class lib_database {
 
         $pdo = NULL;
 
-        log_util::log(LOG_LEVEL_DEBUG, "securityQuestion: ", $securityQuestion);
+        print_r($securityQuestions);
+        log_util::log(LOG_LEVEL_DEBUG, "securityQuestions: ", $securityQuestions);
         log_util::logDivider();
 
         return $securityQuestion;
@@ -2611,25 +2631,33 @@ class lib_database {
                 $userNameMigrate = $user->getUserName();
                 $emailMigrate = $user->getEmail();
                 $passwordMigrate = $user->getPassword();
-                $securityQuestionMigrate = $user->getSecurityQuestion();
-                $securityQuestionAnswerMigrate = $user->getSecurityQuestionAnswer();
+                $securityQuestion1Migrate = $user->getSecurityQuestion1();
+                $securityQuestion1AnswerMigrate = $user->getSecurityQuestion1Answer();
+                $securityQuestion2Migrate = $user->getSecurityQuestion2();
+                $securityQuestion2AnswerMigrate = $user->getSecurityQuestion2Answer();
+                $securityQuestion3Migrate = $user->getSecurityQuestion3();
+                $securityQuestion3AnswerMigrate = $user->getSecurityQuestion3Answer();
                 $emailBlastsMigrate = $user->getEmailBlasts();
                 $textBlastsMigrate = $user->getTextBlasts();
                 $cellMigrate = $user->getCell();
                 $roleMigrate = $user->getRole();
 
-                $stmt = $pdo->prepare("INSERT INTO users (firstName, lastName, userName, email, password, securityQuestion, securityQuestionAnswer, emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO users (firstName, lastName, userName, email, password, securityQuestion1, securityQuestion1Answer, securityQuestion2, securityQuestion2Answer, securityQuestion3, securityQuestion3Answer, emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bindParam(1, $firstNameMigrate, PDO::PARAM_STR);
                 $stmt->bindParam(2, $lastNameMigrate, PDO::PARAM_STR);
                 $stmt->bindParam(3, $userNameMigrate, PDO::PARAM_STR);
                 $stmt->bindParam(4, $emailMigrate, PDO::PARAM_STR);
                 $stmt->bindParam(5, $passwordMigrate, PDO::PARAM_STR);
-                $stmt->bindParam(6, $securityQuestionMigrate, PDO::PARAM_INT);
-                $stmt->bindParam(7, $securityQuestionAnswerMigrate, PDO::PARAM_STR);
-                $stmt->bindParam(8, $emailBlastsMigrate, PDO::PARAM_INT);
-                $stmt->bindParam(9, $textBlastsMigrate, PDO::PARAM_INT);
-                $stmt->bindParam(10, $cellMigrate, PDO::PARAM_STR);
-                $stmt->bindParam(11, $roleMigrate, PDO::PARAM_INT);
+                $stmt->bindParam(6, $securityQuestion1Migrate, PDO::PARAM_INT);
+                $stmt->bindParam(7, $securityQuestion1AnswerMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(8, $securityQuestion2Migrate, PDO::PARAM_INT);
+                $stmt->bindParam(9, $securityQuestion2AnswerMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(10, $securityQuestion3Migrate, PDO::PARAM_INT);
+                $stmt->bindParam(11, $securityQuestion3AnswerMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(12, $emailBlastsMigrate, PDO::PARAM_INT);
+                $stmt->bindParam(13, $textBlastsMigrate, PDO::PARAM_INT);
+                $stmt->bindParam(14, $cellMigrate, PDO::PARAM_STR);
+                $stmt->bindParam(15, $roleMigrate, PDO::PARAM_INT);
                 $stmt->execute();
 
 				$stmt = $pdo->prepare("SELECT * FROM users ORDER BY id DESC LIMIT 1");
@@ -2691,8 +2719,12 @@ class lib_database {
                     $user->setUserName($row['userName']);
                     $user->setEmail($row['email']);
                     $user->setPassword($row['password']);
-                    $user->setSecurityQuestion((int)$row['securityQuestion']);
-                    $user->setSecurityQuestionAnswer($row['securityQuestionAnswer']);
+                    $user->setSecurityQuestion1((int)$row['securityQuestion1']);
+                    $user->setSecurityQuestion1Answer($row['securityQuestion1Answer']);
+                    $user->setSecurityQuestion2((int)$row['securityQuestion2']);
+                    $user->setSecurityQuestion2Answer($row['securityQuestion2Answer']);
+                    $user->setSecurityQuestion3((int)$row['securityQuestion3']);
+                    $user->setSecurityQuestion3Answer($row['securityQuestion3Answer']);
                     $user->setEmailBlasts((bool)$row['emailBlasts']);
                     $user->setTextBlasts((bool)$row['textBlasts']);
                     $user->setCell($row['cell']);
@@ -3372,7 +3404,7 @@ class lib_database {
         log_util::logDivider();
     }
 
-    public static function updateUser($id, $firstName, $lastName, $userName, $email, $password, $securityQuestion, $securityQuestionAnswer, $emailBlasts, $textBlasts, $cellPhone) {
+    public static function updateUser($id, $firstName, $lastName, $userName, $email, $password, $securityQuestion1, $securityQuestion1Answer, $securityQuestion2, $securityQuestion2Answer, $securityQuestion3, $securityQuestion3Answer, $emailBlasts, $textBlasts, $cellPhone) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -3386,18 +3418,22 @@ class lib_database {
         if(!empty($pdo)) {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS NOT empty");
 
-            $stmt = $pdo->prepare("UPDATE users SET firstName=?, lastName=?, userName=?, email=?, password=?, securityQuestion=?, securityQuestionAnswer=?, emailBlasts=?, textBlasts=?, cell=? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE users SET firstName=?, lastName=?, userName=?, email=?, password=?, securityQuestion1=?, securityQuestion1Answer=?, securityQuestion2=?, securityQuestion2Answer=?, securityQuestion3=?, securityQuestion3Answer=?, emailBlasts=?, textBlasts=?, cell=? WHERE id = ?");
             $stmt->bindParam(1, $firstName, PDO::PARAM_STR);
             $stmt->bindParam(2, $lastName, PDO::PARAM_STR);
             $stmt->bindParam(3, $userName, PDO::PARAM_STR);
             $stmt->bindParam(4, $email, PDO::PARAM_STR);
             $stmt->bindParam(5, $password, PDO::PARAM_STR);
-            $stmt->bindParam(6, $securityQuestion, PDO::PARAM_INT);
-            $stmt->bindParam(7, $securityQuestionAnswer, PDO::PARAM_STR);
-            $stmt->bindParam(8, $emailBlasts, PDO::PARAM_INT);
-            $stmt->bindParam(9, $textBlasts, PDO::PARAM_INT);
-            $stmt->bindParam(10, $cellPhone, PDO::PARAM_STR);
-            $stmt->bindParam(11, $id, PDO::PARAM_STR);
+            $stmt->bindParam(6, $securityQuestion1, PDO::PARAM_INT);
+            $stmt->bindParam(7, $securityQuestion1Answer, PDO::PARAM_STR);
+            $stmt->bindParam(8, $securityQuestion2, PDO::PARAM_INT);
+            $stmt->bindParam(9, $securityQuestion2Answer, PDO::PARAM_STR);
+            $stmt->bindParam(10, $securityQuestion3, PDO::PARAM_INT);
+            $stmt->bindParam(11, $securityQuestion3Answer, PDO::PARAM_STR);
+            $stmt->bindParam(12, $emailBlasts, PDO::PARAM_INT);
+            $stmt->bindParam(13, $textBlasts, PDO::PARAM_INT);
+            $stmt->bindParam(14, $cellPhone, PDO::PARAM_STR);
+            $stmt->bindParam(15, $id, PDO::PARAM_STR);
             $stmt->execute();
         } else {
             log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
@@ -4151,7 +4187,7 @@ class lib_database {
         log_util::logDivider();
     }
 
-    public static function writeUsersTemp($firstName, $lastName, $userName, $email, $password, $securityQuestion, $answer, $emailBlasts, $textBlasts, $cell, $role) {
+    public static function writeUsersTemp($firstName, $lastName, $userName, $email, $password, $securityQuestion1, $securityQuestion1Answer, $securityQuestion2, $securityQuestion2Answer, $securityQuestion3, $securityQuestion3Answer, $emailBlasts, $textBlasts, $cell, $role) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
@@ -4172,18 +4208,22 @@ class lib_database {
 
                 $encryptedPassword = lib::encrypt($password, $email . "_registration");
 
-                $stmt = $dbh->prepare("INSERT INTO users_temp (firstName, lastName, userName, email, password, securityQuestion, securityQuestionAnswer, emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $dbh->prepare("INSERT INTO users_temp (firstName, lastName, userName, email, password, securityQuestion1, securityQuestionAnswer1, securityQuestion2, securityQuestion2Answer, securityQuestion3, securityQuestion3Answer,  emailBlasts, textBlasts, cell, role) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bindParam(1, $firstName, PDO::PARAM_STR);
                 $stmt->bindParam(2, $lastName, PDO::PARAM_STR);
                 $stmt->bindParam(3, $userName, PDO::PARAM_STR);
                 $stmt->bindParam(4, $email, PDO::PARAM_STR);
                 $stmt->bindParam(5, $encryptedPassword, PDO::PARAM_STR);
-                $stmt->bindParam(6, $securityQuestion, PDO::PARAM_INT);
-                $stmt->bindParam(7, $answer, PDO::PARAM_STR);
-                $stmt->bindParam(8, $emailBlasts, PDO::PARAM_INT);
-                $stmt->bindParam(9, $textBlasts, PDO::PARAM_INT);
-                $stmt->bindParam(10, $cell, PDO::PARAM_STR);
-                $stmt->bindParam(11, $role, PDO::PARAM_INT);
+                $stmt->bindParam(6, $securityQuestion1, PDO::PARAM_INT);
+                $stmt->bindParam(7, $securityQuestion1Answer, PDO::PARAM_STR);
+                $stmt->bindParam(8, $securityQuestion2, PDO::PARAM_INT);
+                $stmt->bindParam(9, $securityQuestion2Answer, PDO::PARAM_STR);
+                $stmt->bindParam(10, $securityQuestion3, PDO::PARAM_INT);
+                $stmt->bindParam(11, $securityQuestion3Answer, PDO::PARAM_STR);
+                $stmt->bindParam(12, $emailBlasts, PDO::PARAM_INT);
+                $stmt->bindParam(13, $textBlasts, PDO::PARAM_INT);
+                $stmt->bindParam(14, $cell, PDO::PARAM_STR);
+                $stmt->bindParam(15, $role, PDO::PARAM_INT);
                 $stmt->execute();
             } else {
                 log_util::log(LOG_LEVEL_ERROR, "user DOES exist");

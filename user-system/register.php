@@ -13,13 +13,18 @@ if(isset($_POST['register'])) {
 }
 
 function checkInput() {
-    global $gNoFirstName, $gNoLastName, $gNoUserName, $gNoEmail, $gNoEmailConfirm, $gNoPassword, $gNoPasswordConfirm, $gNoCellPhone, $gNoSecurityQuestion, $gNoAnswer;
-    global $gBlackFirstName, $gBlackLastName, $gBlackUserName, $gBlackEmail, $gBlackEmailConfirm, $gBlackPassword, $gBlackPasswordConfirm, $gBlackCellPhone, $gBlackAnswer;
+    global $gNoFirstName, $gNoLastName, $gNoUserName, $gNoEmail, $gNoEmailConfirm, $gNoPassword, $gNoPasswordConfirm, $gNoCellPhone;
+    global $gBlackFirstName, $gBlackLastName, $gBlackUserName, $gBlackEmail, $gBlackEmailConfirm, $gBlackPassword, $gBlackPasswordConfirm, $gBlackCellPhone;
     global $gFirstNameTooLong, $gLastNameTooLong, $gUserNameTooLong;
     global $gEmailInUse, $gUserNameInUse;
     global $gEmailInRegistration, $gUserNameInRegistration;
     global $gValidEmail, $gValidPassword, $gValidCellPhone;
     global $gEmailsMatch, $gPasswordsMatch;
+    global $gNoSecurityQuestionOne, $gNoSecurityQuestionTwo, $gNoSecurityQuestionThree;
+    global $gBlackSecurityQuestionOneAnswer, $gBlackSecurityQuestionTwoAnswer, $gBlackSecurityQuestionThreeAnswer;
+    global $gSecurityQuestionOneSameAsTwoOrThree, $gSecurityQuestionTwoSameAsOneOrThree, $gSecurityQuestionThreeSameAsOneOrTwo;
+    global $gNoSecurityQuestionOneAnswer, $gNoSecurityQuestionTwoAnswer, $gNoSecurityQuestionThreeAnswer;
+
 
     $firstName = isset($_POST['first-name']) ? $_POST['first-name'] : "";
     $lastName = isset($_POST['last-name']) ? $_POST['last-name'] : "";
@@ -29,8 +34,12 @@ function checkInput() {
     $password = isset($_POST['password']) ? $_POST['password'] : "";
     $passwordConfirm = isset($_POST['password-confirm']) ? $_POST['password-confirm'] : "";
     $cellPhone = isset($_POST['cell-phone']) ? $_POST['cell-phone'] : "";
-    $securityQuestion = isset($_POST['security-question']) ? $_POST['security-question'] : "";
-    $answer = isset($_POST['answer']) ? $_POST['answer'] : "";
+    $securityQuestionOne = isset($_POST['security-question-one']) ? $_POST['security-question-one'] : "";
+    $securityQuestionOneAnswer = isset($_POST['security-question-one-answer']) ? $_POST['security-question-one-answer'] : "";
+    $securityQuestionTwo = isset($_POST['security-question-two']) ? $_POST['security-question-two'] : "";
+    $securityQuestionTwoAnswer = isset($_POST['security-question-two-answer']) ? $_POST['security-question-two-answer'] : "";
+    $securityQuestionThree = isset($_POST['security-question-three']) ? $_POST['security-question-three'] : "";
+    $securityQuestionThreeAnswer = isset($_POST['security-question-three-answer']) ? $_POST['security-question-three-answer'] : "";
 
     log_util::log(LOG_LEVEL_DEBUG, "firstName: " . $firstName);
     log_util::log(LOG_LEVEL_DEBUG, "lastName: " . $lastName);
@@ -40,8 +49,12 @@ function checkInput() {
     log_util::log(LOG_LEVEL_DEBUG, "password: " . $password);
     log_util::log(LOG_LEVEL_DEBUG, "passwordConfirm: " . $passwordConfirm);
     log_util::log(LOG_LEVEL_DEBUG, "cellPhone: " . $cellPhone);
-    log_util::log(LOG_LEVEL_DEBUG, "securityQuestion: " . $securityQuestion);
-    log_util::log(LOG_LEVEL_DEBUG, "answer: " . $answer);
+    log_util::log(LOG_LEVEL_DEBUG, "securityQuestionOne: " . $securityQuestionOne);
+    log_util::log(LOG_LEVEL_DEBUG, "securityQuestionOneAnswer: " . $securityQuestionOneAnswer);
+    log_util::log(LOG_LEVEL_DEBUG, "securityQuestionTwo: " . $securityQuestionTwo);
+    log_util::log(LOG_LEVEL_DEBUG, "securityQuestionTwoAnswer: " . $securityQuestionTwoAnswer);
+    log_util::log(LOG_LEVEL_DEBUG, "securityQuestionThree: " . $securityQuestionThree);
+    log_util::log(LOG_LEVEL_DEBUG, "securityQuestionThreeAnswer: " . $securityQuestionThreeAnswer);
 
     $validForm = TRUE;
 
@@ -80,8 +93,18 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    $gNoAnswer = lib_check::isEmpty($answer);
-    if($gNoAnswer) {
+    $gNoSecurityQuestionOneAnswer = lib_check::isEmpty($securityQuestionOneAnswer);
+    if($gNoSecurityQuestionOneAnswer) {
+        $validForm = FALSE;
+    }
+
+    $gNoSecurityQuestionTwoAnswer = lib_check::isEmpty($securityQuestionTwoAnswer);
+    if($gNoSecurityQuestionTwoAnswer) {
+        $validForm = FALSE;
+    }
+
+    $gNoSecurityQuestionThreeAnswer = lib_check::isEmpty($securityQuestionThreeAnswer);
+    if($gNoSecurityQuestionThreeAnswer) {
         $validForm = FALSE;
     }
 
@@ -125,8 +148,18 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    $gBlackAnswer  = lib_check::againstWhiteList($answer);
-    if($gBlackAnswer) {
+    $gBlackSecurityQuestionOneAnswer  = lib_check::againstWhiteList($securityQuestionOneAnswer);
+    if($gBlackSecurityQuestionOneAnswer) {
+        $validForm = FALSE;
+    }
+
+    $gBlackSecurityQuestionTwoAnswer  = lib_check::againstWhiteList($securityQuestionTwoAnswer);
+    if($gBlackSecurityQuestionTwoAnswer) {
+        $validForm = FALSE;
+    }
+
+    $gBlackSecurityQuestionThreeAnswer  = lib_check::againstWhiteList($securityQuestionThreeAnswer);
+    if($gBlackSecurityQuestionThreeAnswer) {
         $validForm = FALSE;
     }
 
@@ -195,8 +228,33 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    if($securityQuestion == SELECT_SECURITY_QUESTION) {
-        $gNoSecurityQuestion = TRUE;
+    if($securityQuestionOne == SELECT_SECURITY_QUESTION) {
+        $gNoSecurityQuestionOne = TRUE;
+        $validForm = FALSE;
+    }
+
+    if($securityQuestionTwo == SELECT_SECURITY_QUESTION) {
+        $gNoSecurityQuestionTwo = TRUE;
+        $validForm = FALSE;
+    }
+
+    if($securityQuestionThree == SELECT_SECURITY_QUESTION) {
+        $gNoSecurityQuestionThree = TRUE;
+        $validForm = FALSE;
+    }
+
+    if($securityQuestionOne == $securityQuestionTwo || $securityQuestionOne == $securityQuestionThree) {
+        $gSecurityQuestionOneSameAsTwoOrThree = TRUE;
+        $validForm = FALSE;
+    }
+
+    if($securityQuestionTwo == $securityQuestionOne || $securityQuestionTwo == $securityQuestionThree) {
+        $gSecurityQuestionTwoSameAsOneOrThree = TRUE;
+        $validForm = FALSE;
+    }
+
+    if($securityQuestionThree == $securityQuestionOne || $securityQuestionThree == $securityQuestionTwo) {
+        $gSecurityQuestionThreeSameAsOneOrTwo = TRUE;
         $validForm = FALSE;
     }
 
@@ -318,20 +376,62 @@ function displayOutputCellPhone() {
     }
 }
 
-function displayOutputSecurityQuestion(){
-    global $gNoSecurityQuestion;
+function displayOutputSecurityQuestionOne(){
+    global $gNoSecurityQuestionOne, $gSecurityQuestionOneSameAsTwoOrThree;
 
-    if($gNoSecurityQuestion) {
+    if($gNoSecurityQuestionOne) {
         echo("<p class='error'>Please choose a security question.</p>");
+    } else if($gSecurityQuestionOneSameAsTwoOrThree) {
+        echo("<p class='error'>Please choose three seperate security questions.</p>");
     }
 }
 
-function displayOutputAnswer() {
-    global $gNoAnswer, $gBlackAnswer;
+function displayOutputSecurityQuestionOneAnswer() {
+    global $gNoSecurityQuestionOneAnswer, $gBlackSecurityQuestionOneAnswer;
 
-    if($gNoAnswer) {
+    if($gNoSecurityQuestionOneAnswer) {
         echo("<p class='error'>Please enter in an answer to the security question to continue.</p>");
-    } else if($gBlackAnswer) {
+    } else if($gBlackSecurityQuestionOneAnswer) {
+        echo("<p class='error'>Answer to security question contained characters that are not allowed.</p>");
+    }
+}
+
+function displayOutputSecurityQuestionTwo(){
+    global $gNoSecurityQuestionTwo, $gSecurityQuestionTwoSameAsOneOrThree;
+
+    if($gNoSecurityQuestionTwo) {
+        echo("<p class='error'>Please choose a security question.</p>");
+    } else if($gSecurityQuestionTwoSameAsOneOrThree) {
+        echo("<p class='error'>Please choose three seperate security questions.</p>");
+    }
+}
+
+function displayOutputSecurityQuestionTwoAnswer() {
+    global $gNoSecurityQuestionTwoAnswer, $gBlackSecurityQuestionTwoAnswer;
+
+    if($gNoSecurityQuestionTwoAnswer) {
+        echo("<p class='error'>Please enter in an answer to the security question to continue.</p>");
+    } else if($gBlackSecurityQuestionTwoAnswer) {
+        echo("<p class='error'>Answer to security question contained characters that are not allowed.</p>");
+    }
+}
+
+function displayOutputSecurityQuestionThree(){
+    global $gNoSecurityQuestionThree, $gSecurityQuestionThreeSameAsOneOrTwo;
+
+    if($gNoSecurityQuestionThree) {
+        echo("<p class='error'>Please choose a security question.</p>");
+    } else if($gSecurityQuestionThreeSameAsOneOrTwo) {
+        echo("<p class='error'>Please choose three seperate security questions.</p>");
+    }
+}
+
+function displayOutputSecurityQuestionThreeAnswer() {
+    global $gNoSecurityQuestionThreeAnswer, $gBlackSecurityQuestionThreeAnswer;
+
+    if($gNoSecurityQuestionThreeAnswer) {
+        echo("<p class='error'>Please enter in an answer to the security question to continue.</p>");
+    } else if($gBlackSecurityQuestionThreeAnswer) {
         echo("<p class='error'>Answer to security question contained characters that are not allowed.</p>");
     }
 }
@@ -359,8 +459,12 @@ function register() {
     $email = isset($_POST['email']) ? $_POST['email'] : "";
     $password = isset($_POST['password']) ? $_POST['password'] : "";
     $cellPhone = isset($_POST['cell-phone']) ? $_POST['cell-phone'] : "";
-    $securityQuestion = isset($_POST['security-question']) ? $_POST['security-question'] : "";
-    $answer = isset($_POST['answer']) ? $_POST['answer'] : "";
+    $securityQuestionOne = isset($_POST['security-question-one']) ? $_POST['security-question-one'] : "";
+    $securityQuestionOneAnswer = isset($_POST['security-question-one-answer']) ? $_POST['security-question-one-answer'] : "";
+    $securityQuestionTwo = isset($_POST['security-question-two']) ? $_POST['security-question-two'] : "";
+    $securityQuestionTwoAnswer = isset($_POST['security-question-two-answer']) ? $_POST['security-question-two-answer'] : "";
+    $securityQuestionThree = isset($_POST['security-question-three']) ? $_POST['security-question-three'] : "";
+    $securityQuestionThreeAnswer = isset($_POST['security-question-three-answer']) ? $_POST['security-question-three-answer'] : "";
 
     if(!empty($_POST['email-blasts'])) {
         $emailBlasts = 1;
@@ -376,7 +480,7 @@ function register() {
 
     $role = ROLE_USER;
 
-    lib_database::writeUsersTemp($firstName, $lastName, $userName, $email, $password, $securityQuestion, $answer, $emailBlasts, $textBlasts, $cellPhone, $role);
+    lib_database::writeUsersTemp($firstName, $lastName, $userName, $email, $password, $securityQuestionOne, $securityQuestionOneAnswer, $securityQuestionTwo, $securityQuestionTwoAnswer, $securityQuestionThree, $securityQuestionThreeAnswer, $emailBlasts, $textBlasts, $cellPhone, $role);
 }
 
 function sendRegistrationEmail() {
@@ -661,34 +765,102 @@ function sendRegistrationEmail() {
                 <div class="clear"></div>
 
                 <div class="label30">
-                    <p><strong>Security Question:</strong></p>
+                    <p><strong>Security Question One:</strong></p>
                 </div>
                 <div class="input70">
                     <!-- HACK - wanted to print this out in dbQuestionsPrintSelect but options weren't populated before sent to the validation service -->
-                    <select name="security-question">
+                    <select name="security-question-one">
                          <!-- A static option needed for the validation of the security question -->
                         <option><?php echo(SELECT_SECURITY_QUESTION); ?></option>
                         <?php
                             $securityQuestions = lib_database::getSecurityQuestions();
                             $randomizedSecurityQuestions = lib::randomizeArray($securityQuestions, 10);
-                            $selectedQuestion = isset($_POST['security-question']) ? $_POST['security-question'] : "";
+                            $selectedQuestion = isset($_POST['security-question-one']) ? $_POST['security-question-one'] : "";
                             lib::printSecurityQuestions($randomizedSecurityQuestions, $selectedQuestion);
                         ?>
                     </select>
                     <?php
-                        displayOutputSecurityQuestion();
+                        displayOutputSecurityQuestionOne();
                     ?>
                 </div>
                 <div class="clear"></div>
 
                 <div class="label30">
-                    <p><strong>Security Question Answer:</strong></p>
+                    <p><strong>Security Question One Answer:</strong></p>
                 </div>
                 <div class="input70">
-                    <p><input type="text" name="answer" value="<?php if(isset($_POST['answer'])){ echo($_POST['answer']); } ?>"/></p>
+                    <p><input type="text" name="security-question-one-answer" value="<?php if(isset($_POST['security-question-one-answer'])){ echo($_POST['security-question-one-answer']); } ?>"/></p>
                     <?php
                         if(isset($_POST['register'])) {
-                            displayOutputAnswer();
+                            displayOutputSecurityQuestionOneAnswer();
+                        }
+                    ?>
+                </div>
+                <div class="clear"></div>
+
+                <div class="label30">
+                    <p><strong>Security Question Two:</strong></p>
+                </div>
+                <div class="input70">
+                    <!-- HACK - wanted to print this out in dbQuestionsPrintSelect but options weren't populated before sent to the validation service -->
+                    <select name="security-question-one">
+                        <!-- A static option needed for the validation of the security question -->
+                        <option><?php echo(SELECT_SECURITY_QUESTION); ?></option>
+                        <?php
+                            $securityQuestions = lib_database::getSecurityQuestions();
+                            $randomizedSecurityQuestions = lib::randomizeArray($securityQuestions, 10);
+                            $selectedQuestion = isset($_POST['security-question-two']) ? $_POST['security-question-two'] : "";
+                            lib::printSecurityQuestions($randomizedSecurityQuestions, $selectedQuestion);
+                        ?>
+                    </select>
+                    <?php
+                        displayOutputSecurityQuestionTwo();
+                    ?>
+                </div>
+                <div class="clear"></div>
+
+                <div class="label30">
+                    <p><strong>Security Question Two Answer:</strong></p>
+                </div>
+                <div class="input70">
+                    <p><input type="text" name="security-question-two-answer" value="<?php if(isset($_POST['security-question-two-answer'])){ echo($_POST['security-question-two-answer']); } ?>"/></p>
+                    <?php
+                    if(isset($_POST['register'])) {
+                        displayOutputSecurityQuestionTwoAnswer();
+                    }
+                    ?>
+                </div>
+                <div class="clear"></div>
+
+                <div class="label30">
+                    <p><strong>Security Question Three:</strong></p>
+                </div>
+                <div class="input70">
+                    <!-- HACK - wanted to print this out in dbQuestionsPrintSelect but options weren't populated before sent to the validation service -->
+                    <select name="security-question-one">
+                        <!-- A static option needed for the validation of the security question -->
+                        <option><?php echo(SELECT_SECURITY_QUESTION); ?></option>
+                        <?php
+                            $securityQuestions = lib_database::getSecurityQuestions();
+                            $randomizedSecurityQuestions = lib::randomizeArray($securityQuestions, 10);
+                            $selectedQuestion = isset($_POST['security-question-three']) ? $_POST['security-question-three'] : "";
+                            lib::printSecurityQuestions($randomizedSecurityQuestions, $selectedQuestion);
+                        ?>
+                    </select>
+                    <?php
+                        displayOutputSecurityQuestionThree();
+                    ?>
+                </div>
+                <div class="clear"></div>
+
+                <div class="label30">
+                    <p><strong>Security Question Three Answer:</strong></p>
+                </div>
+                <div class="input70">
+                    <p><input type="text" name="security-question-three-answer" value="<?php if(isset($_POST['security-question-three-answer'])){ echo($_POST['security-question-three-answer']); } ?>"/></p>
+                    <?php
+                        if(isset($_POST['register'])) {
+                            displayOutputSecurityQuestionThreeAnswer();
                         }
                     ?>
                 </div>

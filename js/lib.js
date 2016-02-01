@@ -13,7 +13,9 @@ window.onload = function() {
 
     toggleAccessControlBlockType();
     toggleAccountInfoEditConfirmEmail();
-    toggleAccountInfoEditConfirmSecurityAnswer();
+    toggleAccountInfoEditConfirmSecurityQuestionOneAnswer();
+    toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer();
+    toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer();
     toggleAccountInfoEditNewPassword();
     toggleAnnoyanceLevelsAddEditOrDelete();
     toggleEmailDistrosAddEditOrDelete();

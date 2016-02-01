@@ -8,6 +8,9 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
 $validForm = FALSE;
 
+$securityQuestionIndex = rand(1, 3);
+echo("<p>Security question index: " . $securityQuestionIndex . "</p>");
+
 if(isset($_POST['forgot-password'])) {
     $validForm = checkInput();
     if($validForm) {

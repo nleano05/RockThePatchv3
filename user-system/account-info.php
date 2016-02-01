@@ -92,12 +92,11 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 <?php
                     require_once("../inc/user-nav.php");
                     if($gLoginStatus == STATUS_LOGGED_IN) {
-                        ?>
-                        <!-- Script to display the current page in the navigation -->
+                ?>
                         <script type="text/javascript">
                             document.getElementById("account-info").className  = "current";
                         </script>
-                        <?php
+                <?php
                     }
                 ?>
             </div>
@@ -138,7 +137,9 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                 $user = lib_get::currentUser();
                 $securityQuestion = NULL;
                 if($user != NULL) {
-                    $securityQuestion = lib_database::getSecurityQuestionById($user->getSecurityQuestion());
+                    $securityQuestion1 = lib_database::getSecurityQuestionById($user->getSecurityQuestion1());
+                    $securityQuestion2 = lib_database::getSecurityQuestionById($user->getSecurityQuestion2());
+                    $securityQuestion3 = lib_database::getSecurityQuestionById($user->getSecurityQuestion3());
                 }
         ?>
                 <p>Below is where you can see your account information and make edits. (<em>This only applies if you are logged in</em>)</p>
@@ -185,10 +186,26 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
                     ?>
                 </p>
 
-                <p><strong>Security Question: </strong>
+                <p><strong>Security Question 1: </strong>
                     <?php
-                        if($securityQuestion != NULL) {
-                            echo($securityQuestion->getQuestion());
+                        if($securityQuestion1 != NULL) {
+                            echo($securityQuestion1->getQuestion());
+                        }
+                    ?>
+                </p>
+
+                <p><strong>Security Question 2: </strong>
+                    <?php
+                        if($securityQuestion2 != NULL) {
+                            echo($securityQuestion2->getQuestion());
+                        }
+                    ?>
+                </p>
+
+                <p><strong>Security Question 3: </strong>
+                    <?php
+                        if($securityQuestion3 != NULL) {
+                            echo($securityQuestion3->getQuestion());
                         }
                     ?>
                 </p>
