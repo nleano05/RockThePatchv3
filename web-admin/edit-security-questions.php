@@ -65,7 +65,7 @@ function checkInputAddSecurityQuestion() {
 }
 
 function checkInputDeleteSecurityQuestion() {
-    global $gDefaultDeleteQuestion;
+    global $gDefaultDeleteQuestion, $gSecurityQuestionInUse;
 
     $validForm = TRUE;
 
@@ -73,6 +73,11 @@ function checkInputDeleteSecurityQuestion() {
 
     if($deleteQuestion == SELECT_SECURITY_QUESTION_TO_DELETE) {
         $gDefaultDeleteQuestion = TRUE;
+        $validForm = FALSE;
+    }
+
+    $gSecurityQuestionInUse = lib_check::securityQuestionInUse($deleteQuestion);
+    if($gSecurityQuestionInUse) {
         $validForm = FALSE;
     }
 
@@ -136,10 +141,12 @@ function displayOutputEditQuestionSelect() {
 }
 
 function displayOutputDeleteQuestion() {
-    global $gDefaultDeleteQuestion;
+    global $gDefaultDeleteQuestion, $gSecurityQuestionInUse;
 
     if($gDefaultDeleteQuestion) {
         echo("<p class='error'>Please select a security question to delete.</p>");
+    } else if ($gSecurityQuestionInUse) {
+        echo("<p class='error'>You may not delete a security question that is in use.</p>");
     }
 }
 ?>

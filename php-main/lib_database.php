@@ -1254,6 +1254,65 @@ class lib_database {
         return $mailingList;
     }
 
+    public static function getUsersUsingSecurityQuestion($securityQuestionId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+
+        $users = array();
+
+        $pdo = lib_database::connect();
+
+        if(!empty($pdo)) {
+            log_util::log(LOG_LEVEL_DEBUG, "pdo connection WAS NOT empty");
+
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE securityQuestion1=? OR securityQuestion2=? OR securityQuestion3=?");
+            $stmt->bindParam(1, $securityQuestionId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $securityQuestionId, PDO::PARAM_INT);
+            $stmt->bindParam(3, $securityQuestionId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch()) {
+                $user = new User();
+                $user->setId((int)$row['id']);
+                $user->setFirstName($row['firstName']);
+                $user->setLastName($row['lastName']);
+                $user->setUserName($row['userName']);
+                $user->setEmail($row['email']);
+                $user->setPassword($row['password']);
+                $user->setSecurityQuestion1((int)$row['securityQuestion1']);
+                $user->setSecurityQuestion1Answer($row['securityQuestion1Answer']);
+                $user->setSecurityQuestion2((int)$row['securityQuestion2']);
+                $user->setSecurityQuestion2Answer($row['securityQuestion2Answer']);
+                $user->setSecurityQuestion3((int)$row['securityQuestion3']);
+                $user->setSecurityQuestion3Answer($row['securityQuestion3Answer']);
+                $user->setEmailBlasts((bool)$row['emailBlasts']);
+                $user->setTextBlasts((bool)$row['textBlasts']);
+                $user->setCell($row['cell']);
+                $user->setRole((int)$row['role']);
+                $user->setLocked((bool)$row['locked']);
+                $user->setLockedByAdmin((bool)$row['lockedByAdmin']);
+                $user->setTimeLocked($row['timeLocked']);
+                $user->setConsecutiveFailedLoginAttempts((int)$row['consecutiveFailedLoginAttempts']);
+                $user->setLastLoginAttemptTime($row['lastLoginAttemptTime']);
+
+                array_push($users, $user);
+            }
+        } else {
+            log_util::log(LOG_LEVEL_ERROR, "pdo connection WAS empty");
+        }
+
+        $pdo = NULL;
+
+        log_util::logDivider();
+        
+        return $users;
+    }
+
     public static function getAnnoyanceLevelById($id) {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
@@ -1648,9 +1707,9 @@ class lib_database {
                 $encryptionData->setId((int)$row['id']);
                 $encryptionData->setIdentifier($row['identifier']);
                 $encryptionData->setCipher($row['cipher']);
-                $encryptionData->setKey($row['encryption_key']);
+                $encryptionData->setKey($row['encryptionKey']);
                 $encryptionData->setIv($row['iv']);
-                $encryptionData->setTime($row['encryption_time']);
+                $encryptionData->setTime($row['encryptionTime']);
             } else {
                 log_util::log(LOG_LEVEL_WARNING, "row WAS empty");
             }
@@ -3184,7 +3243,7 @@ class lib_database {
             $iv = $encryptionData->getIv();
             $time = $encryptionData->getTime();
 
-            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, encryption_key=?, iv=?, encryption_time=? WHERE identifier = ?");
+            $stmt = $pdo->prepare("UPDATE encryption SET cipher=?, encryptionKey=?, iv=?, encryptionTime=? WHERE identifier = ?");
             $stmt->bindParam(1, $cipher, PDO::PARAM_STR);
             $stmt->bindParam(2, $key, PDO::PARAM_STR);
             $stmt->bindParam(3, $iv, PDO::PARAM_STR);
@@ -3557,7 +3616,7 @@ class lib_database {
                 $key = $encryptionData->getKey();
                 $iv = $encryptionData->getIv();
                 $time = $encryptionData->getTime();
-                $stmt = $pdo->prepare("INSERT INTO encryption (identifier, cipher, encryption_key, iv, encryption_time) VALUE (?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO encryption (identifier, cipher, encryptionKey, iv, encryptionTime) VALUE (?, ?, ?, ?, ?)");
                 $stmt->bindParam(1, $identifier, PDO::PARAM_STR);
                 $stmt->bindParam(2, $cipher, PDO::PARAM_STR);
                 $stmt->bindParam(3, $key, PDO::PARAM_STR);

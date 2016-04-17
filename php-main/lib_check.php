@@ -486,6 +486,25 @@ class lib_check {
         return $same;
     }
 
+    public static function securityQuestionInUse($securityQuestionId) {
+        $reflector = new ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        foreach ($parameters as $parameter) {
+            $args[$parameter->name] = ${$parameter->name};
+        }
+        log_util::logFunctionStart($args);
+        $inUse = FALSe;
+        $users = lib_database::getUsersUsingSecurityQuestion($securityQuestionId);
+        if(count($users) > 0) {
+            $inUse = TRUE;
+        }
+
+        log_util::logDivider();
+
+        return $inUse;
+    }
+
     public static function sessionId() {
         $reflector = new ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
