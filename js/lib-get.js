@@ -50,7 +50,7 @@ function getOldSecurityQuestionTwoAnswerForAccountInfoEdit() {
         var cookieSplit = cookie.split(";");
         for(var x = 0; x < cookieSplit.length; x++) {
             if(cookieSplit[x].indexOf("security_question_two_answer") != -1) {
-                oldSecurityQuestionOneAnswerBase64 = cookieSplit[x].replace("security_question_two_answer=", "");
+                oldSecurityQuestionTwoAnswerBase64 = cookieSplit[x].replace("security_question_two_answer=", "");
                 break;
             }
         }
@@ -88,7 +88,7 @@ function getOldSecurityQuestionThreeAnswerForAccountInfoEdit() {
         var cookieSplit = cookie.split(";");
         for(var x = 0; x < cookieSplit.length; x++) {
             if(cookieSplit[x].indexOf("security_question_three_answer") != -1) {
-                oldSecurityQuestionOneAnswerBase64 = cookieSplit[x].replace("security_question_three_answer=", "");
+                oldSecurityQuestionThreeAnswerBase64 = cookieSplit[x].replace("security_question_three_answer=", "");
                 break;
             }
         }

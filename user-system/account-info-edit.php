@@ -21,7 +21,7 @@ if($gUser != NULL) {
 }
 
 if(isset($_POST['account-info-edit'])) {
-    $gValidForm = checkInput();
+    $validForm = checkInput();
 }
 
 function checkInput() {
@@ -96,12 +96,12 @@ function checkInput() {
         }
     }
 
-    $gNoOldPassword = lib_check::isEmpty($oldPassword);
-    if($gNoOldPassword) {
-        $validForm = FALSE;
-    }
-
     if($useOldPassword == "no") {
+        $gNoOldPassword = lib_check::isEmpty($oldPassword);
+        if($gNoOldPassword) {
+            $validForm = FALSE;
+        }
+
         $gNoNewPassword = lib_check::isEmpty($newPassword);
         if($gNoNewPassword) {
             $validForm = FALSE;
@@ -219,12 +219,12 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    $gBlackOldPassword = lib_check::againstWhiteList($oldPassword);
-    if($gBlackOldPassword) {
-        $validForm = FALSE;
-    }
-
     if($useOldPassword == "no") {
+        $gBlackOldPassword = lib_check::againstWhiteList($oldPassword);
+        if($gBlackOldPassword) {
+            $validForm = FALSE;
+        }
+
         $gBlackNewPassword = lib_check::againstWhiteList($newPassword);
         if($gBlackNewPassword) {
             $validForm = FALSE;
@@ -266,16 +266,18 @@ function checkInput() {
         $validForm = FALSE;
     }
 
-    $user = lib_database::getUser($gUser->getId(), NULL, NULL, $oldPassword);
-    if($user != NULL) {
-        $oldPasswordFromDatabase = lib::decrypt($user->getId() . "_pass");
-        $gCorrectOldPassword = lib_check::same($oldPassword, $oldPasswordFromDatabase);
-        if(!$gCorrectOldPassword) {
+    if($useOldPassword == "no") {
+        $user = lib_database::getUser($gUser->getId(), NULL, NULL, $oldPassword);
+        if ($user != NULL) {
+            $oldPasswordFromDatabase = lib::decrypt($user->getId() . "_pass");
+            $gCorrectOldPassword = lib_check::same($oldPassword, $oldPasswordFromDatabase);
+            if (!$gCorrectOldPassword) {
+                $validForm = FALSE;
+            }
+        } else {
+            $gCorrectOldPassword = FALSE;
             $validForm = FALSE;
         }
-    } else {
-        $gCorrectOldPassword = FALSE;
-        $validForm = FALSE;
     }
 
     $gFirstNameTooLong = lib_check::stringLength($firstName, 40, ">");

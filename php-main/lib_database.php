@@ -2467,7 +2467,7 @@ class lib_database {
             log_util::log(LOG_LEVEL_DEBUG, "user: ", $user);
             log_util::logDivider();
         }
-		
+
         return $user;
     }
 
@@ -2570,7 +2570,7 @@ class lib_database {
         log_util::logFunctionStart($args);
 
         $pdo = lib_database::connect();
-        $securityQuestion = NULL;
+        $securityQuestions = array();
 
         if(!empty($pdo)) {
             $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR userName = ?");
@@ -2578,8 +2578,6 @@ class lib_database {
             $stmt->bindParam(2, $userNameOrEmail, PDO::PARAM_STR);
             $stmt->execute();
             $row = $stmt->fetch();
-
-            $securityQuestions = array();
 
             if(!empty($row)) {
                 log_util::log(LOG_LEVEL_ERROR, "row WAS NOT empty");
@@ -2600,11 +2598,10 @@ class lib_database {
 
         $pdo = NULL;
 
-        print_r($securityQuestions);
         log_util::log(LOG_LEVEL_DEBUG, "securityQuestions: ", $securityQuestions);
         log_util::logDivider();
 
-        return $securityQuestion;
+        return $securityQuestions;
     }
 
     public static function migrateUser($email, $userName, $firstName, $lastName) {

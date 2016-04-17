@@ -8,8 +8,7 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
 $validForm = FALSE;
 
-$securityQuestionIndex = rand(1, 3);
-echo("<p>Security question index: " . $securityQuestionIndex . "</p>");
+$securityQuestionIndex = rand(0, 2);
 
 if(isset($_POST['forgot-password'])) {
     $validForm = checkInput();
@@ -228,8 +227,8 @@ function displayOutputUsernameOrEmail() {
                     <p><strong> Security Question is:</strong>
                         <?php
                             $userNameOrEmail = isset($_POST['username-or-email']) ? strtolower($_POST['username-or-email']) : "";
-                            $securityQuestion = lib_database::getUsersSecurityQuestion($userNameOrEmail);
-                            echo($securityQuestion->getQuestion());
+                            $securityQuestions = lib_database::getUsersSecurityQuestions($userNameOrEmail);
+                            echo($securityQuestions[$securityQuestionIndex]->getQuestion());
                         ?>
                     </p>
                 </div>
@@ -239,6 +238,8 @@ function displayOutputUsernameOrEmail() {
                 <p>
                     <input type="submit" name="forgot-password-security-question" value="Email Me A Temp Password" class="button" />
                 </p>
+
+                <input type="hidden" name="security-question-index" value="<?php echo($securityQuestionIndex); ?>"/>
             </form>
             <br/>
 

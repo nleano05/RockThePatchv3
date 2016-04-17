@@ -8,22 +8,35 @@ $timeModified = gmdate("F d, Y h:m:s", getlastmod());
 
 $validForm = FALSE;
 
-$securityQuestionIndex = rand(1, 3);
-echo("<p>Security question index: " . $securityQuestionIndex . "</p>");
+global $gSecurityQuestionIndex;
+$gSecurityQuestionIndex = isset($_POST['security-question-index']) ? $_POST['security-question-index'] : rand(0, 2);
 
 if(isset($_POST['forgot-password-security-question'])) {
     $validForm = checkInput();
 }
 
 function checkInput() {
-    global $gNoAnswer, $gBlackAnswer, $gCorrectAnswer;
+    global $gNoAnswer, $gBlackAnswer, $gCorrectAnswer, $gSecurityQuestionIndex;
 
     $validForm = TRUE;
 
     $userNameOrEmail = isset($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) ? base64_decode($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) : "";
     $answer = isset($_POST['answer']) ? $_POST['answer'] : "";
     $user = lib_database::getUser(NULL, $userNameOrEmail, $userNameOrEmail);
-    $answerFromDatabase = isset($user) ? $user->getSecurityQuestionAnswer() : "";
+    switch($gSecurityQuestionIndex) {
+        case 0:
+            $answerFromDatabase = isset($user) ? $user->getSecurityQuestion1Answer() : "";
+            break;
+        case 1:
+            $answerFromDatabase = isset($user) ? $user->getSecurityQuestion2Answer() : "";
+            break;
+        case 2:
+            $answerFromDatabase = isset($user) ? $user->getSecurityQuestion3Answer() : "";
+            break;
+        default:
+            $answerFromDatabase = "";
+            break;
+    }
 
     $gNoAnswer = lib_check::isEmpty($answer);
     if($gNoAnswer) {
@@ -225,9 +238,9 @@ function sendTempPassword() {
                         <?php
                             $userNameOrEmail = isset($_COOKIE[COOKIE_USERNAME_OR_EMAIL]) ? $_COOKIE[COOKIE_USERNAME_OR_EMAIL] : "";
                             $userNameOrEmailBase64decode = base64_decode($userNameOrEmail);
-                            $securityQuestion = lib_database::getUsersSecurityQuestion($userNameOrEmailBase64decode);
-							if($securityQuestion != null) {
-								echo($securityQuestion->getQuestion());
+                            $securityQuestions = lib_database::getUsersSecurityQuestions($userNameOrEmailBase64decode);
+							if($securityQuestions != null) {
+                                echo($securityQuestions[$gSecurityQuestionIndex]->getQuestion());;
 							}
                         ?>
                     </p>

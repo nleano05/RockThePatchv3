@@ -129,7 +129,7 @@ function toggleAccountInfoEditConfirmSecurityQuestionTwoAnswer() {
         var oldSecurityQuestionTwoAnswer = getOldSecurityQuestionTwoAnswer();
 
         if(typeof oldSecurityQuestionTwoAnswer != "undefined") {
-            if(oldSecurityQuestionTwoAnswer.value.length == 0 || securityQuestionTwoAnswer.value.toLowerCase().trim() != oldSecurityQuestionTwoAnswer.toLowerCase().trim()) {
+            if(securityQuestionTwoAnswer.value.length == 0 || securityQuestionTwoAnswer.value.toLowerCase().trim() != oldSecurityQuestionTwoAnswer.toLowerCase().trim()) {
                 securityQuestionTwoAnswerConfirm.style.display = "block";
             } else {
                 securityQuestionTwoAnswerConfirm.style.display = "none";
@@ -177,13 +177,13 @@ function toggleAccountInfoEditConfirmSecurityQuestionThreeAnswer() {
         var oldSecurityQuestionThreeAnswer = getOldSecurityQuestionThreeAnswer();
 
         if(typeof oldSecurityQuestionThreeAnswer != "undefined") {
-            if(oldSecurityQuestionThreeAnswer.value.length == 0 || securityQuestionThreeAnswer.value.toLowerCase().trim() != oldSecurityQuestionThreeAnswer.toLowerCase().trim()) {
+            if(securityQuestionThreeAnswer.value.length == 0 || securityQuestionThreeAnswer.value.toLowerCase().trim() != oldSecurityQuestionThreeAnswer.toLowerCase().trim()) {
                 securityQuestionThreeAnswerConfirm.style.display = "block";
             } else {
                 securityQuestionThreeAnswerConfirm.style.display = "none";
             }
         } else {
-            getOldSecurityQuestionTwoAnswerForAccountInfoEdit();
+            getOldSecurityQuestionThreeAnswerForAccountInfoEdit();
             securityQuestionThreeAnswerConfirm.style.display = "none";
         }
 
