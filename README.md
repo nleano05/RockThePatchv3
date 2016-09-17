@@ -1,6 +1,6 @@
 # [DEPRECATED] RockThePatchV3
 
-> *Developed by Patches 06/27/2015 - present* <br/><br/>
+> *Developed by Patches 06/27/2015 - 09/15/2016* <br/><br/>
 > For more details, please refer to the wiki: https://github.com/isuPatches/RockThePatchv3/wiki
 
 ##Reason 
